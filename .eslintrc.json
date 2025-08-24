@@ -1,0 +1,23 @@
+{
+    "root": true,
+    "parser": "@typescript-eslint/parser",
+    "plugins": [
+        "@typescript-eslint",
+        "prettier",
+        "react"
+    ],
+    "extends": [
+        "eslint:recommended",
+        "plugin:@typescript-eslint/recommended",
+        "plugin:react/recommended",
+        "prettier"
+    ],
+    "rules": {
+        "prettier/prettier": "error"
+    },
+    "settings": {
+        "react": {
+            "version": "detect"
+        }
+    }
+}

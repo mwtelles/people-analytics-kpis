@@ -7,7 +7,7 @@
     "dev:frontend": "pnpm --filter frontend dev",
     "dev:db:migrate": "pnpm --filter db migrate",
     "dev:db:seed": "pnpm --filter db seed",
-    "lint": "pnpm exec eslint . --ext .ts,.tsx --fix",
+    "lint": "eslint . --ext .ts,.tsx --fix",
     "build": "pnpm --filter backend build && pnpm --filter frontend build",
     "test": "pnpm --filter backend test && pnpm --filter frontend test",
     "prepare": "husky install"
@@ -15,8 +15,15 @@
   "devDependencies": {
     "@commitlint/cli": "^19.8.1",
     "@commitlint/config-conventional": "^19.8.1",
+    "@typescript-eslint/eslint-plugin": "^8.40.0",
+    "@typescript-eslint/parser": "^8.40.0",
     "concurrently": "^9.2.0",
+    "eslint": "^9.34.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.4",
+    "eslint-plugin-react": "^7.37.5",
     "husky": "^8.0.3",
+    "prettier": "^3.6.2",
     "release-please": "^17.1.2"
   },
   "lint-staged": {
