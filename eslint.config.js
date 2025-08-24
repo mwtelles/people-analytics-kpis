@@ -10,6 +10,9 @@ export default [
     {
         ignores: [
             "**/*.config.{js,ts,cjs,mjs}",
+            "**/__tests__/*",
+            "**/*.spec.{js,ts,tsx}",
+            "**/*.test.{js,ts,tsx}",
             "node_modules",
             "dist",
             "build"
