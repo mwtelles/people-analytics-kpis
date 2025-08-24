@@ -14,8 +14,8 @@ export default [
             "**/*.spec.{js,ts,tsx}",
             "**/*.test.{js,ts,tsx}",
             "node_modules",
-            "dist",
-            "build"
+            "**/dist",
+            "**/build"
         ],
     },
     {
