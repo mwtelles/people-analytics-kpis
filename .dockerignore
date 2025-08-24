@@ -1,0 +1,14 @@
+node_modules
+npm-debug.log
+pnpm-debug.log
+
+dist
+build
+
+.git
+.gitignore
+
+.vscode
+.idea
+.DS_Store
+Thumbs.db

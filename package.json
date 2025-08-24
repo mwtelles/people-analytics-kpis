@@ -1,0 +1,28 @@
+{
+  "name": "people-analytics-kpis",
+  "private": true,
+  "scripts": {
+    "dev": "concurrently \"pnpm --filter frontend dev\" \"pnpm --filter backend dev\"",
+    "dev:backend": "pnpm --filter backend dev",
+    "dev:frontend": "pnpm --filter frontend dev",
+    "dev:db:migrate": "pnpm --filter db migrate",
+    "dev:db:seed": "pnpm --filter db seed",
+    "lint": "eslint . --ext .ts,.tsx --fix",
+    "build": "pnpm --filter backend build && pnpm --filter frontend build",
+    "test": "pnpm --filter backend test && pnpm --filter frontend test",
+    "prepare": "husky install"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^19.8.1",
+    "@commitlint/config-conventional": "^19.8.1",
+    "concurrently": "^9.2.0",
+    "husky": "^8.0.3",
+    "release-please": "^17.1.2"
+  },
+  "lint-staged": {
+    "*.{js,ts,tsx,json,css,md}": [
+      "eslint --fix",
+      "prettier --write"
+    ]
+  }
+}
