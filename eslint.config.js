@@ -6,19 +6,31 @@ import globals from "globals";
 
 export default [
     js.configs.recommended,
-
     ...tseslint.configs.recommended,
-
     {
-        files: ["**/*.{ts,tsx}"],
+        files: ["apps/backend/**/*.{ts,tsx}"],
         languageOptions: {
             parser: tseslint.parser,
             parserOptions: {
-                project: "./tsconfig.json",
+                project: "./apps/backend/tsconfig.json",
+            },
+            globals: {
+                ...globals.node,
+            },
+        },
+        rules: {
+            "prettier/prettier": "error",
+        },
+    },
+    {
+        files: ["apps/frontend/**/*.{ts,tsx}"],
+        languageOptions: {
+            parser: tseslint.parser,
+            parserOptions: {
+                project: "./apps/frontend/tsconfig.json",
             },
             globals: {
                 ...globals.browser,
-                ...globals.node,
             },
         },
         plugins: {
@@ -33,20 +45,6 @@ export default [
             react: {
                 version: "detect",
             },
-        },
-    },
-
-    {
-        files: ["apps/backend/**/*.{ts,tsx}"],
-        rules: {
-            "no-console": "warn",
-        },
-    },
-
-    {
-        files: ["apps/frontend/**/*.{ts,tsx}"],
-        rules: {
-            "react/prop-types": "off",
         },
     },
 ];

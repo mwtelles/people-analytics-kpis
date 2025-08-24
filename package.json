@@ -1,6 +1,7 @@
 {
   "name": "people-analytics-kpis",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "concurrently \"pnpm --filter frontend dev\" \"pnpm --filter backend dev\"",
     "dev:backend": "pnpm --filter backend dev",
