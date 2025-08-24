@@ -8,6 +8,14 @@ export default [
     js.configs.recommended,
     ...tseslint.configs.recommended,
     {
+        ignores: [
+            "**/*.config.{js,ts,cjs,mjs}",
+            "node_modules",
+            "dist",
+            "build"
+        ],
+    },
+    {
         files: ["apps/backend/**/*.{ts,tsx}"],
         languageOptions: {
             parser: tseslint.parser,
