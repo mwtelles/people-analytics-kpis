@@ -7,7 +7,7 @@
     "dev:frontend": "pnpm --filter frontend dev",
     "dev:db:migrate": "pnpm --filter db migrate",
     "dev:db:seed": "pnpm --filter db seed",
-    "lint": "eslint . --ext .ts,.tsx --fix",
+    "lint": "pnpm exec eslint . --ext .ts,.tsx --fix",
     "build": "pnpm --filter backend build && pnpm --filter frontend build",
     "test": "pnpm --filter backend test && pnpm --filter frontend test",
     "prepare": "husky install"
