@@ -18,6 +18,9 @@ export default [
                 ...globals.node,
             },
         },
+        plugins: {
+            prettier,
+        },
         rules: {
             "prettier/prettier": "error",
         },
