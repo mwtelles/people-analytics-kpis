@@ -1,11 +1,6 @@
 #!/bin/sh
 . "$(dirname "$0")/_/husky.sh"
 
-echo "🔍 Rodando lint..."
-pnpm exec eslint . --ext .ts,.tsx --fix || exit 1
-
-echo "🔨 Rodando build..."
+pnpm lint || exit 1
 pnpm build || exit 1
-
-echo "🧪 Rodando testes..."
 pnpm test || exit 1
