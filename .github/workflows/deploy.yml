@@ -60,7 +60,10 @@ jobs:
       - name: Install Railway CLI
         run: npm add -g @railway/cli
 
+      - name: Check Railway CLI version
+        run: railway --version
+
       - name: Deploy to Railway
-        run: railway up --service all --ci --project f87cc766-d691-4c74-918d-df5c5f501561
+        run: railway up --service all --ci --verbose --project f87cc766-d691-4c74-918d-df5c5f501561
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
