@@ -2,9 +2,15 @@ projectId = "f87cc766-d691-4c74-918d-df5c5f501561"
 name = "frontend"
 
 [deploy]
+# instala sem travar por lockfile desatualizado
 installCommand = "pnpm install --no-frozen-lockfile"
+
+# builda o Vite
 buildCommand = "pnpm run build"
+
+# sobe o preview do Vite na porta 8080
 startCommand = "pnpm run preview -- --port 8080"
+
 numReplicas = 1
 restartPolicyType = "ALWAYS"
 healthcheckPath = "/"
