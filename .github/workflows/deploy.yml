@@ -58,7 +58,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Install Railway CLI
-        run: pnpm add -g @railway/cli
+        run: npm add -g @railway/cli
 
       - name: Deploy to Railway
         run: railway up --service all --ci --project f87cc766-d691-4c74-918d-df5c5f501561
