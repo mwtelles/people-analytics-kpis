@@ -3,8 +3,8 @@ version: "3.9"
 services:
   db:
     build:
-      context: ../..
-      dockerfile: infra/docker/postgres.dockerfile
+      context: ./infra/docker
+      dockerfile: postgres.dockerfile
     container_name: people-db
     restart: always
     environment:
@@ -18,27 +18,27 @@ services:
 
   backend:
     build:
-      context: ../..
-      dockerfile: infra/docker/backend.dockerfile
+      context: ./apps/backend
+      dockerfile: Dockerfile
     container_name: people-backend
     restart: always
     env_file:
-      - ../../.env
+      - .env
     ports:
-      - "5000:5000"
+      - "5000:8080"
     depends_on:
       - db
 
   frontend:
     build:
-      context: ../..
-      dockerfile: infra/docker/frontend.dockerfile
+      context: ./apps/frontend
+      dockerfile: Dockerfile
     container_name: people-frontend
     restart: always
     env_file:
-      - ../../.env
+      - .env
     ports:
-      - "3000:3000"
+      - "3000:8080"
     depends_on:
       - backend
 
