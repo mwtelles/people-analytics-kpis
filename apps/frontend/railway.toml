@@ -1,0 +1,14 @@
+projectId = "f87cc766-d691-4c74-918d-df5c5f501561"
+name = "frontend"
+
+[deploy]
+installCommand = "pnpm install --no-frozen-lockfile"
+buildCommand = "pnpm run build"
+startCommand = "pnpm run preview -- --port 8080"
+numReplicas = 1
+restartPolicyType = "ALWAYS"
+healthcheckPath = "/"
+
+[envs]
+PORT = "8080"
+VITE_API_URL = "https://${{backend.PUBLIC_URL}}/api"
