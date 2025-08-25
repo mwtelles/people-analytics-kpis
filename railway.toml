@@ -1,47 +1,53 @@
-projectId = "f87cc766-d691-4c74-918d-df5c5f501561"[
-    [services
-    ]
-]
-name = "db"[services.build
-]
+projectId = "f87cc766-d691-4c74-918d-df5c5f501561"
+
+[[services]]
+name = "db"
+
+[services.build]
 builder = "DOCKERFILE"
-dockerfilePath = "infra/docker/postgres.dockerfile"[services.deploy
-]
+dockerfilePath = "infra/docker/postgres.dockerfile"
+
+[services.deploy]
 numReplicas = 1
-restartPolicyType = "ALWAYS"[services.envs
-]
+restartPolicyType = "ALWAYS"
+
+[services.envs]
 POSTGRES_USER = "postgres"
 POSTGRES_PASSWORD = "postgres"
-POSTGRES_DB = "people_analytics"[
-    [services
-    ]
-]
-name = "backend"[services.build
-]
+POSTGRES_DB = "people_analytics"
+
+[[services]]
+name = "backend"
+
+[services.build]
 builder = "DOCKERFILE"
-dockerfilePath = "infra/docker/backend.dockerfile"[services.deploy
-]
+dockerfilePath = "infra/docker/backend.dockerfile"
+
+[services.deploy]
 preDeployCommand = "npx sequelize-cli db:migrate && npx sequelize-cli db:seed:all"
 startCommand = "node dist/index.js"
 numReplicas = 1
 restartPolicyType = "ALWAYS"
-healthcheckPath = "/api/docs"[services.envs
-]
+healthcheckPath = "/api/docs"
+
+[services.envs]
 PORT = "8080"
 FEATURE_ENTERPRISE = "false"
 FEATURE_AI = "false"
-DATABASE_URL = "${{ db.DATABASE_URL }}"[
-    [services
-    ]
-]
-name = "frontend"[services.build
-]
+DATABASE_URL = "${{ db.DATABASE_URL }}"
+
+[[services]]
+name = "frontend"
+
+[services.build]
 builder = "DOCKERFILE"
-dockerfilePath = "infra/docker/frontend.dockerfile"[services.deploy
-]
+dockerfilePath = "infra/docker/frontend.dockerfile"
+
+[services.deploy]
 numReplicas = 1
 restartPolicyType = "ALWAYS"
-healthcheckPath = "/"[services.envs
-]
+healthcheckPath = "/"
+
+[services.envs]
 PORT = "8080"
 VITE_API_URL = "https://${{ backend.PUBLIC_URL }}/api"
