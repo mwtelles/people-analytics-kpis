@@ -1,12 +1,12 @@
 {
     "$schema": "http://json-schema.org/draft-07/schema#",
     "projectId": "f87cc766-d691-4c74-918d-df5c5f501561",
-    "services": {
-        "db": {
+    "services": [
+        {
             "name": "db",
             "build": {
                 "builder": "DOCKERFILE",
-                "dockerfilePath": "db/Dockerfile"
+                "dockerfilePath": "infra/docker/postgres.dockerfile"
             },
             "deploy": {
                 "numReplicas": 1,
@@ -18,11 +18,11 @@
                 "POSTGRES_DB": "people_analytics"
             }
         },
-        "backend": {
+        {
             "name": "backend",
             "build": {
                 "builder": "DOCKERFILE",
-                "dockerfilePath": "apps/backend/Dockerfile"
+                "dockerfilePath": "infra/docker/backend.dockerfile"
             },
             "deploy": {
                 "preDeployCommand": "npx sequelize-cli db:migrate && npx sequelize-cli db:seed:all",
@@ -38,11 +38,11 @@
                 "DATABASE_URL": "${{ db.DATABASE_URL }}"
             }
         },
-        "frontend": {
+        {
             "name": "frontend",
             "build": {
                 "builder": "DOCKERFILE",
-                "dockerfilePath": "apps/frontend/Dockerfile"
+                "dockerfilePath": "infra/docker/frontend.dockerfile"
             },
             "deploy": {
                 "numReplicas": 1,
@@ -54,5 +54,5 @@
                 "VITE_API_URL": "https://${{ backend.PUBLIC_URL }}/api"
             }
         }
-    }
+    ]
 }
