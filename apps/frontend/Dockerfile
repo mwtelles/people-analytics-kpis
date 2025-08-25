@@ -19,4 +19,4 @@ ENV NODE_ENV=production
 ENV PORT=8080
 EXPOSE 8080
 
-CMD ["pnpm", "run", "preview", "--", "--port", "8080"]
+CMD ["node", "node_modules/vite/bin/vite.js", "preview", "--port", "8080"]
