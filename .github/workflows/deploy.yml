@@ -31,10 +31,10 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Lint ${{ matrix.app }}
-        run: pnpm --filter ${{ matrix.app }} lint --if-present
+        run: pnpm --filter ${{ matrix.app }} run lint --if-present
 
       - name: Build ${{ matrix.app }}
-        run: pnpm --filter ${{ matrix.app }} build --if-present
+        run: pnpm --filter ${{ matrix.app }} run build --if-present
 
   deploy:
     runs-on: ubuntu-latest
