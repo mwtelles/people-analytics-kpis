@@ -1,0 +1,58 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "projectId": "f87cc766-d691-4c74-918d-df5c5f501561",
+    "services": {
+        "db": {
+            "name": "db",
+            "build": {
+                "builder": "DOCKERFILE",
+                "dockerfilePath": "db/Dockerfile"
+            },
+            "deploy": {
+                "numReplicas": 1,
+                "restartPolicyType": "ALWAYS"
+            },
+            "envs": {
+                "POSTGRES_USER": "postgres",
+                "POSTGRES_PASSWORD": "postgres",
+                "POSTGRES_DB": "people_analytics"
+            }
+        },
+        "backend": {
+            "name": "backend",
+            "build": {
+                "builder": "DOCKERFILE",
+                "dockerfilePath": "apps/backend/Dockerfile"
+            },
+            "deploy": {
+                "preDeployCommand": "npx sequelize-cli db:migrate && npx sequelize-cli db:seed:all",
+                "startCommand": "node dist/index.js",
+                "numReplicas": 1,
+                "restartPolicyType": "ALWAYS",
+                "healthcheckPath": "/api/docs"
+            },
+            "envs": {
+                "PORT": "8080",
+                "FEATURE_ENTERPRISE": "false",
+                "FEATURE_AI": "false",
+                "DATABASE_URL": "${{ db.DATABASE_URL }}"
+            }
+        },
+        "frontend": {
+            "name": "frontend",
+            "build": {
+                "builder": "DOCKERFILE",
+                "dockerfilePath": "apps/frontend/Dockerfile"
+            },
+            "deploy": {
+                "numReplicas": 1,
+                "restartPolicyType": "ALWAYS",
+                "healthcheckPath": "/"
+            },
+            "envs": {
+                "PORT": "8080",
+                "VITE_API_URL": "https://${{ backend.PUBLIC_URL }}/api"
+            }
+        }
+    }
+}
