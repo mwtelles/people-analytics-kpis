@@ -15,7 +15,7 @@ const sequelize = new Sequelize(
       freezeTableName: true,
       timestamps: true,
     },
-  }
+  },
 );
 
 export default sequelize;

@@ -13,10 +13,15 @@ interface EmployeeAttributes {
   position?: string;
 }
 
-type EmployeeCreationAttributes = Optional<EmployeeAttributes, "id" | "leaderId" | "resignationDate" | "position">;
+type EmployeeCreationAttributes = Optional<
+  EmployeeAttributes,
+  "id" | "leaderId" | "resignationDate" | "position"
+>;
 
-export class Employee extends Model<EmployeeAttributes, EmployeeCreationAttributes>
-  implements EmployeeAttributes {
+export class Employee
+  extends Model<EmployeeAttributes, EmployeeCreationAttributes>
+  implements EmployeeAttributes
+{
   public id!: number;
   public registration!: string;
   public status!: "ativo" | "inativo";
@@ -44,5 +49,5 @@ Employee.init(
     sequelize,
     tableName: "Employees",
     timestamps: true,
-  }
+  },
 );
