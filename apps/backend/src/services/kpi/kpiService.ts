@@ -1,6 +1,6 @@
 import { EmployeeRepository } from "../../repositories/employee";
-import { startOfMonth, endOfMonth, eachMonthOfInterval } from "date-fns";
 import { isActiveOnDate } from "../../utils/dateUtils";
+import { getMonthRange } from "../../utils/monthUtils";
 
 interface KpiPoint {
   month: string;
@@ -13,24 +13,23 @@ export class KpiService {
     if (!ids.length) return [];
 
     const employees: any[] = await EmployeeRepository.getEmployeesByIds(ids);
-    const startDate = new Date(`${from}-01T00:00:00Z`);
-    const endDate = new Date(`${to}-01T00:00:00Z`);
-    endDate.setMonth(endDate.getMonth() + 1);
 
-    const months = eachMonthOfInterval({ start: startDate, end: endDate });
+    const [fromYear, fromMonth] = from.split("-").map(Number);
+    const [toYear, toMonth] = to.split("-").map(Number);
+
     const series: KpiPoint[] = [];
 
-    for (const month of months) {
-      const firstDay = startOfMonth(month);
-      const lastDay = endOfMonth(month);
+    for (let y = fromYear, m = fromMonth - 1; y < toYear || (y === toYear && m <= toMonth - 1); m++) {
+      if (m > 11) { y++; m = 0; }
+      const { start, end } = getMonthRange(y, m);
 
-      const activeFirstDay = employees.filter((e) => isActiveOnDate(e, firstDay)).length;
-      const activeLastDay = employees.filter((e) => isActiveOnDate(e, lastDay)).length;
+      const activeFirstDay = employees.filter((e) => isActiveOnDate(e, start)).length;
+      const activeLastDay = employees.filter((e) => isActiveOnDate(e, end)).length;
 
       const headcount = (activeFirstDay + activeLastDay) / 2;
 
       series.push({
-        month: `${month.getUTCFullYear()}-${String(month.getUTCMonth() + 1).padStart(2, "0")}`,
+        month: `${y}-${String(m + 1).padStart(2, "0")}`,
         value: headcount,
       });
     }
@@ -43,31 +42,30 @@ export class KpiService {
     if (!ids.length) return [];
 
     const employees: any[] = await EmployeeRepository.getEmployeesByIds(ids);
-    const startDate = new Date(`${from}-01T00:00:00Z`);
-    const endDate = new Date(`${to}-01T00:00Z`);
-    endDate.setMonth(endDate.getMonth() + 1);
 
-    const months = eachMonthOfInterval({ start: startDate, end: endDate });
+    const [fromYear, fromMonth] = from.split("-").map(Number);
+    const [toYear, toMonth] = to.split("-").map(Number);
+
     const series: KpiPoint[] = [];
 
-    for (const month of months) {
-      const lastDay = endOfMonth(month);
+    for (let y = fromYear, m = fromMonth - 1; y < toYear || (y === toYear && m <= toMonth - 1); m++) {
+      if (m > 11) { y++; m = 0; }
+      const { start, end } = getMonthRange(y, m);
 
       const terminated = employees.filter((e) => {
         if (!e.resignationDate) return false;
         const res = new Date(e.resignationDate);
-        return res.getUTCFullYear() === month.getUTCFullYear() &&
-               res.getUTCMonth() === month.getUTCMonth();
+        return res.getUTCFullYear() === y && res.getUTCMonth() === m;
       }).length;
 
-      const activeFirstDay = employees.filter((e) => isActiveOnDate(e, startOfMonth(month))).length;
-      const activeLastDay = employees.filter((e) => isActiveOnDate(e, lastDay)).length;
+      const activeFirstDay = employees.filter((e) => isActiveOnDate(e, start)).length;
+      const activeLastDay = employees.filter((e) => isActiveOnDate(e, end)).length;
 
       const headcount = (activeFirstDay + activeLastDay) / 2;
       const turnover = headcount > 0 ? terminated / headcount : 0;
 
       series.push({
-        month: `${month.getUTCFullYear()}-${String(month.getUTCMonth() + 1).padStart(2, "0")}`,
+        month: `${y}-${String(m + 1).padStart(2, "0")}`,
         value: turnover,
       });
     }
