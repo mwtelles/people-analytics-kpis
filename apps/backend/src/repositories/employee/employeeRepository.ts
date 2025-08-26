@@ -18,7 +18,7 @@ export class EmployeeRepository {
       {
         type: QueryTypes.SELECT,
         replacements: { email },
-      }
+      },
     );
 
     return result.map((row) => row.id);
