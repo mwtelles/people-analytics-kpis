@@ -10,11 +10,7 @@ export class KpiController {
         return res.status(400).json({ error: "Parâmetros obrigatórios: email, from, to" });
       }
 
-      const series = await KpiService.getHeadcountSeries(
-        String(email),
-        String(from),
-        String(to)
-      );
+      const series = await KpiService.getHeadcountSeries(String(email), String(from), String(to));
 
       return res.json({ series });
     } catch (err) {
@@ -31,11 +27,7 @@ export class KpiController {
         return res.status(400).json({ error: "Parâmetros obrigatórios: email, from, to" });
       }
 
-      const series = await KpiService.getTurnoverSeries(
-        String(email),
-        String(from),
-        String(to)
-      );
+      const series = await KpiService.getTurnoverSeries(String(email), String(from), String(to));
 
       return res.json({ series });
     } catch (err) {

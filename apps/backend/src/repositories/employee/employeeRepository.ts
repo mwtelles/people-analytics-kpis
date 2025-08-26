@@ -17,7 +17,7 @@ export class EmployeeRepository {
       {
         type: QueryTypes.SELECT,
         replacements: { email },
-      }
+      },
     );
 
     return result.map((row) => row.id);
@@ -25,13 +25,10 @@ export class EmployeeRepository {
 
   static async getEmployeesByIds(ids: number[]) {
     if (!ids.length) return [];
-    const result = await sequelize.query(
-      `SELECT * FROM "Employees" WHERE id IN (:ids)`,
-      {
-        type: QueryTypes.SELECT,
-        replacements: { ids },
-      }
-    );
+    const result = await sequelize.query(`SELECT * FROM "Employees" WHERE id IN (:ids)`, {
+      type: QueryTypes.SELECT,
+      replacements: { ids },
+    });
     return result;
   }
 }

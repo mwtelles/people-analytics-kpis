@@ -19,8 +19,15 @@ export class KpiService {
 
     const series: KpiPoint[] = [];
 
-    for (let y = fromYear, m = fromMonth - 1; y < toYear || (y === toYear && m <= toMonth - 1); m++) {
-      if (m > 11) { y++; m = 0; }
+    for (
+      let y = fromYear, m = fromMonth - 1;
+      y < toYear || (y === toYear && m <= toMonth - 1);
+      m++
+    ) {
+      if (m > 11) {
+        y++;
+        m = 0;
+      }
       const { start, end } = getMonthRange(y, m);
 
       const activeFirstDay = employees.filter((e) => isActiveOnDate(e, start)).length;
@@ -48,8 +55,15 @@ export class KpiService {
 
     const series: KpiPoint[] = [];
 
-    for (let y = fromYear, m = fromMonth - 1; y < toYear || (y === toYear && m <= toMonth - 1); m++) {
-      if (m > 11) { y++; m = 0; }
+    for (
+      let y = fromYear, m = fromMonth - 1;
+      y < toYear || (y === toYear && m <= toMonth - 1);
+      m++
+    ) {
+      if (m > 11) {
+        y++;
+        m = 0;
+      }
       const { start, end } = getMonthRange(y, m);
 
       const terminated = employees.filter((e) => {
