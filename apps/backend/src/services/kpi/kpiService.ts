@@ -1,3 +1,4 @@
+import { Employee } from "../../models/employee";
 import { EmployeeRepository } from "../../repositories/employee";
 import { isActiveOnDate } from "../../utils/dateUtils";
 import { getMonthRange } from "../../utils/monthUtils";
@@ -12,7 +13,7 @@ export class KpiService {
     const ids = await EmployeeRepository.getEmployeeTreeByEmail(email);
     if (!ids.length) return [];
 
-    const employees: any[] = await EmployeeRepository.getEmployeesByIds(ids);
+    const employees: Employee[] = await EmployeeRepository.getEmployeesByIds(ids);
 
     const [fromYear, fromMonth] = from.split("-").map(Number);
     const [toYear, toMonth] = to.split("-").map(Number);

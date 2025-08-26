@@ -1,5 +1,6 @@
 import { QueryTypes } from "sequelize";
 import sequelize from "../../config/database";
+import { Employee } from "../../models/employee";
 
 export class EmployeeRepository {
   static async getEmployeeTreeByEmail(email: string): Promise<number[]> {
@@ -17,18 +18,17 @@ export class EmployeeRepository {
       {
         type: QueryTypes.SELECT,
         replacements: { email },
-      },
+      }
     );
 
     return result.map((row) => row.id);
   }
 
-  static async getEmployeesByIds(ids: number[]) {
+  static async getEmployeesByIds(ids: number[]): Promise<Employee[]> {
     if (!ids.length) return [];
-    const result = await sequelize.query(`SELECT * FROM "Employees" WHERE id IN (:ids)`, {
-      type: QueryTypes.SELECT,
-      replacements: { ids },
+    const employees = await Employee.findAll({
+      where: { id: ids },
     });
-    return result;
+    return employees;
   }
 }
