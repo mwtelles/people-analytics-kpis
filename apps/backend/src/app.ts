@@ -1,8 +1,11 @@
 import express from "express";
+import cors from "cors";
 import kpiRoutes from "./routes/kpiRoutes";
 import { setupSwagger } from "./config/swagger";
 
 const app = express();
+
+app.use(cors({ origin: process.env.VITE_URL || "http://localhost:5173" }));
 
 app.use(express.json());
 
