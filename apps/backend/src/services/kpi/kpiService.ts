@@ -1,90 +1,134 @@
 import { Employee } from "../../models/employee";
 import { EmployeeRepository } from "../../repositories/employee";
-import { isActiveOnDate } from "../../utils/dateUtils";
-import { getMonthRange } from "../../utils/monthUtils";
-
-interface KpiPoint {
-  month: string;
-  value: number;
-}
+import { TotalKpiDto, GroupedKpiDto, HierarchyKpiDto, KpiResponseDto } from "../../dtos/kpi.dto";
+import { buildMonthlySeries, Metric } from "../../utils/kpi/buildMonthlySeries";
+import { splitEmployees } from "../../utils/kpi/splitEmployees";
+import { buildHierarchyTree } from "../../utils/kpi/buildHierarchyTree";
 
 export class KpiService {
-  static async getHeadcountSeries(email: string, from: string, to: string): Promise<KpiPoint[]> {
-    const ids = await EmployeeRepository.getEmployeeTreeByEmail(email);
-    if (!ids.length) return [];
-
-    const employees: Employee[] = await EmployeeRepository.getEmployeesByIds(ids);
-
-    const [fromYear, fromMonth] = from.split("-").map(Number);
-    const [toYear, toMonth] = to.split("-").map(Number);
-
-    const series: KpiPoint[] = [];
-
-    for (
-      let y = fromYear, m = fromMonth - 1;
-      y < toYear || (y === toYear && m <= toMonth - 1);
-      m++
-    ) {
-      if (m > 11) {
-        y++;
-        m = 0;
-      }
-      const { start, end } = getMonthRange(y, m);
-
-      const activeFirstDay = employees.filter((e) => isActiveOnDate(e, start)).length;
-      const activeLastDay = employees.filter((e) => isActiveOnDate(e, end)).length;
-
-      const headcount = (activeFirstDay + activeLastDay) / 2;
-
-      series.push({
-        month: `${y}-${String(m + 1).padStart(2, "0")}`,
-        value: headcount,
-      });
-    }
-
-    return series;
+  static async getHeadcount(
+    email: string,
+    from: string,
+    to: string,
+    scope: string,
+    includeMeta: boolean,
+  ): Promise<KpiResponseDto> {
+    return this.getByMetric("headcount", email, from, to, scope, includeMeta);
   }
 
-  static async getTurnoverSeries(email: string, from: string, to: string): Promise<KpiPoint[]> {
+  static async getTurnover(
+    email: string,
+    from: string,
+    to: string,
+    scope: string,
+    includeMeta: boolean,
+  ): Promise<KpiResponseDto> {
+    return this.getByMetric("turnover", email, from, to, scope, includeMeta);
+  }
+
+  private static async getByMetric(
+    metric: Metric,
+    email: string,
+    from: string,
+    to: string,
+    scope: string,
+    includeMeta: boolean,
+  ): Promise<KpiResponseDto> {
+    switch (scope) {
+      case "grouped":
+        return this.getGrouped(metric, email, from, to);
+      case "hierarchy":
+        return this.getHierarchy(metric, email, from, to, includeMeta);
+      default:
+        return {
+          aggregates: {
+            total: {
+              [metric]: await buildMonthlySeries(
+                metric,
+                await this.getAllEmployees(email),
+                from,
+                to,
+              ),
+            },
+          },
+        } as TotalKpiDto;
+    }
+  }
+
+  private static async getAllEmployees(email: string): Promise<Employee[]> {
     const ids = await EmployeeRepository.getEmployeeTreeByEmail(email);
     if (!ids.length) return [];
+    return EmployeeRepository.getEmployeesByIds(ids);
+  }
 
-    const employees: Employee[] = await EmployeeRepository.getEmployeesByIds(ids);
-
-    const [fromYear, fromMonth] = from.split("-").map(Number);
-    const [toYear, toMonth] = to.split("-").map(Number);
-
-    const series: KpiPoint[] = [];
-
-    for (
-      let y = fromYear, m = fromMonth - 1;
-      y < toYear || (y === toYear && m <= toMonth - 1);
-      m++
-    ) {
-      if (m > 11) {
-        y++;
-        m = 0;
-      }
-      const { start, end } = getMonthRange(y, m);
-
-      const terminated = employees.filter((e) => {
-        if (!e.resignationDate) return false;
-        const res = new Date(e.resignationDate);
-        return res.getUTCFullYear() === y && res.getUTCMonth() === m;
-      }).length;
-
-      const activeFirstDay = employees.filter((e) => isActiveOnDate(e, start)).length;
-      const activeLastDay = employees.filter((e) => isActiveOnDate(e, end)).length;
-
-      const headcount = (activeFirstDay + activeLastDay) / 2;
-      const turnover = headcount > 0 ? terminated / headcount : 0;
-
-      series.push({
-        month: `${y}-${String(m + 1).padStart(2, "0")}`,
-        value: turnover,
-      });
+  private static async getGrouped(
+    metric: Metric,
+    email: string,
+    from: string,
+    to: string,
+  ): Promise<GroupedKpiDto> {
+    const leader = await Employee.findOne({ where: { email } });
+    if (!leader) {
+      return {
+        aggregates: {
+          direct: { [metric]: [] },
+          indirect: { [metric]: [] },
+          total: { [metric]: [] },
+        },
+      };
     }
 
-    return series;
+    const employees = await this.getAllEmployees(email);
+    const { direct, indirect } = splitEmployees(employees, leader.id);
+
+    return {
+      aggregates: {
+        direct: { [metric]: buildMonthlySeries(metric, direct, from, to) },
+        indirect: { [metric]: buildMonthlySeries(metric, indirect, from, to) },
+        total: { [metric]: buildMonthlySeries(metric, [...direct, ...indirect], from, to) },
+      },
+    };
+  }
+
+  private static async getHierarchy(
+    metric: Metric,
+    email: string,
+    from: string,
+    to: string,
+    includeMeta: boolean,
+  ): Promise<HierarchyKpiDto> {
+    const leader = await Employee.findOne({ where: { email } });
+    if (!leader) {
+      return {
+        leader: null,
+        hierarchy: { directReports: [] },
+        aggregates: {
+          direct: { [metric]: [] },
+          indirect: { [metric]: [] },
+          total: { [metric]: [] },
+        },
+      };
+    }
+
+    const employees = await this.getAllEmployees(email);
+    const { direct, indirect } = splitEmployees(employees, leader.id);
+
+    return {
+      leader: includeMeta
+        ? {
+            id: leader.id,
+            name: leader.name,
+            email: leader.email,
+            position: leader.position,
+            status: leader.status,
+          }
+        : null,
+      hierarchy: buildHierarchyTree(metric, employees, leader, from, to),
+      aggregates: {
+        direct: { [metric]: buildMonthlySeries(metric, direct, from, to) },
+        indirect: { [metric]: buildMonthlySeries(metric, indirect, from, to) },
+        total: { [metric]: buildMonthlySeries(metric, [...direct, ...indirect], from, to) },
+      },
+    };
   }
 }
