@@ -1,7 +1,4 @@
-import {
-  createRootRouteWithContext,
-  Outlet,
-} from "@tanstack/react-router";
+import { createRootRouteWithContext, Outlet } from "@tanstack/react-router";
 import { QueryClient } from "@tanstack/react-query";
 import { AnimatePresence, motion } from "framer-motion";
 import { easeInOut } from "framer-motion";

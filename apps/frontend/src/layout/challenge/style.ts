@@ -31,7 +31,9 @@ export const NavItem = styled.a`
   color: white;
   text-decoration: none;
 
-  transition: color 0.25s ease, transform 0.25s ease;
+  transition:
+    color 0.25s ease,
+    transform 0.25s ease;
 
   svg {
     stroke-width: 2;

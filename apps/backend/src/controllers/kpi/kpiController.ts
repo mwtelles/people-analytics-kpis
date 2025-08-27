@@ -8,9 +8,7 @@ export class KpiController {
       const { email, from, to, scope = "total", includeMeta } = req.query;
 
       if (!email || !from || !to) {
-        return res
-          .status(400)
-          .json({ error: "Parâmetros obrigatórios: email, from, to" });
+        return res.status(400).json({ error: "Parâmetros obrigatórios: email, from, to" });
       }
 
       const result: KpiResponseDto = await KpiService.getHeadcount(
@@ -18,15 +16,13 @@ export class KpiController {
         String(from),
         String(to),
         String(scope),
-        includeMeta === "true"
+        includeMeta === "true",
       );
 
       return res.json(result satisfies KpiResponseDto);
     } catch (err) {
       console.error(err);
-      return res
-        .status(500)
-        .json({ error: "Erro interno ao calcular headcount" });
+      return res.status(500).json({ error: "Erro interno ao calcular headcount" });
     }
   }
 
@@ -35,9 +31,7 @@ export class KpiController {
       const { email, from, to, scope = "total", includeMeta } = req.query;
 
       if (!email || !from || !to) {
-        return res
-          .status(400)
-          .json({ error: "Parâmetros obrigatórios: email, from, to" });
+        return res.status(400).json({ error: "Parâmetros obrigatórios: email, from, to" });
       }
 
       const result: KpiResponseDto = await KpiService.getTurnover(
@@ -45,15 +39,13 @@ export class KpiController {
         String(from),
         String(to),
         String(scope),
-        includeMeta === "true"
+        includeMeta === "true",
       );
 
       return res.json(result satisfies KpiResponseDto);
     } catch (err) {
       console.error(err);
-      return res
-        .status(500)
-        .json({ error: "Erro interno ao calcular turnover" });
+      return res.status(500).json({ error: "Erro interno ao calcular turnover" });
     }
   }
 }

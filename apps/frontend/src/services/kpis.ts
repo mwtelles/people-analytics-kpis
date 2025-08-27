@@ -36,7 +36,7 @@ export const getHeadcount = async (
   from: string,
   to: string,
   scope: "total" | "grouped" | "hierarchy" = "total",
-  includeMeta = false
+  includeMeta = false,
 ): Promise<KpiResponse> => {
   const { data } = await api.get("/kpis/headcount", {
     params: { email, from, to, scope, includeMeta },
@@ -49,7 +49,7 @@ export const getTurnover = async (
   from: string,
   to: string,
   scope: "total" | "grouped" | "hierarchy" = "total",
-  includeMeta = false
+  includeMeta = false,
 ): Promise<KpiResponse> => {
   const { data } = await api.get("/kpis/turnover", {
     params: { email, from, to, scope, includeMeta },

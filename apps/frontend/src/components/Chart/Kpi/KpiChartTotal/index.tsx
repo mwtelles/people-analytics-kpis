@@ -14,13 +14,8 @@ interface Props {
   isPercentage?: boolean;
 }
 
-export default function KpiChartTotal({
-  title,
-  data = [],
-  isPercentage = false,
-}: Props) {
-  const toNivo = (points: Point[] = []) =>
-    points.map((p) => ({ x: p.month, y: p.value }));
+export default function KpiChartTotal({ title, data = [], isPercentage = false }: Props) {
+  const toNivo = (points: Point[] = []) => points.map((p) => ({ x: p.month, y: p.value }));
 
   const chartData = [
     {
@@ -119,7 +114,6 @@ export default function KpiChartTotal({
                   </div>
                 </div>
               )}
-
               layers={[
                 "grid",
                 "markers",

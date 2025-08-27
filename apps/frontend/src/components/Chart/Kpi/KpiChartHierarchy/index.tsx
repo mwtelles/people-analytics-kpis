@@ -32,16 +32,15 @@ export default function KpiChartHierarchy({
   metric,
   isPercentage = false,
 }: Props) {
-  const toNivo = (points?: Point[]) =>
-    (points ?? []).map((p) => ({ x: p.month, y: p.value }));
+  const toNivo = (points?: Point[]) => (points ?? []).map((p) => ({ x: p.month, y: p.value }));
 
   const chartData =
     reports.length > 0
       ? reports.map((rep) => ({
-        id: rep.name || `Report-${rep.id}`,
-        color: stringToColor(rep.name || String(rep.id)),
-        data: toNivo(rep.metrics?.[metric]),
-      }))
+          id: rep.name || `Report-${rep.id}`,
+          color: stringToColor(rep.name || String(rep.id)),
+          data: toNivo(rep.metrics?.[metric]),
+        }))
       : [];
 
   return (

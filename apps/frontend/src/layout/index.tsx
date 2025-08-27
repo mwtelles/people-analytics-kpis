@@ -2,8 +2,7 @@ import React from "react";
 import ChallengeLayout from "./challenge";
 import BoostLayout from "./boost";
 
-const FEATURE_ENTERPRISE =
-  import.meta.env.VITE_FEATURE_ENTERPRISE === "true";
+const FEATURE_ENTERPRISE = import.meta.env.VITE_FEATURE_ENTERPRISE === "true";
 
 interface LayoutProps {
   children: React.ReactNode;

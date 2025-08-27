@@ -15,4 +15,3 @@ export async function checkEmail(req: Request, res: Response) {
 
   return res.json({ valid: true, email: employee.email });
 }
-

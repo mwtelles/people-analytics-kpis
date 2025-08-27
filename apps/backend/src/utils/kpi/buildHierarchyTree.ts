@@ -6,7 +6,7 @@ export function buildHierarchyTree(
   employees: Employee[],
   leader: Employee,
   from: string,
-  to: string
+  to: string,
 ) {
   const build = (parent: Employee, rootId: number): any => {
     const children = employees.filter((e) => e.leaderId === parent.id);
@@ -18,13 +18,13 @@ export function buildHierarchyTree(
       status: parent.status,
       type: parent.leaderId === rootId ? "direct" : "indirect",
       metrics: { [metric]: buildMonthlySeries(metric, [parent], from, to) },
-      reports: children.map((c) => build(c, rootId))
+      reports: children.map((c) => build(c, rootId)),
     };
   };
 
   return {
     directReports: employees
       .filter((e) => e.leaderId === leader.id)
-      .map((c) => build(c, leader.id))
+      .map((c) => build(c, leader.id)),
   };
 }

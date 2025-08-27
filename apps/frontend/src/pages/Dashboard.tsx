@@ -19,7 +19,7 @@ export default function Dashboard() {
 
   const email = "daniellewinters@kpis.tech";
 
-  const { headcount, turnover, isLoading } = useKpis({
+  const { headcount, turnover } = useKpis({
     email,
     from,
     to,
@@ -70,12 +70,7 @@ export default function Dashboard() {
       {scope === "total" && (
         <>
           <KpiChart title="Headcount" scope="total" total={headcount.total} />
-          <KpiChart
-            title="Turnover"
-            scope="total"
-            total={turnover.total}
-            isPercentage
-          />
+          <KpiChart title="Turnover" scope="total" total={turnover.total} isPercentage />
         </>
       )}
 

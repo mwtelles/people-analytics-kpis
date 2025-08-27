@@ -5,7 +5,7 @@ import {
   TotalKpiDto,
   GroupedKpiDto,
   HierarchyKpiDto,
-  KpiResponseDto
+  KpiResponseDto,
 } from "../../dtos/kpi.dto";
 import { buildMonthlySeries, Metric } from "../../utils/kpi/buildMonthlySeries";
 import { splitEmployees } from "../../utils/kpi/splitEmployees";
@@ -17,7 +17,7 @@ export class KpiService {
     from: string,
     to: string,
     scope: string,
-    includeMeta: boolean
+    includeMeta: boolean,
   ): Promise<KpiResponseDto> {
     return this.getByMetric("headcount", email, from, to, scope, includeMeta);
   }
@@ -27,7 +27,7 @@ export class KpiService {
     from: string,
     to: string,
     scope: string,
-    includeMeta: boolean
+    includeMeta: boolean,
   ): Promise<KpiResponseDto> {
     return this.getByMetric("turnover", email, from, to, scope, includeMeta);
   }
@@ -38,7 +38,7 @@ export class KpiService {
     from: string,
     to: string,
     scope: string,
-    includeMeta: boolean
+    includeMeta: boolean,
   ): Promise<KpiResponseDto> {
     switch (scope) {
       case "grouped":
@@ -53,10 +53,10 @@ export class KpiService {
                 metric,
                 await this.getAllEmployees(email),
                 from,
-                to
-              )
-            }
-          }
+                to,
+              ),
+            },
+          },
         } as TotalKpiDto;
     }
   }
@@ -71,7 +71,7 @@ export class KpiService {
     metric: Metric,
     email: string,
     from: string,
-    to: string
+    to: string,
   ): Promise<GroupedKpiDto> {
     const leader = await Employee.findOne({ where: { email } });
     if (!leader) {
@@ -79,8 +79,8 @@ export class KpiService {
         aggregates: {
           direct: { [metric]: [] },
           indirect: { [metric]: [] },
-          total: { [metric]: [] }
-        }
+          total: { [metric]: [] },
+        },
       };
     }
 
@@ -91,8 +91,8 @@ export class KpiService {
       aggregates: {
         direct: { [metric]: buildMonthlySeries(metric, direct, from, to) },
         indirect: { [metric]: buildMonthlySeries(metric, indirect, from, to) },
-        total: { [metric]: buildMonthlySeries(metric, [...direct, ...indirect], from, to) }
-      }
+        total: { [metric]: buildMonthlySeries(metric, [...direct, ...indirect], from, to) },
+      },
     };
   }
 
@@ -101,7 +101,7 @@ export class KpiService {
     email: string,
     from: string,
     to: string,
-    includeMeta: boolean
+    includeMeta: boolean,
   ): Promise<HierarchyKpiDto> {
     const leader = await Employee.findOne({ where: { email } });
     if (!leader) {
@@ -111,8 +111,8 @@ export class KpiService {
         aggregates: {
           direct: { [metric]: [] },
           indirect: { [metric]: [] },
-          total: { [metric]: [] }
-        }
+          total: { [metric]: [] },
+        },
       };
     }
 
@@ -126,15 +126,15 @@ export class KpiService {
             name: leader.name,
             email: leader.email,
             position: leader.position,
-            status: leader.status
+            status: leader.status,
           }
         : null,
       hierarchy: buildHierarchyTree(metric, employees, leader, from, to),
       aggregates: {
         direct: { [metric]: buildMonthlySeries(metric, direct, from, to) },
         indirect: { [metric]: buildMonthlySeries(metric, indirect, from, to) },
-        total: { [metric]: buildMonthlySeries(metric, [...direct, ...indirect], from, to) }
-      }
+        total: { [metric]: buildMonthlySeries(metric, [...direct, ...indirect], from, to) },
+      },
     };
   }
 }

@@ -23,11 +23,7 @@ const COLORS = {
   indirect: "#d32f2f",
 };
 
-export default function KpiChartGrouped({
-  title,
-  data,
-  isPercentage = false,
-}: Props) {
+export default function KpiChartGrouped({ title, data, isPercentage = false }: Props) {
   const toNivo = (points?: Point[]) =>
     (points ?? [])
       .filter((p) => p.value !== null && p.value !== undefined)
@@ -87,11 +83,7 @@ export default function KpiChartGrouped({
               xScale={{ type: "point" }}
               yScale={{ type: "linear", min: 0, max: "auto" }}
               xFormat={(value) => formatMonth(String(value), "pt-BR")}
-              yFormat={(value) =>
-                isPercentage
-                  ? `${(value as number).toFixed(1)}%`
-                  : `${value}`
-              }
+              yFormat={(value) => (isPercentage ? `${(value as number).toFixed(1)}%` : `${value}`)}
               axisBottom={{
                 tickRotation: -35,
                 legend: "Mês",
@@ -126,9 +118,7 @@ export default function KpiChartGrouped({
                     boxShadow: "0 2px 6px rgba(0,0,0,0.15)",
                   }}
                 >
-                  <strong style={{ color: point.seriesColor }}>
-                    {point.seriesId}
-                  </strong>
+                  <strong style={{ color: point.seriesColor }}>{point.seriesId}</strong>
                   <br />
                   {point.data.xFormatted}: {point.data.yFormatted}
                 </div>

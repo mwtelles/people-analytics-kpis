@@ -47,7 +47,7 @@ export default function Home() {
         });
       }
     } catch (err: any) {
-      console.log('erro', err);
+      console.log("erro", err);
       if (err.response.data.valid === false) {
         setError("E-mail não encontrado na base.");
       } else {
@@ -57,7 +57,6 @@ export default function Home() {
       setLoading(false);
     }
   }
-
 
   return (
     <Container
@@ -147,7 +146,6 @@ export default function Home() {
           {error}
         </Alert>
       </Snackbar>
-
     </Container>
   );
 }

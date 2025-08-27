@@ -9,17 +9,13 @@ export function buildMonthlySeries(
   metric: Metric,
   list: Employee[],
   from: string,
-  to: string
+  to: string,
 ): KpiPoint[] {
   const [fromYear, fromMonth] = from.split("-").map(Number);
   const [toYear, toMonth] = to.split("-").map(Number);
   const series: KpiPoint[] = [];
 
-  for (
-    let y = fromYear, m = fromMonth - 1;
-    y < toYear || (y === toYear && m <= toMonth - 1);
-    m++
-  ) {
+  for (let y = fromYear, m = fromMonth - 1; y < toYear || (y === toYear && m <= toMonth - 1); m++) {
     if (m > 11) {
       y++;
       m = 0;
@@ -42,7 +38,7 @@ export function buildMonthlySeries(
 
     series.push({
       month: `${y}-${String(m + 1).padStart(2, "0")}`,
-      value
+      value,
     });
   }
   return series;
