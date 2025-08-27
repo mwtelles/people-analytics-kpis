@@ -19,6 +19,7 @@
         "@tanstack/react-router": "^1.131.27",
         "@tanstack/router-devtools": "^1.131.27",
         "@tanstack/zod-adapter": "^1.131.27",
+        "@untitled-ui/icons-react": "^0.1.4",
         "axios": "^1.11.0",
         "framer-motion": "^12.23.12",
         "phosphor-react": "^1.4.1",

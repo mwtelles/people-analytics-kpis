@@ -1,5 +1,3 @@
-import { useNavigate } from "@tanstack/react-router";
-import { useState } from "react";
 import {
   Container,
   Box,
@@ -12,53 +10,22 @@ import {
   Alert,
 } from "@mui/material";
 import { MailOutline } from "@mui/icons-material";
-import { checkEmail } from "../services/employees";
-import { AxiosError } from "axios";
 
-function defaultRange() {
-  const end = new Date();
-  const start = new Date();
-  start.setMonth(start.getMonth() - 11);
-  const fmt = (d: Date) => d.toISOString().slice(0, 10);
-  return {
-    from: fmt(new Date(start.getFullYear(), start.getMonth(), 1)),
-    to: fmt(new Date(end.getFullYear(), end.getMonth() + 1, 0)),
-  };
+interface Props {
+  email: string;
+  setEmail: (v: string) => void;
+  loading: boolean;
+  error: string | null;
+  onSubmit: (e: React.FormEvent) => void;
 }
 
-export default function Home() {
-  const [email, setEmail] = useState("");
-  const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
-  const { from, to } = defaultRange();
-
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    setError(null);
-    setLoading(true);
-
-    try {
-      const data = await checkEmail(email);
-
-      if (data.valid) {
-        navigate({
-          to: "/dashboard",
-          search: { email: data.email ?? email, from, to },
-        });
-      }
-    } catch (err: unknown) {
-      console.log("erro", err);
-      if (err instanceof AxiosError && err.response?.data?.valid === false) {
-        setError("E-mail não encontrado na base.");
-      } else {
-        setError("Erro de conexão com o servidor.");
-      }
-    } finally {
-      setLoading(false);
-    }
-  }
-
+export default function ChallengeView({
+  email,
+  setEmail,
+  loading,
+  error,
+  onSubmit,
+}: Props) {
   return (
     <Container
       maxWidth="sm"
@@ -95,7 +62,7 @@ export default function Home() {
           </Typography>
         </Box>
 
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={onSubmit}>
           <TextField
             type="email"
             label="E-mail"
@@ -140,7 +107,7 @@ export default function Home() {
       <Snackbar
         open={!!error}
         autoHideDuration={4000}
-        onClose={() => setError(null)}
+        onClose={() => setEmail("")}
         anchorOrigin={{ vertical: "top", horizontal: "center" }}
       >
         <Alert severity="error" variant="filled" sx={{ width: "100%" }}>
