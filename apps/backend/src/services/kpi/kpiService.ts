@@ -1,11 +1,6 @@
 import { Employee } from "../../models/employee";
 import { EmployeeRepository } from "../../repositories/employee";
-import {
-  TotalKpiDto,
-  GroupedKpiDto,
-  HierarchyKpiDto,
-  KpiResponseDto,
-} from "../../dtos/kpi.dto";
+import { TotalKpiDto, GroupedKpiDto, HierarchyKpiDto, KpiResponseDto } from "../../dtos/kpi.dto";
 import { buildMonthlySeries, Metric } from "../../utils/kpi/buildMonthlySeries";
 import { splitEmployees } from "../../utils/kpi/splitEmployees";
 import { buildHierarchyTree } from "../../utils/kpi/buildHierarchyTree";

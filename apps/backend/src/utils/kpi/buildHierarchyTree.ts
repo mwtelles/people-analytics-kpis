@@ -9,7 +9,6 @@ export function buildHierarchyTree(
   from: string,
   to: string,
 ) {
-  
   const build = (parent: Employee, rootId: number): HierarchyNodeDto => {
     const children = employees.filter((e) => e.leaderId === parent.id);
     return {

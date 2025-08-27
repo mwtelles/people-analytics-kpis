@@ -61,7 +61,4 @@ export interface HierarchyKpiResponse {
   };
 }
 
-export type KpiResponse =
-  | TotalKpiResponse
-  | GroupedKpiResponse
-  | HierarchyKpiResponse;
+export type KpiResponse = TotalKpiResponse | GroupedKpiResponse | HierarchyKpiResponse;
