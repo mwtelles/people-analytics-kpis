@@ -16,11 +16,15 @@ export const Headline = styled.h1`
   font-size: 3rem;
   font-weight: 800;
   line-height: 1.2;
-  color: #fff;
+  color: ${({ theme }) => theme.colors.text};
   text-align: center;
 
   span {
-    background: linear-gradient(90deg, #00b4d8, #0077b6);
+    background: linear-gradient(
+      90deg,
+      ${({ theme }) => theme.colors.primary},
+      ${({ theme }) => theme.colors.primaryHover}
+    );
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
   }
@@ -32,12 +36,12 @@ export const Headline = styled.h1`
 
 export const Subheadline = styled.p`
   font-size: 1.25rem;
-  color: #bbb;
+  color: ${({ theme }) => theme.colors.textSecondary};
   max-width: 700px;
   text-align: center;
 
   strong {
-    color: #fff;
+    color: ${({ theme }) => theme.colors.text};
   }
 
   @media (max-width: 768px) {
@@ -51,30 +55,30 @@ export const Divider = styled.div`
   justify-content: center;
   gap: 1rem;
 
-  color: #888;
+  color: ${({ theme }) => theme.colors.textSecondary};
   font-size: 0.9rem;
   letter-spacing: 0.5px;
   width: 100%;
   max-width: 480px;
 
   span {
-    background: rgba(15, 20, 30, 0.9);
+    background: ${({ theme }) => theme.colors.overlayStrong};
     padding: 0.4rem 1rem;
     border-radius: 6px;
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    border: 1px solid ${({ theme }) => theme.colors.borderSubtle};
   }
 `;
 
 export const Card = styled.div`
-  background: rgba(15, 20, 30, 0.75);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: ${({ theme }) => theme.colors.overlay};
+  border: 1px solid ${({ theme }) => theme.colors.borderSoft};
   backdrop-filter: blur(25px);
   border-radius: 20px;
   padding: 2rem;
   width: 100%;
   max-width: 600px;
 
-  box-shadow: 0 0 50px rgba(0, 180, 216, 0.15);
+  box-shadow: 0 0 50px ${({ theme }) => theme.colors.glowSecondary};
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
@@ -88,7 +92,11 @@ export const Card = styled.div`
     transform: translateX(-50%);
     width: 400px;
     height: 200px;
-    background: radial-gradient(circle, rgba(0, 180, 216, 0.25), transparent 70%);
+    background: radial-gradient(
+      circle,
+      ${({ theme }) => theme.colors.glowPrimary} 0%,
+      transparent 70%
+    );
     filter: blur(80px);
     z-index: -1;
   }
@@ -96,11 +104,11 @@ export const Card = styled.div`
 
 export const FormIntro = styled.p`
   font-size: 1rem;
-  color: #aaa;
+  color: ${({ theme }) => theme.colors.textSecondary};
   text-align: center;
 
   strong {
-    color: #fff;
+    color: ${({ theme }) => theme.colors.text};
   }
 `;
 
@@ -115,20 +123,21 @@ export const InputWrapper = styled.div`
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  background: rgba(0, 0, 0, 0.4);
+  background: ${({ theme }) => theme.colors.overlayInput};
   padding: 1rem 1.25rem;
   border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid ${({ theme }) => theme.colors.borderSoft};
   transition: border-color 0.3s ease, box-shadow 0.3s ease;
 
   &:focus-within {
-    border-color: #00b4d8;
-    box-shadow: 0 0 12px rgba(0, 180, 216, 0.4);
+    border-color: ${({ theme }) => theme.colors.primary};
+    box-shadow: 0 0 12px ${({ theme }) => theme.colors.glowPrimary};
   }
 
   svg {
     flex-shrink: 0;
     opacity: 0.9;
+    color: ${({ theme }) => theme.colors.primary};
   }
 `;
 
@@ -138,41 +147,72 @@ export const Input = styled.input`
   outline: none;
   font-size: 1rem;
   background: transparent;
-  color: #fff;
+  color: ${({ theme }) => theme.colors.text};
 
   &::placeholder {
-    color: #777;
+    color: ${({ theme }) => theme.colors.textSecondary};
   }
 `;
 
 export const SubmitButton = styled.button`
-  padding: 1rem;
+  position: relative;
+  overflow: hidden;
+
+  padding: 0.5rem 1rem;
+  height: 50px;
   border-radius: 12px;
   border: none;
   font-weight: 600;
   font-size: 1rem;
   cursor: pointer;
-  background: rgba(252, 252, 252, 0.2);
-  color: white;
-  transition: all 0.25s ease;
+
+  background: ${({ theme }) => theme.colors.buttonGlass};
+  color: ${({ theme }) => theme.colors.text};
+  transition: transform 0.3s ease;
 
   &:hover:not(:disabled) {
-    background: #0077b6;
     transform: translateY(-2px);
+    color: #fff;
   }
 
   &:disabled {
     opacity: 0.6;
     cursor: not-allowed;
   }
+
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+
+    background: linear-gradient(
+      120deg,
+      rgba(255, 255, 255, 0.12) 0%,
+      rgba(255, 255, 255, 0.04) 40%,
+      rgba(255, 255, 255, 0.12) 80%
+    );
+
+    background-size: 200% 100%;
+    background-position: -120% 0;
+
+    opacity: 0;
+    transition: opacity 0.4s ease, background-position 1.2s ease-in-out;
+    pointer-events: none;
+  }
+
+  &:hover::before {
+    opacity: 1;
+    background-position: 120% 0;
+  }
 `;
 
+
 export const ErrorBox = styled.div`
-  color: #ff6b6b;
+  color: ${({ theme }) => theme.colors.error};
   font-weight: 500;
   text-align: center;
   font-size: 0.9rem;
 `;
 
-export const Mailicon = styled(Mail04)`
-`;
+export const Mailicon = styled(Mail04)``;

@@ -1,6 +1,8 @@
 import { motion } from "framer-motion";
 import { MailOutline } from "@mui/icons-material";
 import * as S from "./style";
+import { EmailInput } from "../../../../components/EmailInput";
+import Spinner from "../../../../components/Loading/Spinner";
 
 interface Props {
   email: string;
@@ -10,16 +12,11 @@ interface Props {
   onSubmit: (e: React.FormEvent) => void;
 }
 
-export default function BoostView({
-  email,
-  setEmail,
-  loading,
-  error,
-  onSubmit,
-}: Props) {
+export default function BoostView({ email, setEmail, loading, error, onSubmit }: Props) {
   return (
     <S.Wrapper>
       <S.Headline
+        data-tour="headline"
         as={motion.h1}
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
@@ -34,8 +31,8 @@ export default function BoostView({
         animate={{ opacity: 1 }}
         transition={{ delay: 0.2 }}
       >
-        Monitore <strong>Headcount</strong> e <strong>Turnover</strong> com
-        dashboards claros e intuitivos.
+        Monitore <strong>Headcount</strong> e <strong>Turnover</strong> com dashboards claros e
+        intuitivos.
       </S.Subheadline>
 
       <S.Divider>
@@ -53,23 +50,21 @@ export default function BoostView({
         </S.FormIntro>
 
         <S.Form onSubmit={onSubmit}>
-          <S.InputWrapper>
-            <S.Mailicon />
-            <S.Input
-              type="email"
-              placeholder="seu.email@empresa.com"
-              required
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-          </S.InputWrapper>
+          <EmailInput
+            data-tour="email-input"
+            value={email}
+            onChange={setEmail}
+            required
+            domainWhitelist={["kpis.tech"]}
+            externalError={error}
+          />
 
-          <S.SubmitButton type="submit" disabled={loading}>
-            {loading ? "Verificando..." : "Ver KPIs"}
+          <S.SubmitButton data-tour="submit-btn" type="submit" disabled={loading}>
+            {loading ? <Spinner /> : "Ver KPIs"}
           </S.SubmitButton>
         </S.Form>
 
-        {error && <S.ErrorBox>⚠ {error}</S.ErrorBox>}
+        {error && <S.ErrorBox>{error}</S.ErrorBox>}
       </S.Card>
     </S.Wrapper>
   );

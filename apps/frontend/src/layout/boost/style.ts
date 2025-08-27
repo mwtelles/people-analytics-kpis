@@ -1,5 +1,5 @@
-import styled, { keyframes, DefaultTheme } from "styled-components";
-import { BookOpen02 } from "@untitled-ui/icons-react";
+import styled from "styled-components";
+import { BookOpen02, Menu01, Moon01, Sun, X } from "@untitled-ui/icons-react";
 import { GitHub } from "@mui/icons-material";
 
 interface VariantProps {
@@ -14,17 +14,16 @@ export const Container = styled.div<VariantProps>`
   color: ${({ theme }) => theme.colors.text};
   overflow: hidden;
 
-  ${({ $variant }) =>
+  ${({ $variant, theme }) =>
     $variant === "landing"
       ? `
-    background: radial-gradient(circle at top, #0a0f1c, #05070d);
+    background: ${theme.colors.landingBackground};
 
     &::before {
       content: "";
       position: absolute;
       inset: 0;
-      background-image: linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
-                        linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
+      background-image: ${theme.colors.overlayGrid};
       background-size: 40px 40px;
       opacity: 0.25;
       z-index: 0;
@@ -38,7 +37,7 @@ export const Container = styled.div<VariantProps>`
       transform: translateX(-50%);
       width: 1000px;
       height: 600px;
-      background: radial-gradient(circle, rgba(0,180,216,0.25), transparent 70%);
+      background: ${theme.colors.glowPrimaryRadial};
       filter: blur(160px);
       z-index: 0;
     }
@@ -50,15 +49,14 @@ export const Container = styled.div<VariantProps>`
       right: -200px;
       width: 500px;
       height: 500px;
-      background: radial-gradient(circle, #0077b644 0%, transparent 70%);
+      background: ${theme.colors.glowSecondaryRadial};
       filter: blur(140px);
       z-index: 0;
       animation: float 14s ease-in-out infinite alternate;
     }
   `
       : `
-    background: ${({ theme }: { theme: DefaultTheme }) =>
-      `radial-gradient(circle at top left, ${theme.colors.background}, ${theme.colors.backgroundContent})`};
+    background: radial-gradient(circle at top left, ${theme.colors.background}, ${theme.colors.backgroundContent});
   `}
 
   > * {
@@ -67,22 +65,25 @@ export const Container = styled.div<VariantProps>`
   }
 
   @keyframes float {
-    from { transform: translateY(0) translateX(0); }
-    to   { transform: translateY(-40px) translateX(30px); }
+    from {
+      transform: translateY(0) translateX(0);
+    }
+    to {
+      transform: translateY(-40px) translateX(30px);
+    }
   }
 `;
 
-
-
 export const Header = styled.header<VariantProps>`
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
   align-items: center;
+  height: 64px;
   padding: 1.25rem 2rem;
   width: 100%;
   z-index: 100;
 
-  ${({ $variant }) =>
+  ${({ $variant, theme }) =>
     $variant === "landing"
       ? `
     position: absolute;
@@ -92,19 +93,46 @@ export const Header = styled.header<VariantProps>`
       : `
     position: sticky;
     top: 0;
-    background: rgba(0,0,0,0.6);
+    background: ${theme.colors.overlay};
     backdrop-filter: blur(12px);
-    border-bottom: 1px solid rgba(255,255,255,0.1);
+    border-bottom: 1px solid ${theme.colors.borderSoft};
   `}
 `;
 
 export const Nav = styled.nav`
+  grid-column: 1;
+  justify-self: start;
+
   display: flex;
+  align-items: center;
   gap: 1.5rem;
 
   @media (max-width: 768px) {
     display: none;
   }
+`;
+
+export const LogoWrapper = styled.div`
+  grid-column: 2;
+  justify-self: center;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 1.1rem;
+`;
+
+export const Actions = styled.div`
+  grid-column: 3;
+  justify-self: end;
+
+  display: flex;
+  align-items: center;
+  gap: 1rem;
 `;
 
 export const NavItem = styled.a`
@@ -129,12 +157,6 @@ export const NavItem = styled.a`
   }
 `;
 
-export const Actions = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-`;
-
 export const ThemeButton = styled.button`
   background: none;
   border: none;
@@ -145,7 +167,9 @@ export const ThemeButton = styled.button`
   align-items: center;
   justify-content: center;
 
-  transition: color 0.25s ease, transform 0.25s ease;
+  transition:
+    color 0.25s ease,
+    transform 0.25s ease;
 
   &:hover {
     color: ${({ theme }) => theme.colors.primary};
@@ -255,19 +279,22 @@ export const Footer = styled.footer<VariantProps>`
     color: ${({ theme }) => theme.colors.primary};
   }
 
-  ${({ $variant }) =>
+  ${({ $variant, theme }) =>
     $variant === "landing"
       ? `
     background: transparent;
-    border-top: 1px solid rgba(255,255,255,0.05);
+    border-top: 1px solid ${theme.colors.borderSubtle};
   `
       : `
-    background: rgba(0,0,0,0.6);
+    background: ${theme.colors.overlay};
     backdrop-filter: blur(12px);
-    border-top: 1px solid rgba(255,255,255,0.1);
+    border-top: 1px solid ${theme.colors.borderSoft};
   `}
 `;
 
 export const DocIcon = styled(BookOpen02)``;
 export const RepoIcon = styled(GitHub)``;
-export const LogoWrapper = styled.div``;
+export const CloseIcon = styled(X)``;
+export const LightModeIcon = styled(Sun)``;
+export const DarkModeIcon = styled(Moon01)``;
+export const MenuIcon = styled(Menu01)``;

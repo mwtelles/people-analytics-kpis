@@ -19,13 +19,7 @@ interface Props {
   onSubmit: (e: React.FormEvent) => void;
 }
 
-export default function ChallengeView({
-  email,
-  setEmail,
-  loading,
-  error,
-  onSubmit,
-}: Props) {
+export default function ChallengeView({ email, setEmail, loading, error, onSubmit }: Props) {
   return (
     <Container
       maxWidth="sm"

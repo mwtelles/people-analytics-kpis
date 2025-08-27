@@ -3,9 +3,7 @@ import { ThemeProvider } from "styled-components";
 import { ThemeModeContext, ThemeMode } from "./context";
 import { lightTheme, darkTheme } from "../../theme";
 
-export const ThemeModeProvider: React.FC<{ children: React.ReactNode }> = ({
-  children,
-}) => {
+export const ThemeModeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [mode, setMode] = useState<ThemeMode>(() => {
     const stored = localStorage.getItem("theme_mode");
     return stored === "dark" ? "dark" : "light";
@@ -19,9 +17,7 @@ export const ThemeModeProvider: React.FC<{ children: React.ReactNode }> = ({
 
   return (
     <ThemeModeContext.Provider value={{ mode, toggleMode }}>
-      <ThemeProvider theme={mode === "light" ? lightTheme : darkTheme}>
-        {children}
-      </ThemeProvider>
+      <ThemeProvider theme={mode === "light" ? lightTheme : darkTheme}>{children}</ThemeProvider>
     </ThemeModeContext.Provider>
   );
 };

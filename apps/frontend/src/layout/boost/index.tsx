@@ -1,24 +1,20 @@
 import React, { useState } from "react";
 import * as S from "./style";
-import { GithubLogo, BookOpen, List, X, Sun, Moon } from "phosphor-react";
+import { GithubLogo, BookOpen } from "phosphor-react";
 import Logo from "../../components/Logo";
 import { useThemeMode } from "../../contexts/ThemeMode";
 import { useNavigate } from "@tanstack/react-router";
+import { motion } from "framer-motion";
 
 interface Props {
   children: React.ReactNode;
   variant?: "landing" | "app";
 }
 
-const API_DOCS_URL =
-  import.meta.env.VITE_API_DOCS_URL || "http://localhost:3000/api/docs";
-const GITHUB_REPO =
-  "https://github.com/mwtelles/people-analytics-kpis";
+const API_DOCS_URL = import.meta.env.VITE_API_DOCS_URL || "http://localhost:3000/api/docs";
+const GITHUB_REPO = "https://github.com/mwtelles/people-analytics-kpis";
 
-export default function BoostLayout({
-  children,
-  variant = "landing",
-}: Props) {
+export default function BoostLayout({ children, variant = "landing" }: Props) {
   const [menuOpen, setMenuOpen] = useState(false);
   const { mode, toggleMode } = useThemeMode();
   const navigate = useNavigate();
@@ -26,40 +22,36 @@ export default function BoostLayout({
   return (
     <S.Container $variant={variant}>
       <S.Header $variant={variant}>
+        <S.Nav>
+          <S.NavItem data-tour="repo-link" href={GITHUB_REPO} target="_blank" rel="noopener noreferrer">
+            <S.RepoIcon />
+            Repositório
+          </S.NavItem>
+          <S.NavItem data-tour="docs-link" href={API_DOCS_URL} target="_blank" rel="noopener noreferrer">
+            <S.DocIcon />
+            API Docs
+          </S.NavItem>
+        </S.Nav>
+
         <S.LogoWrapper onClick={() => navigate({ to: "/" })}>
           <Logo />
         </S.LogoWrapper>
 
-        <S.Nav>
-          <S.NavItem
-            href={API_DOCS_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <S.DocIcon />
-            API Docs
-          </S.NavItem>
-          <S.NavItem
-            href={GITHUB_REPO}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <S.RepoIcon />
-            Repositório
-          </S.NavItem>
-        </S.Nav>
-
         <S.Actions>
           <S.ThemeButton onClick={toggleMode} aria-label="Toggle theme">
-            {mode === "light" ? (
-              <Moon size={22} weight="duotone" />
-            ) : (
-              <Sun size={22} weight="duotone" />
-            )}
+            <motion.div
+              key={mode}
+              initial={{ rotate: 0, scale: 0.8, opacity: 0 }}
+              animate={{ rotate: 360, scale: 1, opacity: 1 }}
+              exit={{ rotate: -180, scale: 0.8, opacity: 0 }}
+              transition={{ duration: 0.6, ease: "easeInOut" }}
+            >
+              {mode === "light" ? <S.DarkModeIcon /> : <S.LightModeIcon />}
+            </motion.div>
           </S.ThemeButton>
 
           <S.MenuButton onClick={() => setMenuOpen(true)}>
-            <List size={28} />
+            <S.MenuIcon />
           </S.MenuButton>
         </S.Actions>
       </S.Header>
@@ -67,25 +59,25 @@ export default function BoostLayout({
       {menuOpen && (
         <S.MobileMenu>
           <S.CloseButton onClick={() => setMenuOpen(false)}>
-            <X size={28} />
+            <S.CloseIcon />
           </S.CloseButton>
 
           <S.MobileNav>
-            <S.NavItem
-              href={API_DOCS_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={() => setMenuOpen(false)}
-            >
-              <BookOpen size={22} /> API Docs
-            </S.NavItem>
             <S.NavItem
               href={GITHUB_REPO}
               target="_blank"
               rel="noopener noreferrer"
               onClick={() => setMenuOpen(false)}
             >
-              <GithubLogo size={22} /> Repositório
+              <S.RepoIcon /> Repositório
+            </S.NavItem>
+            <S.NavItem
+              href={API_DOCS_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => setMenuOpen(false)}
+            >
+              <S.DocIcon /> API Docs
             </S.NavItem>
           </S.MobileNav>
         </S.MobileMenu>

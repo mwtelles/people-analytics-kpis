@@ -17,8 +17,7 @@ export const FloatingButton = styled(motion.button)<{ $active?: boolean }>`
   height: 60px;
   border-radius: 50%;
   border: 1px solid
-    ${({ theme, $active }) =>
-      $active ? theme.colors.primary : "rgba(255,255,255,0.08)"};
+    ${({ theme, $active }) => ($active ? theme.colors.primary : "rgba(255,255,255,0.08)")};
   cursor: pointer;
 
   display: flex;
@@ -30,8 +29,7 @@ export const FloatingButton = styled(motion.button)<{ $active?: boolean }>`
   backdrop-filter: blur(16px) saturate(140%);
   -webkit-backdrop-filter: blur(16px) saturate(140%);
 
-  color: ${({ theme, $active }) =>
-    $active ? theme.colors.primary : theme.colors.textSecondary};
+  color: ${({ theme, $active }) => ($active ? theme.colors.primary : theme.colors.textSecondary)};
 
   transition: all 0.3s ease;
 
@@ -66,6 +64,5 @@ export const Text = styled.span<{ $active?: boolean }>`
   letter-spacing: 0.5px;
   text-transform: uppercase;
 
-  color: ${({ theme, $active }) =>
-    $active ? theme.colors.primary : theme.colors.textSecondary};
+  color: ${({ theme, $active }) => ($active ? theme.colors.primary : theme.colors.textSecondary)};
 `;

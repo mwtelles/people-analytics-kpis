@@ -25,6 +25,21 @@ export const darkTheme: DefaultTheme = {
     warningHover: "#f59e0b",
     error: "#ef4444",
     errorHover: "#dc2626",
+
+    borderSoft: "rgba(255, 255, 255, 0.08)",
+    borderSubtle: "rgba(255, 255, 255, 0.05)",
+    overlayGrid: `linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px)`,
+    landingBackground: "radial-gradient(circle at top, #0a0f1c, #05070d)",
+    glowPrimary: "rgba(56, 189, 248, 0.25)",
+    glowSecondary: "rgba(56, 189, 248, 0.15)",
+    glowPrimaryRadial: "radial-gradient(circle, rgba(56,189,248,0.25), transparent 70%)",
+    glowSecondaryRadial: "radial-gradient(circle, rgba(0,119,182,0.25), transparent 70%)",
+    buttonGlass: "rgba(255, 255, 255, 0.12)",
+    overlay: "rgba(15, 20, 30, 0.75)",
+    overlayStrong: "rgba(15, 20, 30, 0.9)",
+    overlayInput: "rgba(0, 0, 0, 0.4)",
+
   },
   font: {
     family: "'Inter', sans-serif",

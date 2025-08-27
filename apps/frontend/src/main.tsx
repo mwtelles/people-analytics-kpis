@@ -7,6 +7,7 @@ import { GlobalStyle } from "./theme/global";
 import Layout from "./layout";
 import { FeatureFlagsProvider } from "./contexts/FeatureFlags";
 import { ThemeModeProvider } from "./contexts/ThemeMode";
+import { TourProvider } from "./contexts/Tour";
 
 const queryClient = new QueryClient();
 const router = createRouter({ routeTree, context: { queryClient } });
@@ -22,10 +23,12 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
     <QueryClientProvider client={queryClient}>
       <FeatureFlagsProvider>
         <ThemeModeProvider>
-          <GlobalStyle />
-          <RouterProvider router={router} />
+          <TourProvider>
+            <GlobalStyle />
+            <RouterProvider router={router} />
+          </TourProvider>
         </ThemeModeProvider>
       </FeatureFlagsProvider>
     </QueryClientProvider>
-  </React.StrictMode>
+  </React.StrictMode>,
 );

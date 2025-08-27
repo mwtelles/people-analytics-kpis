@@ -9,6 +9,4 @@ export interface FeatureFlagsContextType {
   toggleChallenge: () => void;
 }
 
-export const FeatureFlagsContext = createContext<FeatureFlagsContextType | undefined>(
-  undefined
-);
+export const FeatureFlagsContext = createContext<FeatureFlagsContextType | undefined>(undefined);

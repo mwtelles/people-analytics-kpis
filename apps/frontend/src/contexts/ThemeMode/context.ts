@@ -7,6 +7,4 @@ export interface ThemeModeContextType {
   toggleMode: () => void;
 }
 
-export const ThemeModeContext = createContext<ThemeModeContextType | undefined>(
-  undefined
-);
+export const ThemeModeContext = createContext<ThemeModeContextType | undefined>(undefined);

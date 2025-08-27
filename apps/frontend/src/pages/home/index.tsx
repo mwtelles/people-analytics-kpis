@@ -44,7 +44,7 @@ export default function Home() {
       }
     } catch (err: unknown) {
       if (err instanceof AxiosError && err.response?.data?.valid === false) {
-        setError("E-mail não encontrado na base.");
+        setError("E-mail não encontrado.");
       } else {
         setError("Erro de conexão com o servidor.");
       }
@@ -55,9 +55,5 @@ export default function Home() {
 
   const viewProps = { email, setEmail, loading, error, onSubmit: handleSubmit };
 
-  return challenge ? (
-    <BoostView {...viewProps} />
-  ) : (
-    <ChallengeView {...viewProps} />
-  );
+  return challenge ? <BoostView {...viewProps} /> : <ChallengeView {...viewProps} />;
 }

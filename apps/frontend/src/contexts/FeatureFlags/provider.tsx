@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { FeatureFlagsContext } from "./context";
 
-export const FeatureFlagsProvider: React.FC<{ children: React.ReactNode }> = ({
-  children,
-}) => {
+export const FeatureFlagsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [challenge, setChallenge] = useState<boolean>(() => {
     const stored = localStorage.getItem("feature_challenge");
     return stored ? stored === "true" : false;

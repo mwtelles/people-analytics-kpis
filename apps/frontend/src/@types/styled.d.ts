@@ -26,6 +26,19 @@ declare module "styled-components" {
       warningHover: string;
       error: string;
       errorHover: string;
+
+      overlay: string;
+      overlayStrong: string;
+      overlayInput: string;
+      borderSoft: string;
+      borderSubtle: string;
+      glowPrimary: string;
+      glowSecondary: string;
+      buttonGlass: string;
+      overlayGrid: string;
+      landingBackground: string;
+      glowPrimaryRadial: string;
+      glowSecondaryRadial: string;
     };
     font: {
       family: string;
