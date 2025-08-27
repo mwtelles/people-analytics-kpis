@@ -2,6 +2,7 @@ import KpiChartTotal from "./KpiChartTotal";
 import KpiChartGrouped from "./KpiChartGrouped";
 import KpiChartHierarchy from "./KpiChartHierarchy";
 import { SeriesPoint } from "../../../services/kpis";
+import { AnimatePresence, motion } from "framer-motion";
 
 export type Scope = "total" | "grouped" | "hierarchy";
 
@@ -41,40 +42,44 @@ interface HierarchyProps {
 type KpiChartProps = TotalProps | GroupedProps | HierarchyProps;
 
 export default function KpiChart(props: KpiChartProps) {
-  switch (props.scope) {
-    case "total":
-      return (
-        <KpiChartTotal
-          title={props.title}
-          data={props.total ?? []}
-          isPercentage={props.isPercentage}
-        />
-      );
+  return (
+    <AnimatePresence mode="wait">
+      <motion.div
+        key={props.scope} // 👈 animação dispara sempre que o tipo muda
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: -20 }}
+        transition={{ duration: 0.3, ease: "easeInOut" }}
+      >
+        {props.scope === "total" && (
+          <KpiChartTotal
+            title={props.title}
+            data={props.total ?? []}
+            isPercentage={props.isPercentage}
+          />
+        )}
 
-    case "grouped":
-      return (
-        <KpiChartGrouped
-          title={props.title}
-          data={{
-            total: props.total ?? [],
-            direct: props.direct ?? [],
-            indirect: props.indirect ?? [],
-          }}
-          isPercentage={props.isPercentage}
-        />
-      );
+        {props.scope === "grouped" && (
+          <KpiChartGrouped
+            title={props.title}
+            data={{
+              total: props.total ?? [],
+              direct: props.direct ?? [],
+              indirect: props.indirect ?? [],
+            }}
+            isPercentage={props.isPercentage}
+          />
+        )}
 
-    case "hierarchy":
-      return (
-        <KpiChartHierarchy
-          title={props.title}
-          reports={props.reports ?? []}
-          metric={props.metric}
-          isPercentage={props.isPercentage}
-        />
-      );
-
-    default:
-      return null;
-  }
+        {props.scope === "hierarchy" && (
+          <KpiChartHierarchy
+            title={props.title}
+            reports={props.reports ?? []}
+            metric={props.metric}
+            isPercentage={props.isPercentage}
+          />
+        )}
+      </motion.div>
+    </AnimatePresence>
+  );
 }

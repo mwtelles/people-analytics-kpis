@@ -1,6 +1,7 @@
 import { ResponsiveLine } from "@nivo/line";
 import { Card, CardContent, Typography, Box } from "@mui/material";
 import { formatMonth } from "../../../../utils/date";
+import { formatValue } from "../../../../utils/formatValue";
 
 interface Point {
   month: string;
@@ -33,9 +34,6 @@ export default function KpiChartHierarchy({
 }: Props) {
   const toNivo = (points?: Point[]) =>
     (points ?? []).map((p) => ({ x: p.month, y: p.value }));
-
-  const formatValue = (val: number) =>
-    isPercentage ? `${val.toFixed(1)}%` : `${val}`;
 
   const chartData =
     reports.length > 0
@@ -88,7 +86,7 @@ export default function KpiChartHierarchy({
                 legend: isPercentage ? "Percentual (%)" : "Qtd. Pessoas",
                 legendOffset: -60,
                 legendPosition: "middle",
-                format: formatValue,
+                format: (val: number) => formatValue(val, isPercentage),
               }}
               enablePoints
               pointSize={7}

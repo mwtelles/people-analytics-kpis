@@ -8,8 +8,11 @@ import {
   Button,
   Paper,
   InputAdornment,
+  Snackbar,
+  Alert,
 } from "@mui/material";
 import { MailOutline } from "@mui/icons-material";
+import { checkEmail } from "../services/employees";
 
 function defaultRange() {
   const end = new Date();
@@ -24,8 +27,37 @@ function defaultRange() {
 
 export default function Home() {
   const [email, setEmail] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { from, to } = defaultRange();
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setError(null);
+    setLoading(true);
+
+    try {
+      const data = await checkEmail(email);
+
+      if (data.valid) {
+        navigate({
+          to: "/dashboard",
+          search: { email: data.email ?? email, from, to },
+        });
+      }
+    } catch (err: any) {
+      console.log('erro', err);
+      if (err.response.data.valid === false) {
+        setError("E-mail não encontrado na base.");
+      } else {
+        setError("Erro de conexão com o servidor.");
+      }
+    } finally {
+      setLoading(false);
+    }
+  }
+
 
   return (
     <Container
@@ -34,8 +66,7 @@ export default function Home() {
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        minHeight: "100vh",
-        py: 4,
+        minHeight: "calc(100vh - 20vh)",
       }}
     >
       <Paper
@@ -64,15 +95,7 @@ export default function Home() {
           </Typography>
         </Box>
 
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            navigate({
-              to: "/dashboard",
-              search: { email, from, to },
-            });
-          }}
-        >
+        <form onSubmit={handleSubmit}>
           <TextField
             type="email"
             label="E-mail"
@@ -96,6 +119,7 @@ export default function Home() {
             type="submit"
             fullWidth
             size="large"
+            disabled={loading}
             sx={{
               py: 1.5,
               textTransform: "none",
@@ -108,10 +132,22 @@ export default function Home() {
               },
             }}
           >
-            Ver KPIs
+            {loading ? "Verificando..." : "Ver KPIs"}
           </Button>
         </form>
       </Paper>
+
+      <Snackbar
+        open={!!error}
+        autoHideDuration={4000}
+        onClose={() => setError(null)}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+      >
+        <Alert severity="error" variant="filled" sx={{ width: "100%" }}>
+          {error}
+        </Alert>
+      </Snackbar>
+
     </Container>
   );
 }

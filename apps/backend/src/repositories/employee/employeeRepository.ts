@@ -31,4 +31,8 @@ export class EmployeeRepository {
     });
     return employees;
   }
+
+  static async findByEmail(email: string) {
+    return Employee.findOne({ where: { email } });
+  }
 }

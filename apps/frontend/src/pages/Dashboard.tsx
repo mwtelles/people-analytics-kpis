@@ -40,9 +40,6 @@ export default function Dashboard() {
           <Typography variant="h4" gutterBottom>
             Dashboard KPIs
           </Typography>
-          <Typography variant="subtitle1" color="text.secondary">
-            Escopo atual: <strong>{scope}</strong>
-          </Typography>
         </Box>
 
         <Box display="flex" gap={2}>
