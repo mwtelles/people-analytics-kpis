@@ -1,7 +1,7 @@
 import KpiChartTotal from "./KpiChartTotal";
 import KpiChartGrouped from "./KpiChartGrouped";
 import KpiChartHierarchy from "./KpiChartHierarchy";
-import { SeriesPoint } from "../../../services/kpis";
+import { KpiPoint } from "../../../interfaces/kpi";
 import { AnimatePresence, motion } from "framer-motion";
 
 export type Scope = "total" | "grouped" | "hierarchy";
@@ -10,16 +10,16 @@ interface TotalProps {
   title: string;
   scope: "total";
   isPercentage?: boolean;
-  total?: SeriesPoint[];
+  total?: KpiPoint[];
 }
 
 interface GroupedProps {
   title: string;
   scope: "grouped";
   isPercentage?: boolean;
-  total?: SeriesPoint[];
-  direct?: SeriesPoint[];
-  indirect?: SeriesPoint[];
+  total?: KpiPoint[];
+  direct?: KpiPoint[];
+  indirect?: KpiPoint[];
 }
 
 interface HierarchyProps {
@@ -32,8 +32,8 @@ interface HierarchyProps {
     position?: string;
     status: string;
     metrics: {
-      headcount?: SeriesPoint[];
-      turnover?: SeriesPoint[];
+      headcount?: KpiPoint[];
+      turnover?: KpiPoint[];
     };
   }[];
   metric: "headcount" | "turnover";
@@ -45,7 +45,7 @@ export default function KpiChart(props: KpiChartProps) {
   return (
     <AnimatePresence mode="wait">
       <motion.div
-        key={props.scope} // 👈 animação dispara sempre que o tipo muda
+        key={props.scope}
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: -20 }}

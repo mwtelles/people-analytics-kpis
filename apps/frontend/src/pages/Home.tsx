@@ -13,6 +13,7 @@ import {
 } from "@mui/material";
 import { MailOutline } from "@mui/icons-material";
 import { checkEmail } from "../services/employees";
+import { AxiosError } from "axios";
 
 function defaultRange() {
   const end = new Date();
@@ -46,9 +47,9 @@ export default function Home() {
           search: { email: data.email ?? email, from, to },
         });
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.log("erro", err);
-      if (err.response.data.valid === false) {
+      if (err instanceof AxiosError && err.response?.data?.valid === false) {
         setError("E-mail não encontrado na base.");
       } else {
         setError("Erro de conexão com o servidor.");

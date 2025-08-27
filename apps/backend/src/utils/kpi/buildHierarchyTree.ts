@@ -1,3 +1,4 @@
+import { HierarchyNodeDto } from "../../dtos/kpi.dto";
 import { Employee } from "../../models/employee";
 import { buildMonthlySeries, Metric } from "./buildMonthlySeries";
 
@@ -8,7 +9,8 @@ export function buildHierarchyTree(
   from: string,
   to: string,
 ) {
-  const build = (parent: Employee, rootId: number): any => {
+  
+  const build = (parent: Employee, rootId: number): HierarchyNodeDto => {
     const children = employees.filter((e) => e.leaderId === parent.id);
     return {
       id: parent.id,

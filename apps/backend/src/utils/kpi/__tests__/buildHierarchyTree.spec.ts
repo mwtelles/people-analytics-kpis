@@ -17,6 +17,6 @@ describe("buildHierarchyTree", () => {
     expect(firstReport.id).toBe(2);
     expect(firstReport.type).toBe("direct");
     expect(firstReport.reports[0].type).toBe("indirect");
-    expect(firstReport.metrics.headcount.length).toBeGreaterThan(0);
+    expect(firstReport.metrics?.headcount?.length).toBeGreaterThan(0);
   });
 });

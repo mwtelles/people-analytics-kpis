@@ -1,7 +1,6 @@
 import { Employee } from "../../models/employee";
 import { EmployeeRepository } from "../../repositories/employee";
 import {
-  KpiPoint,
   TotalKpiDto,
   GroupedKpiDto,
   HierarchyKpiDto,
