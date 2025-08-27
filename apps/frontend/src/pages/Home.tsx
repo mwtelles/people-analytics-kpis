@@ -7,7 +7,9 @@ import {
   TextField,
   Button,
   Paper,
+  InputAdornment,
 } from "@mui/material";
+import { MailOutline } from "@mui/icons-material";
 
 function defaultRange() {
   const end = new Date();
@@ -33,16 +35,32 @@ export default function Home() {
         alignItems: "center",
         justifyContent: "center",
         minHeight: "100vh",
+        py: 4,
       }}
     >
-      <Paper elevation={4} sx={{ p: 4, borderRadius: 3, width: "100%" }}>
-        <Box textAlign="center" mb={3}>
-          <Typography variant="h4" component="h1" gutterBottom>
+      <Paper
+        elevation={6}
+        sx={{
+          p: 5,
+          borderRadius: 4,
+          width: "100%",
+          backdropFilter: "blur(8px)",
+          backgroundColor: "rgba(255,255,255,0.95)",
+        }}
+      >
+        <Box textAlign="center" mb={4}>
+          <Typography
+            variant="h4"
+            component="h1"
+            gutterBottom
+            sx={{ fontWeight: "bold", color: "#0086c9" }}
+          >
             🚀 People Analytics KPIs
           </Typography>
           <Typography variant="body1" color="text.secondary">
             Informe seu e-mail corporativo para visualizar o dashboard de
-            Headcount e Turnover.
+            <br />
+            <strong>Headcount</strong> e <strong>Turnover</strong>.
           </Typography>
         </Box>
 
@@ -65,16 +83,29 @@ export default function Home() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             sx={{ mb: 3 }}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <MailOutline color="primary" />
+                </InputAdornment>
+              ),
+            }}
           />
+
           <Button
             type="submit"
             fullWidth
-            variant="contained"
             size="large"
             sx={{
               py: 1.5,
               textTransform: "none",
               fontWeight: "bold",
+              borderRadius: 3,
+              background: "linear-gradient(90deg, #0086c9, #065986)",
+              color: "white",
+              "&:hover": {
+                background: "linear-gradient(90deg, #065986, #0086c9)",
+              },
             }}
           >
             Ver KPIs
