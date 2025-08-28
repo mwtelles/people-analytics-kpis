@@ -6,15 +6,17 @@ import { useFeatureFlags } from "../contexts/FeatureFlags";
 
 interface LayoutProps {
   children: React.ReactNode;
+  variant?: "landing" | "app";
+  headerLayout?: "centered" | "logoLeft";
 }
 
-export default function Layout({ children }: { children: React.ReactNode }) {
+export default function Layout({ children, variant, headerLayout }: LayoutProps) {
   const { flags } = useFeatureFlags();
 
   return (
     <>
       {flags.challenge ? (
-        <BoostLayout>{children}</BoostLayout>
+        <BoostLayout variant={variant} headerLayout={headerLayout}>{children}</BoostLayout>
       ) : (
         <ChallengeLayout>{children}</ChallengeLayout>
       )}

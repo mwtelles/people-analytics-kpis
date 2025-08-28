@@ -70,4 +70,15 @@ export interface HierarchyKpiDto {
   };
 }
 
-export type KpiResponseDto = TotalKpiDto | GroupedKpiDto | HierarchyKpiDto;
+export interface KpiAggregateSummary {
+  last: number;
+  avg: number;
+  max: number;
+}
+
+export interface KpiSummaryDto {
+  headcount: KpiAggregateSummary;
+  turnover: KpiAggregateSummary;
+}
+
+export type KpiResponseDto = TotalKpiDto | GroupedKpiDto | HierarchyKpiDto | KpiSummaryDto;

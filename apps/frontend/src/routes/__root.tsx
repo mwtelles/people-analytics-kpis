@@ -9,9 +9,9 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 
 function RootLayout() {
   return (
-    <Layout>
+    <>
       <Outlet />
       <TourManager />
-    </Layout>
+    </>
   );
 }

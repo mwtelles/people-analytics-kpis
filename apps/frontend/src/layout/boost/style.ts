@@ -1,9 +1,18 @@
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import { BookOpen02, Menu01, Moon01, Sun, X } from "@untitled-ui/icons-react";
 import { GitHub } from "@mui/icons-material";
 
 interface VariantProps {
   $variant?: "landing" | "app";
+  $layout?: "centered" | "logoLeft";
+}
+interface HeaderProps {
+  $variant?: "landing" | "app";
+  $layout?: "centered" | "logoLeft";
+}
+interface ClusterProps {
+  $variant?: "landing" | "app";
+  $layout?: "centered" | "logoLeft";
 }
 
 export const Container = styled.div<VariantProps>`
@@ -41,19 +50,6 @@ export const Container = styled.div<VariantProps>`
       filter: blur(160px);
       z-index: 0;
     }
-
-    &::marker {
-      content: "";
-      position: absolute;
-      bottom: -200px;
-      right: -200px;
-      width: 500px;
-      height: 500px;
-      background: ${theme.colors.glowSecondaryRadial};
-      filter: blur(140px);
-      z-index: 0;
-      animation: float 14s ease-in-out infinite alternate;
-    }
   `
       : `
     background: radial-gradient(circle at top left, ${theme.colors.background}, ${theme.colors.backgroundContent});
@@ -63,25 +59,25 @@ export const Container = styled.div<VariantProps>`
     position: relative;
     z-index: 1;
   }
-
-  @keyframes float {
-    from {
-      transform: translateY(0) translateX(0);
-    }
-    to {
-      transform: translateY(-40px) translateX(30px);
-    }
-  }
 `;
 
-export const Header = styled.header<VariantProps>`
-  display: grid;
-  grid-template-columns: 1fr auto 1fr;
-  align-items: center;
-  height: 64px;
-  padding: 1.25rem 2rem;
+export const Header = styled.header<HeaderProps>`
   width: 100%;
+  padding: 1.25rem 2rem;
   z-index: 100;
+
+  ${({ $layout }) =>
+    $layout === "centered"
+      ? css`
+          display: grid;
+          grid-template-columns: 1fr auto 1fr;
+          align-items: center;
+        `
+      : css`
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+        `}
 
   ${({ $variant, theme }) =>
     $variant === "landing"
@@ -99,10 +95,50 @@ export const Header = styled.header<VariantProps>`
   `}
 `;
 
-export const Nav = styled.nav`
-  grid-column: 1;
-  justify-self: start;
+export const LeftCluster = styled.div<ClusterProps>`
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
 
+  ${({ $layout }) =>
+    $layout === "centered" &&
+    css`
+      grid-column: 1;
+      justify-self: start;
+    `}
+`;
+
+export const CenterCluster = styled.div<ClusterProps>`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+
+  ${({ $layout }) =>
+    $layout === "centered"
+      ? css`
+          grid-column: 2;
+          justify-self: center;
+        `
+      : css`
+          display: none;
+        `}
+`;
+
+export const RightCluster = styled.div<ClusterProps>`
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+
+  ${({ $layout }) =>
+    $layout === "centered" &&
+    css`
+      grid-column: 3;
+      justify-self: end;
+    `}
+`;
+
+export const Nav = styled.nav`
   display: flex;
   align-items: center;
   gap: 1.5rem;
@@ -110,29 +146,6 @@ export const Nav = styled.nav`
   @media (max-width: 768px) {
     display: none;
   }
-`;
-
-export const LogoWrapper = styled.div`
-  grid-column: 2;
-  justify-self: center;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
-
-  cursor: pointer;
-  font-weight: 600;
-  font-size: 1.1rem;
-`;
-
-export const Actions = styled.div`
-  grid-column: 3;
-  justify-self: end;
-
-  display: flex;
-  align-items: center;
-  gap: 1rem;
 `;
 
 export const NavItem = styled.a`
@@ -155,6 +168,12 @@ export const NavItem = styled.a`
     color: ${({ theme }) => theme.colors.primary};
     transform: translateY(-2px);
   }
+`;
+
+export const Actions = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 1rem;
 `;
 
 export const ThemeButton = styled.button`
@@ -238,6 +257,7 @@ export const Content = styled.main<VariantProps>`
   flex: 1;
   display: flex;
   flex-direction: column;
+  width: 100%;
 
   ${({ $variant }) =>
     $variant === "landing"
@@ -264,15 +284,18 @@ export const ContentInner = styled.div<VariantProps>`
     display: flex;
     flex-direction: column;
   `
-      : `
-    max-width: 800px;
-  `}
+      : ``}
 `;
 
 export const Footer = styled.footer<VariantProps>`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.4rem;
   text-align: center;
   padding: 1rem;
   font-size: 0.85rem;
+  height: 64px;
   color: ${({ theme }) => theme.colors.textSecondary};
 
   strong {

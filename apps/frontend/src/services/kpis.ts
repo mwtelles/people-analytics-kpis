@@ -4,6 +4,7 @@ import {
   TotalKpiResponse,
   GroupedKpiResponse,
   HierarchyKpiResponse,
+  KpiSummaryResponse,
 } from "../interfaces/kpi";
 
 export const getHeadcount = async (
@@ -13,12 +14,11 @@ export const getHeadcount = async (
   scope: "total" | "grouped" | "hierarchy" = "total",
   includeMeta = false,
 ): Promise<KpiResponse> => {
-  const { data } = await api.get<TotalKpiResponse | GroupedKpiResponse | HierarchyKpiResponse>(
-    "/kpis/headcount",
-    {
-      params: { email, from, to, scope, includeMeta },
-    },
-  );
+  const { data } = await api.get<
+    TotalKpiResponse | GroupedKpiResponse | HierarchyKpiResponse
+  >("/kpis/headcount", {
+    params: { email, from, to, scope, includeMeta },
+  });
   return data;
 };
 
@@ -29,11 +29,21 @@ export const getTurnover = async (
   scope: "total" | "grouped" | "hierarchy" = "total",
   includeMeta = false,
 ): Promise<KpiResponse> => {
-  const { data } = await api.get<TotalKpiResponse | GroupedKpiResponse | HierarchyKpiResponse>(
-    "/kpis/turnover",
-    {
-      params: { email, from, to, scope, includeMeta },
-    },
-  );
+  const { data } = await api.get<
+    TotalKpiResponse | GroupedKpiResponse | HierarchyKpiResponse
+  >("/kpis/turnover", {
+    params: { email, from, to, scope, includeMeta },
+  });
+  return data;
+};
+
+export const getSummary = async (
+  email: string,
+  from: string,
+  to: string,
+): Promise<KpiSummaryResponse> => {
+  const { data } = await api.get<KpiSummaryResponse>("/kpis/summary", {
+    params: { email, from, to },
+  });
   return data;
 };

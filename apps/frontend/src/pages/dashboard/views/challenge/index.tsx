@@ -1,6 +1,4 @@
 import { useState } from "react";
-import { useKpis, Scope } from "../hooks/useKpis";
-import KpiChart from "../components/Chart/Kpi";
 import {
   Container,
   Box,
@@ -10,21 +8,22 @@ import {
   Select,
   MenuItem,
 } from "@mui/material";
-import { MonthRangePicker } from "../components/MonthRangePicker.tsx";
+import { Scope, useKpis } from "../../../../hooks/useKpis";
+import { MonthRangePicker } from "../../../../components/MonthRangePicker.tsx";
+import KpiChart from "../../../../components/Chart/Kpi";
 
-export default function Dashboard() {
+interface Props {
+  email: string;
+  from: string;
+  to: string;
+}
+
+export default function ChallengeView({ email, from: initialFrom, to: initialTo }: Props) {
   const [scope, setScope] = useState<Scope>("total");
-  const [from, setFrom] = useState("2021-01");
-  const [to, setTo] = useState("2021-12");
+  const [from, setFrom] = useState(initialFrom);
+  const [to, setTo] = useState(initialTo);
 
-  const email = "daniellewinters@kpis.tech";
-
-  const { headcount, turnover } = useKpis({
-    email,
-    from,
-    to,
-    scope,
-  });
+  const { headcount, turnover } = useKpis({ email, from, to, scope });
 
   return (
     <Container maxWidth="lg" sx={{ py: 6 }}>

@@ -2,7 +2,8 @@ import { createFileRoute, redirect } from "@tanstack/react-router";
 import { z } from "zod";
 import { zodValidator } from "@tanstack/zod-adapter";
 import { getHeadcount, getTurnover } from "../services/kpis";
-import Dashboard from "../pages/Dashboard";
+import Dashboard from "../pages/dashboard";
+import Layout from "../layout";
 
 const searchSchema = z.object({
   email: z.email(),
@@ -40,5 +41,5 @@ export const Route = createFileRoute("/dashboard")({
     return null;
   },
 
-  component: Dashboard,
+  component: () => <Layout variant="landing" headerLayout="logoLeft"><Dashboard /></Layout>
 });

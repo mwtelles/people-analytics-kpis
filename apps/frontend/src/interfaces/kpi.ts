@@ -61,4 +61,20 @@ export interface HierarchyKpiResponse {
   };
 }
 
-export type KpiResponse = TotalKpiResponse | GroupedKpiResponse | HierarchyKpiResponse;
+export type KpiResponse =
+  | TotalKpiResponse
+  | GroupedKpiResponse
+  | HierarchyKpiResponse;
+
+export interface KpiSummaryResponse {
+  headcount: {
+    last: number;
+    avg: number;
+    max: number;
+  };
+  turnover: {
+    last: number;
+    avg: number;
+    max: number;
+  };
+}

@@ -199,4 +199,46 @@ router.get("/headcount", KpiController.getHeadcount);
  */
 router.get("/turnover", KpiController.getTurnover);
 
+/**
+ * @swagger
+ * /kpis/summary:
+ *   get:
+ *     summary: Retorna os agregados de headcount e turnover no período
+ *     parameters:
+ *       - in: query
+ *         name: email
+ *         required: true
+ *         schema:
+ *           type: string
+ *         example: "daniellewinters@kpis.tech"
+ *       - in: query
+ *         name: from
+ *         required: true
+ *         schema:
+ *           type: string
+ *           example: "2021-01"
+ *       - in: query
+ *         name: to
+ *         required: true
+ *         schema:
+ *           type: string
+ *           example: "2021-12"
+ *     responses:
+ *       200:
+ *         description: Resumo dos KPIs (último, média e máximo)
+ *         content:
+ *           application/json:
+ *             example:
+ *               headcount:
+ *                 last: 642
+ *                 avg: 635
+ *                 max: 650
+ *               turnover:
+ *                 last: 4.2
+ *                 avg: 3.8
+ *                 max: 6.8
+ */
+router.get("/summary", KpiController.getSummary);
+
+
 export default router;
