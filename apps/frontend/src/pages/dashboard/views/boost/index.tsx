@@ -1,11 +1,10 @@
 import { useRef, useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { motion } from "framer-motion";
 import * as S from "./style";
 import { Scope, useKpis } from "../../../../hooks/useKpis";
-import { formatMonth } from "../../../../utils/date";
 import { DatePicker } from "../../../../components/DatePicker";
 import { formatValue } from "../../../../utils/formatValue";
-import { mapKpiDataToChart } from "../../../../utils/mapKpiDataToChart";
+import { formatMonth } from "../../../../utils/date";
 import LineChart from "../../../../components/Chart/Boost/Line";
 
 interface Props {
@@ -15,13 +14,53 @@ interface Props {
 }
 
 export default function BoostView({ email, from: initialFrom, to: initialTo }: Props) {
-  const containerRef = useRef<HTMLDivElement>(null);
+  const headcountContainerRef = useRef<HTMLDivElement>(null);
+  const turnoverContainerRef = useRef<HTMLDivElement>(null);
   const [scope, setScope] = useState<Scope>("total");
   const [from, setFrom] = useState(initialFrom);
   const [to, setTo] = useState(initialTo);
-  const [chatOpen, setChatOpen] = useState(false);
-
   const { headcount, turnover, summary, isLoading } = useKpis({ email, from, to, scope });
+
+  function renderReports(reports: any[]): React.ReactNode {
+    if (!reports || reports.length === 0) return null;
+
+    return reports.map((report) => (
+      <S.ReportCard key={report.id}>
+        <S.ReportHeader>
+          <S.ReportName>{report.name}</S.ReportName>
+          {report.position && <S.ReportPosition>{report.position}</S.ReportPosition>}
+        </S.ReportHeader>
+
+        <S.ReportCharts>
+          {report.metrics.headcount && (
+            <S.CardChart>
+              <LineChart
+                title="Headcount"
+                data={{ headcount: report.metrics.headcount }}
+              />
+            </S.CardChart>
+          )}
+
+          {report.metrics.turnover && (
+            <S.CardChart>
+              <LineChart
+                title="Turnover"
+                data={{ turnover: report.metrics.turnover }}
+                isPercentage
+              />
+            </S.CardChart>
+          )}
+        </S.ReportCharts>
+
+        {report.reports && report.reports.length > 0 && (
+          <S.SubReports>
+            {renderReports(report.reports)}
+          </S.SubReports>
+        )}
+      </S.ReportCard>
+    ));
+  }
+
 
   return (
     <S.Container>
@@ -43,33 +82,41 @@ export default function BoostView({ email, from: initialFrom, to: initialTo }: P
             animate={{ opacity: 1 }}
             transition={{ delay: 0.2 }}
           >
-            Os dados do usuário já estão disponíveis a partir de{" "}
-            {formatMonth(from, { format: "long", showYear: "numeric" })} até{" "}
-            {formatMonth(to, { format: "long", showYear: "numeric" })}.
+            Os dados do usuário já estão disponíveis de{" "}
+            <strong>{formatMonth(from, { format: "short", showYear: "numeric" })}</strong> até{" "}
+            <strong>{formatMonth(to, { format: "short", showYear: "numeric" })}</strong>.
           </S.Subheadline>
         </S.HeadlineContainer>
+
         <S.Wrapper>
           <S.Select value={scope} onChange={(e) => setScope(e.target.value as Scope)}>
             <option value="total">Total</option>
             <option value="grouped">Diretos vs Indiretos</option>
             <option value="hierarchy">Hierarquia</option>
           </S.Select>
+
           <S.DateContainer>
             <DatePicker
               mode="range"
               variant="dropdown"
               value={[from, to]}
               defaultValue={[initialFrom, initialTo]}
+              dateFormat="YYYY-MM"
               onChange={(val) => {
                 if (Array.isArray(val)) {
                   setFrom(val[0]);
                   setTo(val[1]);
                 }
               }}
-              limitRangeDays={1800}
-              selectionLevel="month"
-              shortcuts={["today", "week", "month", 7, 15, 30]}
-              displayFormat="DD/MM/YYYY"
+              shortcuts={[
+                "thisMonth",
+                "last3Months",
+                "last6Months",
+                "thisYear",
+                "lastYear",
+                "last3Years",
+                "last5Years",
+              ]}
             />
           </S.DateContainer>
         </S.Wrapper>
@@ -128,39 +175,34 @@ export default function BoostView({ email, from: initialFrom, to: initialTo }: P
       </S.GridContainer>
 
       <S.GridChart>
-        <S.CardChart
-          ref={containerRef}
-          style={{
-            minHeight: 320,
-            maxHeight: 480,
-            width: "100%",
-            maxWidth: "100%",
-            overflow: "auto",
-          }}
-        >
-          <LineChart
-            title="Headcount"
-            data={headcount}
-          />
+        <S.CardChart ref={headcountContainerRef}>
+          <LineChart title="Headcount" data={headcount} containerRef={headcountContainerRef} />
         </S.CardChart>
 
-        <S.CardChart
-          ref={containerRef}
-          style={{
-            minHeight: 320,
-            maxHeight: 480,
-            width: "100%",
-            maxWidth: "100%",
-            overflow: "auto",
-          }}
-        >
-          <LineChart
-            title="Turnover"
-            data={turnover}
-            isPercentage
-          />
+        <S.CardChart ref={turnoverContainerRef}>
+          <LineChart title="Turnover" data={turnover} isPercentage containerRef={turnoverContainerRef} />
         </S.CardChart>
       </S.GridChart>
+      {scope === "hierarchy" && (
+        <S.HierarchySection>
+          <S.SectionTitle>Detalhes por Gestor</S.SectionTitle>
+          {(() => {
+            const reports = (headcount as any)?.reports ?? [];
+            const turnoverReports = (turnover as any)?.reports ?? [];
+
+            const merged = reports.map((r: any) => ({
+              ...r,
+              metrics: {
+                headcount: r.metrics.headcount,
+                turnover: turnoverReports.find((t: any) => t.id === r.id)?.metrics.turnover,
+              },
+              reports: r.reports,
+            }));
+
+            return renderReports(merged);
+          })()}
+        </S.HierarchySection>
+      )}
 
     </S.Container>
   );

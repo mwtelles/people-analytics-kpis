@@ -6,8 +6,8 @@ export interface KpiPoint {
 export interface TotalKpiDto {
   aggregates: {
     total: {
-      headcount?: KpiPoint[];
-      turnover?: KpiPoint[];
+      headcount: KpiPoint[];
+      turnover: KpiPoint[];
     };
   };
 }
@@ -15,16 +15,16 @@ export interface TotalKpiDto {
 export interface GroupedKpiDto {
   aggregates: {
     direct: {
-      headcount?: KpiPoint[];
-      turnover?: KpiPoint[];
+      headcount: KpiPoint[];
+      turnover: KpiPoint[];
     };
     indirect: {
-      headcount?: KpiPoint[];
-      turnover?: KpiPoint[];
+      headcount: KpiPoint[];
+      turnover: KpiPoint[];
     };
     total: {
-      headcount?: KpiPoint[];
-      turnover?: KpiPoint[];
+      headcount: KpiPoint[];
+      turnover: KpiPoint[];
     };
   };
 }
@@ -35,11 +35,18 @@ export interface HierarchyNodeDto {
   email: string;
   position?: string;
   status: "ativo" | "inativo";
-  type: "direct" | "indirect";
-  metrics: {
-    headcount?: KpiPoint[];
-    turnover?: KpiPoint[];
+
+  counts: {
+    direct: number;
+    indirect: number;
+    total: number;
   };
+
+  metrics: {
+    headcount: KpiPoint[];
+    turnover: KpiPoint[];
+  };
+
   reports: HierarchyNodeDto[];
 }
 
@@ -51,21 +58,23 @@ export interface HierarchyKpiDto {
     position?: string;
     status: "ativo" | "inativo";
   } | null;
+
   hierarchy: {
     directReports: HierarchyNodeDto[];
   };
+
   aggregates: {
+    total: {
+      headcount: KpiPoint[];
+      turnover: KpiPoint[];
+    };
     direct: {
-      headcount?: KpiPoint[];
-      turnover?: KpiPoint[];
+      headcount: KpiPoint[];
+      turnover: KpiPoint[];
     };
     indirect: {
-      headcount?: KpiPoint[];
-      turnover?: KpiPoint[];
-    };
-    total: {
-      headcount?: KpiPoint[];
-      turnover?: KpiPoint[];
+      headcount: KpiPoint[];
+      turnover: KpiPoint[];
     };
   };
 }
@@ -81,4 +90,6 @@ export interface KpiSummaryDto {
   turnover: KpiAggregateSummary;
 }
 
-export type KpiResponseDto = TotalKpiDto | GroupedKpiDto | HierarchyKpiDto | KpiSummaryDto;
+export type KpiSeriesResponse = TotalKpiDto | GroupedKpiDto | HierarchyKpiDto;
+
+export type KpiResponseDto = KpiSeriesResponse | KpiSummaryDto;

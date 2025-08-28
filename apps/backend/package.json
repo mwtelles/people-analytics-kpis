@@ -9,6 +9,7 @@
     "test": "jest --passWithNoTests"
   },
   "dependencies": {
+    "connect-timeout": "^1.9.1",
     "cors": "^2.8.5",
     "date-fns": "^4.1.0",
     "express": "^4.19.0",
@@ -19,6 +20,7 @@
     "swagger-ui-express": "^5.0.1"
   },
   "devDependencies": {
+    "@types/connect-timeout": "^1.9.0",
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.3",
     "@types/jest": "^30.0.0",

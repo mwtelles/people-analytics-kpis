@@ -1,69 +1,125 @@
-import dayjs from "dayjs";
-import isoWeek from 'dayjs/plugin/isoWeek';
-import type { ShortcutType } from "..";
+import dayjs, { Dayjs } from "dayjs";
+import utc from "dayjs/plugin/utc";
 
-dayjs.extend(isoWeek);
+dayjs.extend(utc);
 
-export const useShortcuts = () => {
-  const today = dayjs();
+export type MonthShortcut =
+  | "thisMonth"
+  | "last3Months"
+  | "last6Months"
+  | "thisYear"
+  | "lastYear"
+  | "last3Years"
+  | "last5Years";
 
-  const shortcutLabels: Record<ShortcutType, string> = {
-    today: 'Hoje',
-    week: 'Esta semana',
-    month: 'Este mês',
-    7: 'Últimos 7 dias',
-    15: 'Últimos 15 dias',
-    30: 'Últimos 30 dias',
-    31: 'Últimos 31 dias',
-    60: 'Últimos 60 dias',
-  };
+export type YearShortcut =
+  | "thisYear"
+  | "lastYear"
+  | "last3Years"
+  | "last5Years";
 
-  const resolveShortcut = (shortcut: ShortcutType, limit: number): [string, string] => {
-    let start = today;
-    let end = today;
+export type ShortcutType = MonthShortcut | YearShortcut;
 
-    switch (shortcut) {
-      case 'today':
-        break;
-      case 'week':
-        start = today.startOf('isoWeek');
-        end = today.endOf('isoWeek');
-        break;
-      case 'month':
-        start = today.startOf('month');
-        end = today.endOf('month');
-        break;
-      case 7:
-      case 15:
-      case 30:
-      case 31:
-      case 60:
-        start = today.subtract(shortcut - 1, 'day');
-        end = today;
-        break;
-    }
+type RangeFn = (today: Dayjs) => [string, string];
 
-    const maxRange = start.add(limit - 1, 'day');
-    if (end.isAfter(maxRange)) end = maxRange;
-    if (end.isAfter(today)) end = today;
+const monthShortcuts: Record<MonthShortcut, { label: string; getRange: RangeFn }> = {
+  thisMonth: {
+    label: "Este mês",
+    getRange: (today) => [
+      today.startOf("month").format("YYYY-MM"),
+      today.endOf("month").format("YYYY-MM"),
+    ],
+  },
+  last3Months: {
+    label: "Últimos 3 meses",
+    getRange: (today) => [
+      today.subtract(2, "month").startOf("month").format("YYYY-MM"),
+      today.endOf("month").format("YYYY-MM"),
+    ],
+  },
+  last6Months: {
+    label: "Últimos 6 meses",
+    getRange: (today) => [
+      today.subtract(5, "month").startOf("month").format("YYYY-MM"),
+      today.endOf("month").format("YYYY-MM"),
+    ],
+  },
+  thisYear: {
+    label: "Este ano",
+    getRange: (today) => [
+      today.startOf("year").format("YYYY-MM"),
+      today.endOf("year").format("YYYY-MM"),
+    ],
+  },
+  lastYear: {
+    label: "Ano passado",
+    getRange: (today) => [
+      today.subtract(1, "year").startOf("year").format("YYYY-MM"),
+      today.subtract(1, "year").endOf("year").format("YYYY-MM"),
+    ],
+  },
+  last3Years: {
+    label: "Últimos 3 anos",
+    getRange: (today) => [
+      today.subtract(2, "year").startOf("year").format("YYYY-MM"),
+      today.endOf("year").format("YYYY-MM"),
+    ],
+  },
+  last5Years: {
+    label: "Últimos 5 anos",
+    getRange: (today) => [
+      today.subtract(4, "year").startOf("year").format("YYYY-MM"),
+      today.endOf("year").format("YYYY-MM"),
+    ],
+  },
+};
 
-    return [start.format('YYYY-MM-DD'), end.format('YYYY-MM-DD')];
-  };
+const yearShortcuts: Record<YearShortcut, { label: string; getRange: RangeFn }> = {
+  thisYear: {
+    label: "Este ano",
+    getRange: (today) => [
+      today.startOf("year").format("YYYY-MM"),
+      today.endOf("year").format("YYYY-MM"),
+    ],
+  },
+  lastYear: {
+    label: "Ano passado",
+    getRange: (today) => [
+      today.subtract(1, "year").startOf("year").format("YYYY-MM"),
+      today.subtract(1, "year").endOf("year").format("YYYY-MM"),
+    ],
+  },
+  last3Years: {
+    label: "Últimos 3 anos",
+    getRange: (today) => [
+      today.subtract(2, "year").startOf("year").format("YYYY-MM"),
+      today.endOf("year").format("YYYY-MM"),
+    ],
+  },
+  last5Years: {
+    label: "Últimos 5 anos",
+    getRange: (today) => [
+      today.subtract(4, "year").startOf("year").format("YYYY-MM"),
+      today.endOf("year").format("YYYY-MM"),
+    ],
+  },
+};
 
-  const isShortcutAllowed = (shortcut: ShortcutType, limit: number) => {
-    const [start, end] = resolveShortcut(shortcut, 9999);
+export const useShortcuts = (selectionLevel: "month" | "year" = "month") => {
+  const today = dayjs.utc();
 
-    const diff = dayjs(end).diff(dayjs(start), 'day') + 1;
-    return diff <= limit;
-  };
+  const shortcuts = selectionLevel === "year" ? yearShortcuts : monthShortcuts;
 
-  const filterShortcutsByLimit = (shortcuts: ShortcutType[], limit: number): ShortcutType[] => {
-    return shortcuts.filter((s) => isShortcutAllowed(s, limit));
+  const shortcutLabels = Object.fromEntries(
+    Object.entries(shortcuts).map(([key, { label }]) => [key, label])
+  ) as Record<ShortcutType, string>;
+
+  const resolveShortcut = (shortcut: ShortcutType): [string, string] => {
+    return (shortcuts as Record<ShortcutType, { label: string; getRange: RangeFn }>)[shortcut].getRange(today);
   };
 
   return {
     shortcutLabels,
     resolveShortcut,
-    filterShortcutsByLimit,
   };
 };

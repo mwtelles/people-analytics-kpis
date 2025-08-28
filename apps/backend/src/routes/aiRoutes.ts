@@ -4,7 +4,6 @@ import { qaController } from "../controllers/ai/qaController";
 
 const router = Router();
 
-// só registra se a flag estiver habilitada
   /**
    * @swagger
    * /ai/insights:

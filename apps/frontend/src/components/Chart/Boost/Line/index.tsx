@@ -5,6 +5,9 @@ import * as S from "./style";
 import { formatMonth, parseMonth } from "../../../../utils/date";
 import { generateTicks } from "../../../../utils/generateTicks";
 import React from "react";
+import { KpiData } from "../../../../hooks/useKpis";
+
+type ChartSeries = Record<string, Point[]>;
 
 interface Point {
     month: string;
@@ -13,16 +16,37 @@ interface Point {
 
 interface Props {
     title: string;
-    data?: { total?: Point[]; direct?: Point[]; indirect?: Point[] };
+    data?: KpiData | ChartSeries;
     isPercentage?: boolean;
     containerRef?: React.RefObject<HTMLDivElement | null>;
 }
 
-const COLORS = {
-    total: "#64748b",
-    direct: "#16a34a",
-    indirect: "#dc2626",
-} as const;
+const BASE_PALETTE = [
+    "#1f77b4",
+    "#ff7f0e",
+    "#2ca02c",
+    "#d62728",
+    "#9467bd",
+    "#e377c2",
+    "#17becf",
+];
+
+const colorMap = new Map<string, string>();
+
+function getColor(key: string, index: number): string {
+    if (colorMap.has(key)) return colorMap.get(key)!;
+
+    let color: string;
+    if (index < BASE_PALETTE.length) {
+        color = BASE_PALETTE[index];
+    } else {
+        const hue = (index * 47) % 360;
+        color = `hsl(${hue}, 65%, 55%)`;
+    }
+
+    colorMap.set(key, color);
+    return color;
+}
 
 export default function LineChart({
     title,
@@ -48,21 +72,41 @@ export default function LineChart({
         return () => observer.disconnect();
     }, [containerRef]);
 
-    const series = useMemo(
-        () =>
-            [
-                { id: "Total", color: COLORS.total, points: data?.total ?? [] },
-                { id: "Diretos", color: COLORS.direct, points: data?.direct ?? [] },
-                { id: "Indiretos", color: COLORS.indirect, points: data?.indirect ?? [] },
-            ].filter((s) => s.points.length > 0),
-        [data]
-    );
+    const series = useMemo(() => {
+        if (!data) return [];
+
+        if ("scope" in data) {
+            return Object.entries(data)
+                .filter(
+                    ([key, value]) =>
+                        key !== "scope" &&
+                        key !== "reports" &&
+                        Array.isArray(value) &&
+                        (value as Point[]).every((p) => p && typeof p.month === "string")
+                )
+                .map(([key, value], idx) => ({
+                    id: key,
+                    color: getColor(key, idx),
+                    points: value as Point[],
+                }));
+        }
+
+        return Object.entries(data as ChartSeries)
+            .filter(([_, value]) => Array.isArray(value))
+            .map(([key, value], idx) => ({
+                id: key,
+                color: getColor(key, idx),
+                points: value as Point[],
+            }));
+    }, [data]);
+
 
     const domainX = useMemo(() => {
         const all = series.flatMap((s) => s.points.map((p) => p.month));
-        return Array.from(new Set(all)).sort(
+        const uniq = Array.from(new Set(all)).sort(
             (a, b) => parseMonth(a).getTime() - parseMonth(b).getTime()
         );
+        return uniq;
     }, [series]);
 
     const safeMax = useMemo(() => {
@@ -75,13 +119,13 @@ export default function LineChart({
     const plotLeft = padding.left;
     const plotTop = padding.top;
     const plotBottom = dims.height - padding.bottom;
+    const MIN_STEP = 80;
+    const baseWidth = containerRef.current?.clientWidth ?? dims.width;
 
-    const MAX_POINTS_RESPONSIVE = 24;
-    const minStep = 60;
-    const chartWidth =
-        domainX.length > MAX_POINTS_RESPONSIVE
-            ? (domainX.length - 1) * minStep + padding.left + padding.right
-            : dims.width;
+    const chartWidth = Math.max(
+        baseWidth,
+        (domainX.length - 1) * MIN_STEP + padding.left + padding.right
+    );
 
     const xScale = useCallback(
         (month: string) => {
@@ -89,7 +133,7 @@ export default function LineChart({
             const step = (chartWidth - plotLeft - padding.right) / Math.max(1, domainX.length - 1);
             return plotLeft + i * step;
         },
-        [domainX, chartWidth]
+        [domainX, chartWidth, plotLeft, padding.right]
     );
 
     const yScale = useCallback(
@@ -121,28 +165,25 @@ export default function LineChart({
         return createPortal(
             <S.TooltipContainer $top={top} $left={left} $width={tooltipWidth} $height={tooltipHeight}>
                 <S.TooltipTitle>
-                    {formatMonth(tooltip.month, { locale: "pt-BR", format: "long", showYear: "numeric" })}
+                    {formatMonth(tooltip.month, { locale: "pt-BR", format: "long", showYear: "numeric" }).replace(
+                        /^./,
+                        (char) => char.toUpperCase()
+                    )}
                 </S.TooltipTitle>
-                <table style={{ marginTop: 6, width: "100%" }}>
-                    <tbody>
-                        {series.map((s) => {
-                            if (hidden.includes(s.id)) return null;
-                            const p = s.points.find((pt) => pt.month === tooltip.month);
-                            if (!p) return null;
-                            return (
-                                <tr key={s.id}>
-                                    <td>
-                                        <S.LegendDot color={s.color} />
-                                        {s.id}
-                                    </td>
-                                    <td style={{ textAlign: "right" }}>
-                                        {isPercentage ? `${p.value.toFixed(1)}%` : p.value}
-                                    </td>
-                                </tr>
-                            );
-                        })}
-                    </tbody>
-                </table>
+                <S.TooltipContent>
+                    {series.map((s) => {
+                        if (hidden.includes(s.id)) return null;
+                        const p = s.points.find((pt) => pt.month === tooltip.month);
+                        if (!p) return null;
+                        return (
+                            <S.TooltipRow key={s.id}>
+                                <S.LegendDot color={s.color} />
+                                <S.TooltipLabel>{s.id}</S.TooltipLabel>
+                                <S.TooltipValue>{isPercentage ? `${p.value.toFixed(1)}%` : p.value}</S.TooltipValue>
+                            </S.TooltipRow>
+                        );
+                    })}
+                </S.TooltipContent>
             </S.TooltipContainer>,
             document.body
         );
@@ -174,6 +215,7 @@ export default function LineChart({
                             fill={color}
                             opacity={0.1}
                             animate={{ opacity: 0.1 }}
+                            pointerEvents="none"
                         />
                     )}
                     <motion.path
@@ -190,13 +232,7 @@ export default function LineChart({
         }
     );
 
-    const SeriesPoints = ({
-        color,
-        points,
-    }: {
-        color: string;
-        points: Point[];
-    }) => (
+    const SeriesPoints = ({ color, points }: { color: string; points: Point[] }) => (
         <>
             {points.map((p, i) => {
                 const cx = xScale(p.month);
@@ -222,7 +258,7 @@ export default function LineChart({
     );
 
     return (
-        <S.Wrapper ref={containerRef} style={{ width: "100%", height: "100%", minHeight: 320 }}>
+        <S.Wrapper ref={containerRef}>
             <S.Header>{title}</S.Header>
 
             {series.length === 0 ? (
@@ -252,13 +288,7 @@ export default function LineChart({
                                 );
                             })}
 
-                            <line
-                                x1={plotLeft}
-                                y1={plotTop}
-                                x2={plotLeft}
-                                y2={plotBottom}
-                                stroke="#999"
-                            />
+                            <line x1={plotLeft} y1={plotTop} x2={plotLeft} y2={plotBottom} stroke="#999" />
 
                             {generateTicks(safeMax).map((val, i) => {
                                 const y = yScale(val);
@@ -305,6 +335,18 @@ export default function LineChart({
                                 </g>
                             ))}
 
+                            {tooltip && (
+                                <line
+                                    x1={tooltip.x}
+                                    y1={plotTop}
+                                    x2={tooltip.x}
+                                    y2={plotBottom}
+                                    stroke="#999"
+                                    strokeDasharray="4 4"
+                                    strokeWidth={1}
+                                />
+                            )}
+
                             {series.map(
                                 (s) =>
                                     !hidden.includes(s.id) && (
@@ -312,8 +354,8 @@ export default function LineChart({
                                             <SeriesPath
                                                 color={s.color}
                                                 points={s.points}
-                                                isTotal={s.id === "Total"}
-                                                fillArea={s.id !== "Total"}
+                                                isTotal={s.id === "total"}
+                                                fillArea={s.id !== "total"}
                                             />
                                             <SeriesPoints color={s.color} points={s.points} />
                                         </g>
@@ -321,25 +363,26 @@ export default function LineChart({
                             )}
                         </S.Chart>
                     </S.ChartScroll>
-
                 </S.ChartWrapper>
             )}
 
             <S.Legend>
-                {series.map((s) => (
-                    <S.LegendItem
-                        key={s.id}
-                        active={!hidden.includes(s.id)}
-                        onClick={() =>
-                            setHidden((prev) =>
-                                prev.includes(s.id) ? prev.filter((h) => h !== s.id) : [...prev, s.id]
-                            )
-                        }
-                    >
-                        <S.LegendDot color={s.color} />
-                        {s.id}
-                    </S.LegendItem>
-                ))}
+                {series
+                    .filter((s) => s.points.length > 0)
+                    .map((s) => (
+                        <S.LegendItem
+                            key={s.id}
+                            active={!hidden.includes(s.id)}
+                            onClick={() =>
+                                setHidden((prev) =>
+                                    prev.includes(s.id) ? prev.filter((h) => h !== s.id) : [...prev, s.id]
+                                )
+                            }
+                        >
+                            <S.LegendDot color={s.color} />
+                            {s.id}
+                        </S.LegendItem>
+                    ))}
             </S.Legend>
 
             {renderTooltip()}

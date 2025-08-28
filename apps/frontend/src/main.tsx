@@ -4,7 +4,6 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { createRouter, RouterProvider } from "@tanstack/react-router";
 import { routeTree } from "./routeTree.gen";
 import { GlobalStyle } from "./theme/global";
-import Layout from "./layout";
 import { FeatureFlagsProvider } from "./contexts/FeatureFlags";
 import { ThemeModeProvider } from "./contexts/ThemeMode";
 import { TourProvider } from "./contexts/Tour";

@@ -15,6 +15,16 @@ const sequelize = new Sequelize(
       freezeTableName: true,
       timestamps: true,
     },
+    dialectOptions: {
+      statement_timeout: Number(process.env.DB_STATEMENT_TIMEOUT) || 10000,
+      query_timeout: Number(process.env.DB_QUERY_TIMEOUT) || 10000,
+    },
+    pool: {
+      max: 10,
+      min: 0,
+      acquire: Number(process.env.DB_ACQUIRE_TIMEOUT) || 20000,
+      idle: Number(process.env.DB_IDLE_TIMEOUT) || 10000,
+    },
   },
 );
 

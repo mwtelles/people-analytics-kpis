@@ -2,14 +2,14 @@ import styled from "styled-components";
 
 export const Wrapper = styled.div`
   background: ${({ theme }) => theme.colors.overlay};
-  border: 1px solid ${({ theme }) => theme.colors.border};
-  border-radius: 12px;
+  border: 1px solid ${({ theme }) => theme.colors.glowPrimary};
+  border-radius: 8px;
   padding: 20px;
+  gap: 20px;
   display: flex;
   flex-direction: column;
-  height: 100%;
-  min-height: 320px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  min-height: 320px;
 
   @media (max-width: 768px) {
     padding: 16px;
@@ -19,8 +19,8 @@ export const Wrapper = styled.div`
 export const Header = styled.h3`
   font-size: 1.15rem;
   font-weight: 600;
-  margin-bottom: 16px;
-  color: ${({ theme }) => theme.colors.text};
+  color: ${({ theme }) => theme.colors.textSecondary};
+  text-align: left;
 `;
 
 export const Empty = styled.div`
@@ -64,7 +64,6 @@ export const ChartScroll = styled.div`
 
 export const Chart = styled.svg`
   display: block;
-  height: 100%;
   min-width: 100%;
 `;
 
@@ -73,7 +72,6 @@ export const Legend = styled.div`
   flex-wrap: wrap;
   justify-content: center;
   gap: 12px;
-  margin-top: 16px;
 `;
 
 export const LegendItem = styled.button<{ active: boolean }>`
@@ -86,16 +84,17 @@ export const LegendItem = styled.button<{ active: boolean }>`
   font-size: 0.9rem;
   font-weight: 500;
   transition: all 0.25s ease;
+  text-transform: capitalize;
 
   color: ${({ theme }) => theme.colors.text};
   background: ${({ theme, active }) =>
-    active ? theme.colors.surface : "transparent"};
+    active ? theme.colors.overlay : "transparent"};
   border: 1px solid
     ${({ theme, active }) =>
       active ? theme.colors.primary : theme.colors.border};
 
   &:hover {
-    background: ${({ theme }) => theme.colors.surface};
+    background: ${({ theme }) => theme.colors.glowPrimary};
     border-color: ${({ theme }) => theme.colors.primary};
     opacity: 0.9;
   }
@@ -124,8 +123,8 @@ export const TooltipContainer = styled.div<{
   max-width: calc(100vw - 24px);
   min-height: ${({ $height }) => $height}px;
 
-  background: ${({ theme }) => theme.colors.backgroundContent};
-  border: 1px solid ${({ theme }) => theme.colors.border};
+  background: ${({ theme }) => theme.colors.overlay};
+  border: 1px solid ${({ theme }) => theme.colors.glowPrimary};
   border-radius: 8px;
   padding: 12px 16px;
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
@@ -143,5 +142,28 @@ export const TooltipTitle = styled.span`
   font-weight: 600;
   color: ${({ theme }) => theme.colors.text};
   font-size: 0.95rem;
-  margin-bottom: 6px;
+`;
+
+export const TooltipContent = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
+export const TooltipRow = styled.div`
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 4px 0;
+  gap: 8px;
+`;
+
+export const TooltipLabel = styled.span`
+  font-size: 0.85rem;
+  color: ${({ theme }) => theme.colors.textSecondary};
+  text-transform: Capitalize;
+`;
+
+export const TooltipValue = styled.span`
+  font-weight: 600;
+  color: ${({ theme }) => theme.colors.text};
 `;

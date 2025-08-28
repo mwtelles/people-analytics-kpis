@@ -10,7 +10,7 @@ function parseScope(scope: unknown): KpiScope {
 }
 
 export class KpiController {
-  static async getHeadcount(req: Request, res: Response) {
+  static async getKpis(req: Request, res: Response) {
     try {
       const { email, from, to, scope = "total", includeMeta } = req.query;
 
@@ -20,7 +20,7 @@ export class KpiController {
           .json({ error: "Parâmetros obrigatórios: email, from, to" });
       }
 
-      const result: KpiResponseDto = await KpiService.getHeadcount(
+      const result: KpiResponseDto = await KpiService.getKpis(
         String(email),
         String(from),
         String(to),
@@ -33,34 +33,7 @@ export class KpiController {
       console.error(err);
       return res
         .status(500)
-        .json({ error: "Erro interno ao calcular headcount" });
-    }
-  }
-
-  static async getTurnover(req: Request, res: Response) {
-    try {
-      const { email, from, to, scope = "total", includeMeta } = req.query;
-
-      if (!email || !from || !to) {
-        return res
-          .status(400)
-          .json({ error: "Parâmetros obrigatórios: email, from, to" });
-      }
-
-      const result: KpiResponseDto = await KpiService.getTurnover(
-        String(email),
-        String(from),
-        String(to),
-        parseScope(scope),
-        includeMeta === "true"
-      );
-
-      return res.json(result satisfies KpiResponseDto);
-    } catch (err) {
-      console.error(err);
-      return res
-        .status(500)
-        .json({ error: "Erro interno ao calcular turnover" });
+        .json({ error: "Erro interno ao calcular KPIs" });
     }
   }
 

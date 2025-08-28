@@ -136,8 +136,9 @@ export const RangeSeparator = styled.div`
 export const Indicator = styled(motion.div)`
   position: absolute;
   bottom: -7px;
+  left: 20px;
   height: 2px;
-  width: 120px;
+  width: 80px;
   background-color: ${({ theme }) => theme.colors.primary};
   border-radius: 999px;
 `;
