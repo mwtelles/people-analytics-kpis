@@ -9,13 +9,10 @@ import BoostView from "./views/boost";
 
 function defaultRange() {
   const end = new Date();
-  const start = new Date();
-  start.setMonth(start.getMonth() - 11);
-  const fmt = (d: Date) => d.toISOString().slice(0, 10);
-  return {
-    from: fmt(new Date(start.getFullYear(), start.getMonth(), 1)),
-    to: fmt(new Date(end.getFullYear(), end.getMonth() + 1, 0)),
-  };
+  const start = new Date(end.getFullYear(), end.getMonth() - 11, 1);
+  const fmt = (d: Date) =>
+    `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
+  return { from: fmt(start), to: fmt(end) };
 }
 
 export default function Home() {
@@ -39,7 +36,11 @@ export default function Home() {
       if (data.valid) {
         navigate({
           to: "/dashboard",
-          search: { email: data.email ?? email, from, to },
+          search: {
+            email: (data.email ?? email).trim(),
+            from,
+            to,
+          },
         });
       }
     } catch (err: unknown) {
@@ -54,6 +55,5 @@ export default function Home() {
   }
 
   const viewProps = { email, setEmail, loading, error, onSubmit: handleSubmit };
-
   return challenge ? <BoostView {...viewProps} /> : <ChallengeView {...viewProps} />;
 }

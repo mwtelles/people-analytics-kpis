@@ -39,7 +39,7 @@ export const darkTheme: DefaultTheme = {
     overlay: "rgba(15, 20, 30, 0.75)",
     overlayStrong: "rgba(15, 20, 30, 0.9)",
     overlayInput: "rgba(0, 0, 0, 0.4)",
-
+    overlayVeryStrong: "rgba(15, 20, 30, 0.96)",
   },
   font: {
     family: "'Inter', sans-serif",

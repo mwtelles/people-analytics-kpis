@@ -1,7 +1,6 @@
 import React from "react";
 import ChallengeLayout from "./challenge";
 import BoostLayout from "./boost";
-import FloatingToggle from "../components/FloatingToggle";
 import { useFeatureFlags } from "../contexts/FeatureFlags";
 import AiFloatingToggle from "../components/AiFloatingToggle";
 
@@ -22,7 +21,6 @@ export default function Layout({ children, variant, headerLayout }: LayoutProps)
         <ChallengeLayout>{children}</ChallengeLayout>
       )}
 
-      <FloatingToggle />
       <AiFloatingToggle />
     </>
   );

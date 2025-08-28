@@ -202,13 +202,13 @@ export const GridCell = styled.div`
   padding: 4px 12px;
   border-radius: 6px;
   cursor: pointer;
-  background-color: ${({ theme }) => theme.colors.backgroundContent};
+  background-color: ${({ theme }) => theme.colors.overlayStrong};
   color: ${({ theme }) => theme.colors.text};
-  border: 1px solid ${({ theme }) => theme.colors.border};
+  border: 1px solid ${({ theme }) => theme.colors.glowPrimary};
 
   &:hover {
-    background-color: ${({ theme }) => theme.colors.backgroundContent};
+    background-color: ${({ theme }) => theme.colors.glowSecondary};
     color: ${({ theme }) => theme.colors.primary};
-    border: 1px solid ${({ theme }) => theme.colors.border};
+    border: 1px solid ${({ theme }) => theme.colors.glowSecondary};
   }
 `;

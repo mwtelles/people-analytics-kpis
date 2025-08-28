@@ -2,6 +2,7 @@ import React from "react";
 import * as S from "./style";
 import { ChartLineUp, GithubLogo, BookOpen } from "phosphor-react";
 import Logo from "../../components/Logo";
+import SwitchMode from "../../components/SwitchMode";
 
 interface Props {
   children: React.ReactNode;
@@ -30,6 +31,7 @@ export default function ChallengeLayout({ children }: Props) {
             GitHub
           </S.NavItem>
         </S.Nav>
+        <SwitchMode />
       </S.Header>
 
       <S.Content>{children}</S.Content>

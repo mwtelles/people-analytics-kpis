@@ -39,7 +39,7 @@ export default function AiFloatingToggle() {
               exit={{ rotate: -180, opacity: 0 }}
               transition={{ duration: 0.4, ease: "easeOut" }}
             >
-              <S.Text>AI</S.Text>
+              <S.Text>IA</S.Text>
             </motion.div>
           </AnimatePresence>
         </S.FloatingButton>

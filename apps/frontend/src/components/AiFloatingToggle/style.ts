@@ -3,33 +3,30 @@ import { motion } from "framer-motion";
 
 export const FloatingWrapper = styled.div`
   position: fixed;
-  bottom: 12%;
-  right: 24px;
-  z-index: 1300;
-
+  bottom: 4%;
+  right: 1%;
+  z-index: 999;
   display: flex;
   align-items: center;
   justify-content: center;
 `;
 
-export const FloatingButton = styled(motion.button)<{ $active?: boolean }>`
+export const FloatingButton = styled(motion.button)`
   width: 60px;
   height: 60px;
   border-radius: 50%;
-  border: 1px solid
-    ${({ theme, $active }) => ($active ? theme.colors.primary : "rgba(255,255,255,0.08)")};
+  border: 1px solid ${({ theme }) => theme.colors.glowPrimary};
   cursor: pointer;
-
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
 
-  background: rgba(18, 19, 20, 0.6);
+  background: ${({ theme }) => theme.colors.primary};
   backdrop-filter: blur(16px) saturate(140%);
   -webkit-backdrop-filter: blur(16px) saturate(140%);
 
-  color: ${({ theme, $active }) => ($active ? theme.colors.primary : theme.colors.textSecondary)};
+  color: ${({ theme }) => theme.colors.textSecondary};
 
   transition: all 0.3s ease;
 
@@ -58,11 +55,10 @@ export const faderStyle: React.CSSProperties = {
   filter: "blur(40px)",
 };
 
-export const Text = styled.span<{ $active?: boolean }>`
-  font-size: 13px;
+export const Text = styled.span`
+  font-size: 25px;
   font-weight: 500;
   letter-spacing: 0.5px;
   text-transform: uppercase;
-
-  color: ${({ theme, $active }) => ($active ? theme.colors.primary : theme.colors.textSecondary)};
+  color: ${({ theme }) => theme.colors.secondary};
 `;

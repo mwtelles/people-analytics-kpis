@@ -39,7 +39,7 @@ export const lightTheme: DefaultTheme = {
     overlay: "rgba(255, 255, 255, 0.6)",
     overlayStrong: "rgba(255, 255, 255, 0.9)",
     overlayInput: "rgba(255, 255, 255, 0.8)",
-
+    overlayVeryStrong: "rgba(255, 255, 255, 0.96)",
   },
   font: {
     family: "'Inter', sans-serif",

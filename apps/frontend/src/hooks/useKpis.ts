@@ -1,12 +1,22 @@
 import { useQuery } from "@tanstack/react-query";
+import { getKpis, getSummary } from "../services/kpis";
 import {
-  getHeadcount,
-  getTurnover,
-  getSummary,
-} from "../services/kpis";
-import { KpiPoint, KpiResponse, KpiSummaryResponse } from "../interfaces/kpi";
+  KpiPoint,
+  KpiSeriesResponse,
+  KpiSummaryResponse,
+  TotalKpiResponse,
+  GroupedKpiResponse,
+  HierarchyKpiResponse,
+  isHierarchy,
+  isGrouped,
+} from "../interfaces/kpi";
 
 export type Scope = "total" | "grouped" | "hierarchy";
+
+type SeriesByScope<S extends Scope> =
+  S extends "total" ? TotalKpiResponse :
+  S extends "grouped" ? GroupedKpiResponse :
+  HierarchyKpiResponse;
 
 export type TotalData = { scope: "total"; total: KpiPoint[] };
 export type GroupedData = {
@@ -26,8 +36,8 @@ export type HierarchyData = {
     position?: string;
     status: string;
     metrics: {
-      headcount?: KpiPoint[];
-      turnover?: KpiPoint[];
+      headcount: KpiPoint[];
+      turnover: KpiPoint[];
     };
   }[];
 };
@@ -58,15 +68,18 @@ export function useKpis<S extends Scope = "total">({
   scope = "total" as S,
   includeMeta = false,
 }: UseKpisParams<S>): UseKpisReturn<S> {
-  const headcountQuery = useQuery<KpiResponse>({
-    queryKey: ["kpis", "headcount", email, from, to, scope, includeMeta],
-    queryFn: () => getHeadcount(email, from, to, scope, includeMeta),
-    enabled: Boolean(email && from && to),
-  });
-
-  const turnoverQuery = useQuery<KpiResponse>({
-    queryKey: ["kpis", "turnover", email, from, to, scope, includeMeta],
-    queryFn: () => getTurnover(email, from, to, scope, includeMeta),
+  const seriesQuery = useQuery<SeriesByScope<S>>({
+    queryKey: ["kpis", "series", email, from, to, scope, includeMeta],
+    queryFn: () => {
+      switch (scope) {
+        case "total":
+          return getKpis(email, from, to, "total", includeMeta) as Promise<SeriesByScope<S>>;
+        case "grouped":
+          return getKpis(email, from, to, "grouped", includeMeta) as Promise<SeriesByScope<S>>;
+        case "hierarchy":
+          return getKpis(email, from, to, "hierarchy", includeMeta) as Promise<SeriesByScope<S>>;
+      }
+    },
     enabled: Boolean(email && from && to),
   });
 
@@ -77,17 +90,17 @@ export function useKpis<S extends Scope = "total">({
   });
 
   const normalize = (
-    data: KpiResponse | undefined,
-    type: "headcount" | "turnover"
+    data: KpiSeriesResponse | undefined,
+    type: "headcount" | "turnover",
   ): KpiData => {
     if (!data) return { scope, total: [] } as KpiData;
 
-    if ("leader" in data && "hierarchy" in data) {
+    if (isHierarchy(data)) {
       return {
         scope: "hierarchy",
-        total: data.aggregates.total[type] ?? [],
-        direct: data.aggregates.direct[type] ?? [],
-        indirect: data.aggregates.indirect[type] ?? [],
+        total: data.aggregates.total[type],
+        direct: data.aggregates.direct[type],
+        indirect: data.aggregates.indirect[type],
         reports: data.hierarchy.directReports.map((r) => ({
           id: r.id,
           name: r.name,
@@ -98,38 +111,27 @@ export function useKpis<S extends Scope = "total">({
       };
     }
 
-    if ("direct" in data.aggregates) {
+    if (isGrouped(data)) {
       return {
         scope: "grouped",
-        total: data.aggregates.total[type] ?? [],
-        direct: data.aggregates.direct[type] ?? [],
-        indirect: data.aggregates.indirect[type] ?? [],
+        total: data.aggregates.total[type],
+        direct: data.aggregates.direct[type],
+        indirect: data.aggregates.indirect[type],
       };
     }
 
     return {
       scope: "total",
-      total: data.aggregates.total[type] ?? [],
+      total: data.aggregates.total[type],
     };
   };
 
   return {
-    headcount: normalize(headcountQuery.data, "headcount") as Extract<
-      KpiData,
-      { scope: S }
-    >,
-    turnover: normalize(turnoverQuery.data, "turnover") as Extract<
-      KpiData,
-      { scope: S }
-    >,
+    headcount: normalize(seriesQuery.data as unknown as KpiSeriesResponse, "headcount") as Extract<KpiData, { scope: S }>,
+    turnover: normalize(seriesQuery.data as unknown as KpiSeriesResponse, "turnover") as Extract<KpiData, { scope: S }>,
     summary: summaryQuery.data,
-    isLoading:
-      headcountQuery.isLoading ||
-      turnoverQuery.isLoading ||
-      summaryQuery.isLoading,
-    isError:
-      headcountQuery.isError || turnoverQuery.isError || summaryQuery.isError,
-    error:
-      headcountQuery.error || turnoverQuery.error || summaryQuery.error,
+    isLoading: seriesQuery.isLoading || summaryQuery.isLoading,
+    isError: seriesQuery.isError || summaryQuery.isError,
+    error: seriesQuery.error || summaryQuery.error,
   };
 }

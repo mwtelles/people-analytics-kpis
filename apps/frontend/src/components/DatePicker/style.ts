@@ -1,5 +1,4 @@
-import ChevronRight from '@untitled-ui/icons-react/build/cjs/ChevronRight';
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 import { motion } from 'framer-motion';
 import Calendar from '@untitled-ui/icons-react/build/cjs/Calendar';
 import X from '@untitled-ui/icons-react/build/cjs/X';
@@ -23,14 +22,14 @@ export const ShortcutContainer = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
   gap: 8px;
-  border-top: 1px solid ${({ theme }) => theme.colors.background};
+  border-top: 1px solid ${({ theme }) => theme.colors.glowPrimary};
   padding: 8px 12px;
 `;
 
 export const ShortcutButton = styled.button`
-  background: ${({ theme }) => theme.colors.backgroundContent};
+  background: ${({ theme }) => theme.colors.overlayVeryStrong};
   color: ${({ theme }) => theme.colors.text};
-  border: 1px solid ${({ theme }) => theme.colors.background};
+  border: 1px solid ${({ theme }) => theme.colors.border};
   border-radius: 8px;
   padding: 8px 12px;
   font-size: 12px;
@@ -39,9 +38,9 @@ export const ShortcutButton = styled.button`
   transition: background 0.2s;
 
   &:hover {
-    background: ${({ theme }) => theme.colors.backgroundContent};
+    background: ${({ theme }) => theme.colors.glowSecondary};
     color: ${({ theme }) => theme.colors.primary};
-    border: 1px solid ${({ theme }) => theme.colors.border};
+    border: 1px solid ${({ theme }) => theme.colors.glowSecondary};
   }
 
   &:active {
@@ -83,8 +82,8 @@ export const Popover = styled.div`
   position: absolute;
   top: calc(100% + 4px);
   z-index: 100;
-  background-color: ${({ theme }) => theme.colors.backgroundContent};
-  border: 1px solid ${({ theme }) => theme.colors.background};
+  background-color: ${({ theme }) => theme.colors.overlayVeryStrong};
+  border: 1px solid ${({ theme }) => theme.colors.glowPrimary};
   border-radius: 8px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
   min-width: 280px;
@@ -130,7 +129,7 @@ export const Item = styled.div`
 export const RangeSeparator = styled.div`
   width: 1px;
   height: 24px;
-  background-color: ${({ theme }) => theme.colors.background};
+  background-color: ${({ theme }) => theme.colors.textSecondary};
 `;
 
 export const Indicator = styled(motion.div)`

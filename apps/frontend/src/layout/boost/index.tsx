@@ -4,6 +4,7 @@ import Logo from "../../components/Logo";
 import { useThemeMode } from "../../contexts/ThemeMode";
 import { useNavigate } from "@tanstack/react-router";
 import { motion } from "framer-motion";
+import SwitchMode from "../../components/SwitchMode";
 
 interface Props {
   children: React.ReactNode;
@@ -58,7 +59,7 @@ export default function BoostLayout({
                     {mode === "light" ? <S.DarkModeIcon /> : <S.LightModeIcon />}
                   </motion.div>
                 </S.ThemeButton>
-
+                <SwitchMode />
                 <S.MenuButton onClick={() => setMenuOpen(true)}>
                   <S.MenuIcon />
                 </S.MenuButton>
@@ -95,6 +96,7 @@ export default function BoostLayout({
                     {mode === "light" ? <S.DarkModeIcon /> : <S.LightModeIcon />}
                   </motion.div>
                 </S.ThemeButton>
+                <SwitchMode />
 
                 <S.MenuButton onClick={() => setMenuOpen(true)}>
                   <S.MenuIcon />

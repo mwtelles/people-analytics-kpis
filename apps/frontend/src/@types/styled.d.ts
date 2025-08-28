@@ -29,6 +29,7 @@ declare module "styled-components" {
 
       overlay: string;
       overlayStrong: string;
+      overlayVeryStrong: string;
       overlayInput: string;
       borderSoft: string;
       borderSubtle: string;

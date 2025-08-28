@@ -1,5 +1,4 @@
 import { motion } from "framer-motion";
-import { MailOutline } from "@mui/icons-material";
 import * as S from "./style";
 import { EmailInput } from "../../../../components/EmailInput";
 import Spinner from "../../../../components/Loading/Spinner";
