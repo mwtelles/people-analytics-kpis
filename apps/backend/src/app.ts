@@ -3,6 +3,7 @@ import cors from "cors";
 import kpiRoutes from "./routes/kpiRoutes";
 import { setupSwagger } from "./config/swagger";
 import employeeRoutes from "./routes/employeeRoutes";
+import aiRoutes from "./routes/aiRoutes";
 
 const app = express();
 
@@ -12,6 +13,7 @@ app.use(express.json());
 
 app.use("/api/kpis", kpiRoutes);
 app.use("/api/employees", employeeRoutes);
+app.use("/api/ai", aiRoutes);
 
 setupSwagger(app);
 
