@@ -1,6 +1,7 @@
 import { DefaultTheme } from "styled-components";
 
 export const lightTheme: DefaultTheme = {
+  mode: "light",
   colors: {
     primary: "#0086c9",
     primaryHover: "#0369a1",

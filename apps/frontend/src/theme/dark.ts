@@ -1,6 +1,7 @@
 import { DefaultTheme } from "styled-components";
 
 export const darkTheme: DefaultTheme = {
+  mode: "dark",
   colors: {
     primary: "#38bdf8",
     primaryHover: "#0ea5e9",
