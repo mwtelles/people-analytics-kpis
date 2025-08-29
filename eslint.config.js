@@ -16,7 +16,7 @@ export default [
             "node_modules",
             "**/dist",
             "**/build",
-            "db/**/*cjs"
+            "apps/backend/db/**"
         ],
     },
     {
