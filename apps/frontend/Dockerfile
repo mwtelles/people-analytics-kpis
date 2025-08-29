@@ -8,15 +8,14 @@ RUN pnpm install --no-frozen-lockfile
 COPY . .
 RUN pnpm run build
 
-FROM node:22-alpine AS prod
-WORKDIR /app
+FROM nginx:alpine AS prod
+WORKDIR /usr/share/nginx/html
 
-COPY --from=build /app/dist ./dist
-COPY --from=build /app/node_modules ./node_modules
-COPY package.json pnpm-lock.yaml* ./
+RUN rm -rf ./*
 
-ENV NODE_ENV=production
-ENV PORT=8080
+COPY --from=build /app/dist ./
+
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+
 EXPOSE 8080
-
-CMD ["node", "node_modules/vite/bin/vite.js", "preview", "--port", "8080"]
+CMD ["nginx", "-g", "daemon off;"]
