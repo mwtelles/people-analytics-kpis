@@ -115,7 +115,7 @@ export default function AiFloatingChat() {
             ];
           });
         },
-        () => { },
+        () => {},
       );
     },
     onError: () => {
@@ -152,7 +152,7 @@ export default function AiFloatingChat() {
             ];
           });
         },
-        () => { },
+        () => {},
       );
     },
     onError: () => {
