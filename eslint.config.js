@@ -15,7 +15,8 @@ export default [
             "**/*.test.{js,ts,tsx}",
             "node_modules",
             "**/dist",
-            "**/build"
+            "**/build",
+            "db/**/*cjs"
         ],
     },
     {

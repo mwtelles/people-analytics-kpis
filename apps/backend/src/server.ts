@@ -1,13 +1,8 @@
-import express from "express";
+import app from "./app";
 
-const app = express();
-app.use(express.json());
+const PORT = process.env.PORT || 3000;
 
-app.get("/health", (_, res) => res.json({ status: "ok" }));
-
-if (require.main === module) {
-  const port = process.env.PORT || 5000;
-  app.listen(port, () => console.log(`🚀 Backend running on http://localhost:${port}`));
-}
-
-export default app;
+app.listen(PORT, () => {
+  console.log(`🚀 Backend rodando em http://localhost:${PORT}`);
+  console.log(`📊 Swagger em http://localhost:${PORT}/api/docs`);
+});

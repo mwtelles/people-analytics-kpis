@@ -1,34 +1,44 @@
 {
-    "name": "backend",
-    "version": "1.0.0",
-    "main": "dist/server.js",
-    "scripts": {
-        "dev": "ts-node-dev --respawn src/server.ts",
-        "build": "tsc",
-        "start": "node dist/server.js",
-        "test": "jest --passWithNoTests"
-    },
-    "dependencies": {
-        "express": "^4.19.0",
-        "pg": "^8.11.0",
-        "sequelize": "^6.37.0",
-        "swagger-ui-express": "^5.0.1"
-    },
-    "devDependencies": {
-        "@types/express": "^5.0.3",
-        "@types/jest": "^30.0.0",
-        "@types/node": "^24.3.0",
-        "@types/supertest": "^6.0.3",
-        "eslint": "^9.34.0",
-        "eslint-config-prettier": "^10.1.8",
-        "eslint-plugin-prettier": "^5.5.4",
-        "husky": "^9.1.7",
-        "jest": "^30.0.5",
-        "lint-staged": "^16.1.5",
-        "prettier": "^3.6.2",
-        "supertest": "^7.1.4",
-        "ts-jest": "^29.4.1",
-        "ts-node-dev": "^2.0.0",
-        "typescript": "^5.4.0"
-    }
+  "name": "backend",
+  "version": "1.0.0",
+  "main": "dist/server.js",
+  "scripts": {
+    "dev": "ts-node-dev --respawn src/server.ts",
+    "build": "tsc",
+    "start": "node dist/server.js",
+    "test": "jest --passWithNoTests"
+  },
+  "dependencies": {
+    "connect-timeout": "^1.9.1",
+    "cors": "^2.8.5",
+    "date-fns": "^4.1.0",
+    "express": "^4.19.0",
+    "openai": "^5.16.0",
+    "pg": "^8.11.0",
+    "sequelize": "^6.37.0",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.1"
+  },
+  "devDependencies": {
+    "@types/connect-timeout": "^1.9.0",
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.3",
+    "@types/jest": "^30.0.0",
+    "@types/node": "^24.3.0",
+    "@types/supertest": "^6.0.3",
+    "@types/swagger-jsdoc": "^6.0.4",
+    "@types/swagger-ui-express": "^4.1.8",
+    "eslint": "^9.34.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.4",
+    "husky": "^9.1.7",
+    "jest": "^30.0.5",
+    "lint-staged": "^16.1.5",
+    "prettier": "^3.6.2",
+    "sequelize-cli": "^6.6.3",
+    "supertest": "^7.1.4",
+    "ts-jest": "^29.4.1",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.4.0"
+  }
 }
