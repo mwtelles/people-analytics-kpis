@@ -132,145 +132,168 @@ export default function DashboardPage() {
 
   return (
     <S.Container>
-      <S.Toolbar>
-        <S.HeadlineContainer>
-          <S.Headline
-            data-tour="headline"
-            as={motion.h1}
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
-          >
-            People Analytics <span>KPIs</span>
-          </S.Headline>
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, ease: "easeOut" }}
+      >
+        <S.Toolbar>
+          <S.HeadlineContainer>
+            <S.Headline
+              data-tour="headline"
+              as={motion.h1}
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, ease: "easeOut" }}
+            >
+              People Analytics <span>KPIs</span>
+            </S.Headline>
 
-          <S.Subheadline
-            as={motion.p}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.2 }}
-          >
-            Os dados do usuário já estão disponíveis de{" "}
-            <strong>{formatMonth(from, { format: "short", showYear: "numeric" })}</strong> até{" "}
-            <strong>{formatMonth(to, { format: "short", showYear: "numeric" })}</strong>.
-          </S.Subheadline>
-        </S.HeadlineContainer>
+            <S.Subheadline
+              as={motion.p}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.2 }}
+            >
+              Os dados do usuário já estão disponíveis de{" "}
+              <strong>{formatMonth(from, { format: "short", showYear: "numeric" })}</strong> até{" "}
+              <strong>{formatMonth(to, { format: "short", showYear: "numeric" })}</strong>.
+            </S.Subheadline>
+          </S.HeadlineContainer>
 
-        <S.Wrapper>
-          <Select
-            value={scope}
-            onChange={(val) => setScope(val as Scope)}
-            options={[
-              { value: "total", label: "Total" },
-              { value: "grouped", label: "Diretos vs Indiretos" },
-              { value: "hierarchy", label: "Hierarquia" },
-            ]}
-          />
-
-          <S.DateContainer>
-            <DatePicker
-              mode="range"
-              variant="dropdown"
-              value={[from, to]}
-              defaultValue={[initialFrom, initialTo]}
-              dateFormat="YYYY-MM"
-              onChange={(val) => {
-                if (Array.isArray(val)) {
-                  setFrom(val[0]);
-                  setTo(val[1]);
-                }
-              }}
-              shortcuts={[
-                "thisMonth",
-                "last3Months",
-                "last6Months",
-                "thisYear",
-                "lastYear",
-                "last3Years",
-                "last5Years",
+          <S.Wrapper>
+            <Select
+              value={scope}
+              onChange={(val) => setScope(val as Scope)}
+              options={[
+                { value: "total", label: "Total" },
+                { value: "grouped", label: "Diretos vs Indiretos" },
+                { value: "hierarchy", label: "Hierarquia" },
               ]}
             />
-          </S.DateContainer>
-        </S.Wrapper>
-      </S.Toolbar>
 
-      <S.GridContainer>
-        <S.Card>
-          <S.CardIcon>
-            <S.BarIcon />
-          </S.CardIcon>
-          <S.CardContainer>
-            <S.CardTitle>Headcount Atual</S.CardTitle>
-            <S.CardValue>{formatValue(summary?.headcount.last ?? 0, false)}</S.CardValue>
-          </S.CardContainer>
-        </S.Card>
+            <S.DateContainer>
+              <DatePicker
+                mode="range"
+                variant="dropdown"
+                value={[from, to]}
+                defaultValue={[initialFrom, initialTo]}
+                dateFormat="YYYY-MM"
+                onChange={(val) => {
+                  if (Array.isArray(val)) {
+                    setFrom(val[0]);
+                    setTo(val[1]);
+                  }
+                }}
+                shortcuts={[
+                  "thisMonth",
+                  "last3Months",
+                  "last6Months",
+                  "thisYear",
+                  "lastYear",
+                  "last3Years",
+                  "last5Years",
+                ]}
+              />
+            </S.DateContainer>
+          </S.Wrapper>
+        </S.Toolbar>
+      </motion.div>
 
-        <S.Card>
-          <S.CardIcon>
-            <S.BarIcon />
-          </S.CardIcon>
-          <S.CardContainer>
-            <S.CardTitle>Média Headcount</S.CardTitle>
-            <S.CardValue>{formatValue(summary?.headcount.avg ?? 0, false)}</S.CardValue>
-          </S.CardContainer>
-        </S.Card>
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, ease: "easeOut" }}
+      >
+        <S.GridContainer>
+          <S.Card>
+            <S.CardIcon>
+              <S.BarIcon />
+            </S.CardIcon>
+            <S.CardContainer>
+              <S.CardTitle>Headcount Atual</S.CardTitle>
+              <S.CardValue>{formatValue(summary?.headcount.last ?? 0, false)}</S.CardValue>
+            </S.CardContainer>
+          </S.Card>
 
-        <S.Card>
-          <S.CardIcon>
-            <S.BarIcon />
-          </S.CardIcon>
-          <S.CardContainer>
-            <S.CardTitle>Máximo Headcount</S.CardTitle>
-            <S.CardValue>{formatValue(summary?.headcount.max ?? 0, false)}</S.CardValue>
-          </S.CardContainer>
-        </S.Card>
+          <S.Card>
+            <S.CardIcon>
+              <S.BarIcon />
+            </S.CardIcon>
+            <S.CardContainer>
+              <S.CardTitle>Média Headcount</S.CardTitle>
+              <S.CardValue>{formatValue(summary?.headcount.avg ?? 0, false)}</S.CardValue>
+            </S.CardContainer>
+          </S.Card>
 
-        <S.Card>
-          <S.CardIcon>
-            <S.BarIcon />
-          </S.CardIcon>
-          <S.CardContainer>
-            <S.CardTitle>Turnover Atual</S.CardTitle>
-            <S.CardValue>{formatValue(summary?.turnover.last ?? 0, true)}</S.CardValue>
-          </S.CardContainer>
-        </S.Card>
+          <S.Card>
+            <S.CardIcon>
+              <S.BarIcon />
+            </S.CardIcon>
+            <S.CardContainer>
+              <S.CardTitle>Máximo Headcount</S.CardTitle>
+              <S.CardValue>{formatValue(summary?.headcount.max ?? 0, false)}</S.CardValue>
+            </S.CardContainer>
+          </S.Card>
 
-        <S.Card>
-          <S.CardIcon>
-            <S.BarIcon />
-          </S.CardIcon>
-          <S.CardContainer>
-            <S.CardTitle>Máximo Turnover</S.CardTitle>
-            <S.CardValue>{formatValue(summary?.turnover.max ?? 0, true)}</S.CardValue>
-          </S.CardContainer>
-        </S.Card>
-      </S.GridContainer>
+          <S.Card>
+            <S.CardIcon>
+              <S.BarIcon />
+            </S.CardIcon>
+            <S.CardContainer>
+              <S.CardTitle>Turnover Atual</S.CardTitle>
+              <S.CardValue>{formatValue(summary?.turnover.last ?? 0, true)}</S.CardValue>
+            </S.CardContainer>
+          </S.Card>
 
-      <S.GridChart>
-        <S.CardChart ref={headcountContainerRef}>
-          <LineChart
-            title="Headcount"
-            data={headcountSeriesTop}
-            containerRef={headcountContainerRef}
-          />
-        </S.CardChart>
+          <S.Card>
+            <S.CardIcon>
+              <S.BarIcon />
+            </S.CardIcon>
+            <S.CardContainer>
+              <S.CardTitle>Máximo Turnover</S.CardTitle>
+              <S.CardValue>{formatValue(summary?.turnover.max ?? 0, true)}</S.CardValue>
+            </S.CardContainer>
+          </S.Card>
+        </S.GridContainer>
+      </motion.div>
 
-        <S.CardChart ref={turnoverContainerRef}>
-          <LineChart
-            title="Turnover"
-            data={turnoverSeriesTop}
-            isPercentage
-            containerRef={turnoverContainerRef}
-          />
-        </S.CardChart>
-      </S.GridChart>
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, ease: "easeOut" }}
+      >
+        <S.GridChart>
+          <S.CardChart ref={headcountContainerRef}>
+            <LineChart
+              title="Headcount"
+              data={headcountSeriesTop}
+              containerRef={headcountContainerRef}
+            />
+          </S.CardChart>
 
-      {scope === "hierarchy" && (
-        <S.HierarchySection>
-          <S.SectionTitle>Detalhes por Gestor</S.SectionTitle>
-          {renderReports(hierarchyReports)}
-        </S.HierarchySection>
-      )}
+          <S.CardChart ref={turnoverContainerRef}>
+            <LineChart
+              title="Turnover"
+              data={turnoverSeriesTop}
+              isPercentage
+              containerRef={turnoverContainerRef}
+            />
+          </S.CardChart>
+        </S.GridChart>
+      </motion.div>
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, ease: "easeOut" }}
+      >
+        {scope === "hierarchy" && (
+          <S.HierarchySection>
+            <S.SectionTitle>Detalhes por Gestor</S.SectionTitle>
+            {renderReports(hierarchyReports)}
+          </S.HierarchySection>
+        )}
+      </motion.div>
       <AiFloatingChat />
     </S.Container>
   );

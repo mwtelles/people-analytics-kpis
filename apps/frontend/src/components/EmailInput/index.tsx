@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import * as S from "./style";
 import { MailOutline } from "@mui/icons-material";
 import { motion } from "framer-motion";
@@ -14,6 +14,7 @@ interface EmailInputProps {
   externalError?: string | null;
   submitted?: boolean;
   validating?: boolean;
+  onValidityChange?: (isValid: boolean) => void;
 }
 
 export function EmailInput({
@@ -27,6 +28,7 @@ export function EmailInput({
   externalError,
   submitted = false,
   validating = false,
+  onValidityChange,
 }: EmailInputProps) {
   const [touched, setTouched] = useState(false);
 
@@ -37,38 +39,43 @@ export function EmailInput({
     if (required && !email) return "Campo obrigatório";
 
     if (email) {
-      if (email.includes("@")) {
-        const [domain] = email.split("@");
-        if (!domain || domain.length < 2) {
-          return null;
-        }
-        if (!emailRegex.test(email)) return "Formato de e-mail inválido";
+      const [, domainPart] = email.split("@");
+      if (!emailRegex.test(email)) return "Formato de e-mail inválido";
 
-        if (domainWhitelist && domainWhitelist.length > 0) {
-          const validDomain = domainWhitelist.some((d) =>
-            email.toLowerCase().endsWith(`@${d.toLowerCase()}`),
-          );
-          if (!validDomain) {
-            return `Use um e-mail corporativo válido (${domainWhitelist.join(", ")})`;
-          }
+      if (domainWhitelist && domainWhitelist.length > 0) {
+        const lower = email.toLowerCase();
+        const validDomain = domainWhitelist.some((d) =>
+          lower.endsWith(`@${d.toLowerCase()}`) || lower.endsWith(`.${d.toLowerCase()}`)
+        );
+        if (!validDomain) {
+          return `Use um e-mail corporativo válido (${domainWhitelist.join(", ")})`;
         }
+      }
+
+      if (!domainPart || domainPart.length < 2) {
+        return "Formato de e-mail inválido";
       }
     }
 
     return null;
   };
 
-  const error = validate(value);
+  const rawError = validate(value);
 
   const finalError =
-    externalError || (submitted && error === "Campo obrigatório") || (touched && value && error)
-      ? error
+    externalError ||
+    (submitted && rawError === "Campo obrigatório") ||
+    (touched && value && rawError)
+      ? rawError
       : null;
 
-  const isValid = !finalError && value.length > 0;
+  const isValid = !rawError;
+
+  useEffect(() => {
+    onValidityChange?.(isValid);
+  }, [isValid, onValidityChange]);
 
   const handleBlur = () => setTouched(true);
-
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     onChange(e.target.value);
   };

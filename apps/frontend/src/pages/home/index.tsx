@@ -16,6 +16,9 @@ function defaultRange() {
 
 export default function HomePage() {
   const [email, setEmail] = useState("");
+  const [emailValid, setEmailValid] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -24,12 +27,14 @@ export default function HomePage() {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+    setSubmitted(true);
     setError(null);
-    setLoading(true);
 
+    if (!emailValid) return;
+
+    setLoading(true);
     try {
       const data = await checkEmail(email);
-
       if (data.valid) {
         navigate({
           to: "/dashboard",
@@ -39,6 +44,8 @@ export default function HomePage() {
             to,
           },
         });
+      } else {
+        setError("E-mail não encontrado.");
       }
     } catch (err: unknown) {
       if (err instanceof AxiosError && err.response?.data?.valid === false) {
@@ -87,17 +94,27 @@ export default function HomePage() {
           Digite seu <strong>e-mail corporativo</strong> para acessar
         </S.FormIntro>
 
-        <S.Form onSubmit={handleSubmit}>
+        <S.Form onSubmit={handleSubmit} noValidate>
           <EmailInput
             data-tour="email-input"
             value={email}
-            onChange={setEmail}
+            onChange={(v) => {
+              setEmail(v);
+              setError(null);
+            }}
             required
             domainWhitelist={["kpis.tech"]}
             externalError={error}
+            submitted={submitted}
+            onValidityChange={setEmailValid}
           />
 
-          <S.SubmitButton data-tour="submit-btn" type="submit" disabled={loading}>
+          <S.SubmitButton
+            data-tour="submit-btn"
+            type="submit"
+            disabled={loading || !emailValid}
+            aria-disabled={loading || !emailValid}
+          >
             {loading ? <Spinner /> : "Ver KPIs"}
           </S.SubmitButton>
         </S.Form>
