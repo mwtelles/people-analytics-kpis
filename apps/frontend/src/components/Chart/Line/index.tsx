@@ -22,12 +22,10 @@ interface Props {
 }
 
 const BASE_PALETTE = ["#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "#9467bd", "#e377c2", "#17becf"];
-
 const colorMap = new Map<string, string>();
 
 function getColor(key: string, index: number): string {
   if (colorMap.has(key)) return colorMap.get(key)!;
-
   let color: string;
   if (index < BASE_PALETTE.length) {
     color = BASE_PALETTE[index];
@@ -35,7 +33,6 @@ function getColor(key: string, index: number): string {
     const hue = (index * 47) % 360;
     color = `hsl(${hue}, 65%, 55%)`;
   }
-
   colorMap.set(key, color);
   return color;
 }
@@ -55,6 +52,12 @@ export default function LineChart({
   const [hidden, setHidden] = useState<string[]>([]);
   const [tooltip, setTooltip] = useState<{ month: string; x: number; y: number } | null>(null);
 
+  const nf = useMemo(() => new Intl.NumberFormat("pt-BR", { maximumFractionDigits: 1 }), []);
+  const fmtVal = useCallback(
+    (v: number) => (isPercentage ? `${nf.format(v)}%` : nf.format(v)),
+    [isPercentage, nf],
+  );
+
   useLayoutEffect(() => {
     if (!containerRef.current) return;
     const observer = new ResizeObserver(([entry]) => {
@@ -64,8 +67,8 @@ export default function LineChart({
     return () => observer.disconnect();
   }, [containerRef]);
 
-  const series = useMemo(() => {
-    if (!data) return [];
+  const baseSeries = useMemo(() => {
+    if (!data) return [] as { id: string; color: string; points: Point[] }[];
 
     if ("scope" in data) {
       return Object.entries(data)
@@ -92,6 +95,18 @@ export default function LineChart({
       }));
   }, [data]);
 
+  const series = useMemo(
+    () =>
+      baseSeries.map((s) => ({
+        ...s,
+        points: s.points.map((p) => ({
+          month: p.month,
+          value: isPercentage ? p.value * 100 : p.value,
+        })),
+      })),
+    [baseSeries, isPercentage],
+  );
+
   const domainX = useMemo(() => {
     const all = series.flatMap((s) => s.points.map((p) => p.month));
     const uniq = Array.from(new Set(all)).sort(
@@ -103,8 +118,13 @@ export default function LineChart({
   const safeMax = useMemo(() => {
     const vals = [...series.flatMap((s) => s.points.map((p) => p.value)), 0];
     const mx = Math.max(...vals);
-    return mx > 0 ? mx : 1;
-  }, [series]);
+    if (!isPercentage) return mx > 0 ? mx : 1;
+
+    if (mx <= 25) return 25;
+    if (mx <= 50) return 50;
+    if (mx <= 75) return 75;
+    return Math.min(100, Math.ceil(mx / 10) * 10);
+  }, [series, isPercentage]);
 
   const padding = { top: 20, right: 20, bottom: 40, left: 50 };
   const plotLeft = padding.left;
@@ -171,7 +191,7 @@ export default function LineChart({
               <S.TooltipRow key={s.id}>
                 <S.LegendDot color={s.color} />
                 <S.TooltipLabel>{s.id}</S.TooltipLabel>
-                <S.TooltipValue>{isPercentage ? `${p.value.toFixed(1)}%` : p.value}</S.TooltipValue>
+                <S.TooltipValue>{fmtVal(p.value)}</S.TooltipValue>
               </S.TooltipRow>
             );
           })}
@@ -293,7 +313,7 @@ export default function LineChart({
                     fontSize={12}
                     fill="#aaa"
                   >
-                    {isPercentage ? `${val.toFixed(0)}%` : val.toFixed(0)}
+                    {fmtVal(val)}
                   </text>
                 );
               })}
