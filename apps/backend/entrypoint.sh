@@ -2,11 +2,11 @@
 set -e
 
 echo "Running database migrations..."
-pnpm migrate
+npx sequelize-cli db:migrate
 
 if [ "$RUN_SEED" = "true" ]; then
   echo "Running seeders..."
-  pnpm seed
+  npx sequelize-cli db:seed:all
 else
   echo "Skipping seeders (set RUN_SEED=true to enable)."
 fi
