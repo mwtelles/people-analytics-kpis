@@ -90,5 +90,4 @@ export const ErrorMsg = styled.span`
   margin-top: 2px;
 `;
 
-export const MailIcon = styled(Mail04)`
-`;
+export const MailIcon = styled(Mail04)``;

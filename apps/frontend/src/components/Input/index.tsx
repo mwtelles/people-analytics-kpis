@@ -63,11 +63,7 @@ export function EmailInput({
   const rawError = validate(value);
 
   const finalError =
-  externalError ||
-  (submitted && rawError) ||
-  (touched && rawError)
-    ? rawError
-    : null;
+    externalError || (submitted && rawError) || (touched && rawError) ? rawError : null;
 
   const isValid = !rawError;
 

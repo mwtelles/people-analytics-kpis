@@ -13,6 +13,6 @@ export function renderWithThemeAndQueryClient(ui: ReactNode) {
   return render(
     <QueryClientProvider client={client}>
       <ThemeProvider theme={lightTheme}>{ui}</ThemeProvider>
-    </QueryClientProvider>
+    </QueryClientProvider>,
   );
 }
