@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
 import { AxiosError } from "axios";
+import { motion } from "framer-motion";
+import * as S from "./style";
+import { EmailInput } from "../../components/EmailInput";
+import Spinner from "../../components/Loading/Spinner";
 import { checkEmail } from "../../services/employees";
-import { useFeatureFlags } from "../../contexts/FeatureFlags";
-
-import ChallengeView from "./views/challenge";
-import BoostView from "./views/boost";
 
 function defaultRange() {
   const end = new Date();
@@ -15,13 +15,11 @@ function defaultRange() {
   return { from: fmt(start), to: fmt(end) };
 }
 
-export default function Home() {
-  const { flags } = useFeatureFlags();
-  const { challenge } = flags;
-
+export default function HomePage() {
   const [email, setEmail] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+
   const navigate = useNavigate();
   const { from, to } = defaultRange();
 
@@ -54,6 +52,59 @@ export default function Home() {
     }
   }
 
-  const viewProps = { email, setEmail, loading, error, onSubmit: handleSubmit };
-  return challenge ? <BoostView {...viewProps} /> : <ChallengeView {...viewProps} />;
+  return (
+    <S.Wrapper>
+      <S.Headline
+        data-tour="headline"
+        as={motion.h1}
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, ease: "easeOut" }}
+      >
+        People Analytics <span>KPIs</span>
+      </S.Headline>
+
+      <S.Subheadline
+        as={motion.p}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.2 }}
+      >
+        Monitore <strong>Headcount</strong> e <strong>Turnover</strong> com dashboards claros e
+        intuitivos.
+      </S.Subheadline>
+
+      <S.Divider>
+        <span>Busca Inteligente</span>
+      </S.Divider>
+
+      <S.Card
+        as={motion.div}
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ delay: 0.3, duration: 0.6, ease: "easeOut" }}
+      >
+        <S.FormIntro>
+          Digite seu <strong>e-mail corporativo</strong> para acessar
+        </S.FormIntro>
+
+        <S.Form onSubmit={handleSubmit}>
+          <EmailInput
+            data-tour="email-input"
+            value={email}
+            onChange={setEmail}
+            required
+            domainWhitelist={["kpis.tech"]}
+            externalError={error}
+          />
+
+          <S.SubmitButton data-tour="submit-btn" type="submit" disabled={loading}>
+            {loading ? <Spinner /> : "Ver KPIs"}
+          </S.SubmitButton>
+        </S.Form>
+
+        {error && <S.ErrorBox>{error}</S.ErrorBox>}
+      </S.Card>
+    </S.Wrapper>
+  );
 }

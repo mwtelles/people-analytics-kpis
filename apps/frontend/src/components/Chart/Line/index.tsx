@@ -2,10 +2,10 @@ import { useState, useRef, useLayoutEffect, useMemo, useCallback } from "react";
 import { createPortal } from "react-dom";
 import { motion } from "framer-motion";
 import * as S from "./style";
-import { formatMonth, parseMonth } from "../../../../utils/date";
-import { generateTicks } from "../../../../utils/generateTicks";
+import { formatMonth, parseMonth } from "../../../utils/date";
+import { generateTicks } from "../../../utils/generateTicks";
 import React from "react";
-import { KpiData } from "../../../../hooks/useKpis";
+import { KpiData } from "../../../hooks/useKpis";
 
 type ChartSeries = Record<string, Point[]>;
 

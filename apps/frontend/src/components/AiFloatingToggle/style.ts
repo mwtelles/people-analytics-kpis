@@ -23,7 +23,7 @@ export const FloatingButton = styled(motion.button)`
   place-items: center;
 
   background: ${({ theme }) => theme.colors.primary};
-  color: ${({ theme }) => theme.colors.textSecondary || "#fff"};
+  color: ${({ theme }) => theme.colors.text || "#fff"};
 
   transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
   box-shadow: ${({ theme }) => theme.shadow.md};
@@ -46,7 +46,8 @@ export const ChatContainer = styled.div`
   flex-direction: column;
   height: 100%;
   max-height: 520px;
-  max-width: 360px;
+  max-width: 400px;
+  min-width: 350px;
   border-radius: 12px;
   border: 1px solid ${({ theme }) => theme.colors.border};
 `;
@@ -226,22 +227,26 @@ export const ApplyButton = styled.button`
 `;
 
 export const Suggestions = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  padding: 4px 6px 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 12px;
+  padding: 12px;
 `;
 
 export const Suggestion = styled.button`
-  border: 1px solid ${({ theme }) => theme.colors.border};
-  background: ${({ theme }) => theme.colors.backgroundContent};
+  border: 1px solid ${({ theme }) => theme.colors.glowPrimary};
+  background: ${({ theme }) => theme.mode === "dark" ? theme.colors.glowSecondary : theme.colors.landingBackground};
   color: ${({ theme }) => theme.colors.text};
   border-radius: ${({ theme }) => theme.radius.full};
   padding: 6px 10px;
   font-size: 12px;
   cursor: pointer;
   box-shadow: ${({ theme }) => theme.shadow.sm};
-  &:hover { background: ${({ theme }) => theme.colors.surface}; }
+
+  &:hover { 
+    background: ${({ theme }) => theme.mode === "dark" ? theme.colors.glowPrimary : theme.colors.glowPrimary};
+    border: 1px solid ${({ theme }) => theme.mode === "dark" ? theme.colors.glowPrimary : theme.colors.glowPrimary};
+  }
 `;
 
 export const ChatFooter = styled.div`

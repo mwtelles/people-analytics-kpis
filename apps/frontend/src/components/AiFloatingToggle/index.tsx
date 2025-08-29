@@ -20,7 +20,6 @@ interface Message {
 const QA_SUGGESTIONS = [
   "Qual foi o turnover médio no ano passado?",
   "Como variou o headcount nos últimos 6 meses?",
-  "Qual foi o maior turnover no período atual?",
 ];
 
 const INSIGHT_SUGGESTIONS = [
@@ -72,7 +71,6 @@ function renderInsight(text: string) {
 export default function AiFloatingChat() {
   const { email, from, to } = useSearch({ from: "/dashboard" });
   const navigate = useNavigate({ from: "/dashboard" });
-
   const [open, setOpen] = useState(false);
   const [mode, setMode] = useState<Mode>(
     () => (localStorage.getItem("ai_mode") as Mode) || "qa"
@@ -80,7 +78,6 @@ export default function AiFloatingChat() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [loadingIx, setLoadingIx] = useState(0);
-  const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   const endRef = useRef<HTMLDivElement>(null);
 
@@ -203,7 +200,6 @@ export default function AiFloatingChat() {
 
   const handleSend = async () => {
     if (isLoading) return;
-    setErrorMsg(null);
 
     if (mode === "qa") {
       const q = input.trim();

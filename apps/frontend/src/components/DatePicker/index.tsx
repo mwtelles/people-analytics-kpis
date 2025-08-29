@@ -3,7 +3,6 @@ import * as S from "./style";
 import { createPortal } from "react-dom";
 import { CalendarPanel } from "./Components/CalendarPanel";
 import { useShortcuts, MonthShortcut, YearShortcut } from "./Hooks/useShortcuts";
-import { formatDate } from "./Utils/date";
 import { AnimatePresence, motion } from "framer-motion";
 import dayjs from "dayjs";
 
