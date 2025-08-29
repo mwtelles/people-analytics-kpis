@@ -11,6 +11,8 @@ RUN pnpm run build
 FROM node:22-alpine AS prod
 WORKDIR /app
 
+RUN corepack enable
+
 COPY --from=build /app/dist ./dist
 COPY --from=build /app/node_modules ./node_modules
 COPY --from=build /app/db ./db
