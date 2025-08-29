@@ -6,7 +6,11 @@
     "dev": "ts-node-dev --respawn src/server.ts",
     "build": "tsc",
     "start": "node dist/server.js",
-    "test": "jest --passWithNoTests"
+    "test": "jest --passWithNoTests",
+    "migrate": "sequelize-cli db:migrate",
+    "seed": "sequelize-cli db:seed:all",
+    "migrate:undo": "sequelize-cli db:migrate:undo:all",
+    "seed:undo": "sequelize-cli db:seed:undo:all"
   },
   "dependencies": {
     "connect-timeout": "^1.9.1",
