@@ -45,5 +45,5 @@ export const dashboardSteps: Step[] = [
   {
     target: '[data-tour="chat"]',
     content: "Aqui você pode interagir com o assistente virtual para obter insights adicionais.",
-  }
+  },
 ];

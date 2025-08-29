@@ -316,7 +316,7 @@ export default function LineChart({
                     stroke="#999"
                   />
                   <text
-                    x={idx === domainX.length - 1 ? (xScale(m) - 10) : xScale(m)}
+                    x={idx === domainX.length - 1 ? xScale(m) - 10 : xScale(m)}
                     y={plotBottom + 20}
                     textAnchor="middle"
                     fontSize={12}

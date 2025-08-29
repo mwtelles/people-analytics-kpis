@@ -1,48 +1,16 @@
 import { useMemo, useRef, useState } from "react";
-import { motion } from "framer-motion";
 import * as S from "./style";
 import { Scope, useKpis } from "../../hooks/useKpis";
-import { DatePicker } from "../../components/DatePicker";
-import { formatValue } from "../../utils/formatValue";
-import { formatMonth } from "../../utils/date";
-import LineChart from "../../components/Chart/Line";
-import type { KpiPoint, HierarchyNodeResponse } from "../../interfaces/kpi";
-import Select from "../../components/Select";
 import { useSearch } from "@tanstack/react-router";
 import AiFloatingChat from "../../components/AiFloatingToggle";
+import ReportTree from "./components/ReportTree";
+import DashboardHeader from "./components/Header";
+import KpiCards from "./components/KpiCards";
+import KpiCharts from "./components/KpiCharts";
+import { buildChildSeriesMap } from "../../utils/seriesUtils";
+import type { HierarchyNodeResponse, KpiPoint } from "../../interfaces/kpi";
 
 type SeriesMap = Record<string, KpiPoint[]>;
-
-function sumSeriesByMonth(seriesList: KpiPoint[][]): KpiPoint[] {
-  const months = Array.from(new Set(seriesList.flatMap((s) => s.map((p) => p.month)))).sort();
-  return months.map((month) => ({
-    month,
-    value: seriesList.reduce((acc, s) => acc + (s.find((p) => p.month === month)?.value ?? 0), 0),
-  }));
-}
-
-function buildChildSeriesMap(
-  node: HierarchyNodeResponse,
-  metric: "headcount" | "turnover",
-  topN = 6,
-): SeriesMap {
-  const total = node.metrics[metric] ?? [];
-  const children = (node.reports ?? []).map((child) => {
-    const series = child.metrics[metric] ?? [];
-    const last = series.length > 0 ? (series[series.length - 1]?.value ?? 0) : 0;
-    return { name: child.name, series, last };
-  });
-
-  children.sort((a, b) => b.last - a.last);
-  const top = children.slice(0, topN);
-  const rest = children.slice(topN);
-
-  const map: SeriesMap = { Total: total };
-  top.forEach(({ name, series }) => (map[name] = series));
-  if (rest.length) map[`Outros (${rest.length})`] = sumSeriesByMonth(rest.map((c) => c.series));
-
-  return map;
-}
 
 export default function DashboardPage() {
   const headcountContainerRef = useRef<HTMLDivElement>(null);
@@ -65,7 +33,7 @@ export default function DashboardPage() {
         status: "ativo",
         counts: { direct: 0, indirect: 0, total: 0 },
         metrics: { headcount: headcount.total, turnover: turnover.total },
-        reports: (headcount.reports ?? []) as unknown as HierarchyNodeResponse[],
+        reports: (headcount.reports ?? []) as HierarchyNodeResponse[],
       };
       return buildChildSeriesMap(syntheticRoot, "headcount", 6);
     }
@@ -85,7 +53,7 @@ export default function DashboardPage() {
         status: "ativo",
         counts: { direct: 0, indirect: 0, total: 0 },
         metrics: { headcount: headcount.total, turnover: turnover.total },
-        reports: (turnover.reports ?? []) as unknown as HierarchyNodeResponse[],
+        reports: (turnover.reports ?? []) as HierarchyNodeResponse[],
       };
       return buildChildSeriesMap(syntheticRoot, "turnover", 6);
     }
@@ -95,208 +63,40 @@ export default function DashboardPage() {
     return { Total: turnover.total };
   }, [headcount, turnover]);
 
-  function renderReports(reports: HierarchyNodeResponse[]): React.ReactNode {
-    if (!reports?.length) return null;
-
-    return reports.map((report) => {
-      const headcountMap = buildChildSeriesMap(report, "headcount", 5);
-      const turnoverMap = buildChildSeriesMap(report, "turnover", 5);
-
-      return (
-        <S.ReportCard key={report.id}>
-          <S.ReportHeader>
-            <S.ReportName>{report.name}</S.ReportName>
-            {report.position && <S.ReportPosition>{report.position}</S.ReportPosition>}
-          </S.ReportHeader>
-
-          <S.ReportCharts>
-            <S.CardChart>
-              <LineChart title="Headcount" data={headcountMap} />
-            </S.CardChart>
-
-            <S.CardChart>
-              <LineChart title="Turnover" data={turnoverMap} isPercentage />
-            </S.CardChart>
-          </S.ReportCharts>
-
-          {report.reports?.length ? (
-            <S.SubReports>{renderReports(report.reports)}</S.SubReports>
-          ) : null}
-        </S.ReportCard>
-      );
-    });
-  }
-
   const hierarchyReports =
     headcount.scope === "hierarchy" ? (headcount.reports as HierarchyNodeResponse[]) : [];
 
   return (
     <S.Container>
-      <motion.div
-        initial={{ opacity: 0, y: 30 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, ease: "easeOut" }}
-      >
-        <S.Toolbar>
-          <S.HeadlineContainer data-tour="headline">
-            <S.Headline
-              as={motion.h1}
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, ease: "easeOut" }}
-            >
-              People Analytics <span>KPIs</span>
-            </S.Headline>
+      <DashboardHeader
+        scope={scope}
+        onScopeChange={setScope}
+        from={from}
+        to={to}
+        onRangeChange={([f, t]) => { setFrom(f); setTo(t); }}
+        initialFrom={initialFrom}
+        initialTo={initialTo}
+      />
 
-            <S.Subheadline
-              as={motion.p}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.2 }}
-            >
-              Os dados do usuário já estão disponíveis de{" "}
-              <strong>{formatMonth(from, { format: "short", showYear: "numeric" })}</strong> até{" "}
-              <strong>{formatMonth(to, { format: "short", showYear: "numeric" })}</strong>.
-            </S.Subheadline>
-          </S.HeadlineContainer>
+      <KpiCards summary={summary ?? null} />
 
-          <S.Wrapper>
-            <S.SelectContainer data-tour="scope-select">
-              <Select
-                value={scope}
-                onChange={(val) => setScope(val as Scope)}
-                options={[
-                  { value: "total", label: "Total" },
-                  { value: "grouped", label: "Diretos vs Indiretos" },
-                  { value: "hierarchy", label: "Hierarquia" },
-                ]}
-              />
-            </S.SelectContainer>
-            <S.DateContainer data-tour="date-picker">
-              <DatePicker
-                mode="range"
-                variant="dropdown"
-                value={[from, to]}
-                defaultValue={[initialFrom, initialTo]}
-                dateFormat="YYYY-MM"
-                onChange={(val) => {
-                  if (Array.isArray(val)) {
-                    setFrom(val[0]);
-                    setTo(val[1]);
-                  }
-                }}
-                shortcuts={[
-                  "thisMonth",
-                  "last3Months",
-                  "last6Months",
-                  "thisYear",
-                  "lastYear",
-                  "last3Years",
-                  "last5Years",
-                ]}
-              />
-            </S.DateContainer>
-          </S.Wrapper>
-        </S.Toolbar>
-      </motion.div>
+      <KpiCharts
+        headcountSeriesTop={headcountSeriesTop}
+        turnoverSeriesTop={turnoverSeriesTop}
+        headcountContainerRef={headcountContainerRef as React.RefObject<HTMLDivElement>}
+        turnoverContainerRef={turnoverContainerRef as React.RefObject<HTMLDivElement>}
+      />
 
-      <motion.div
-        initial={{ opacity: 0, y: 30 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, ease: "easeOut" }}
-      >
-        <S.GridContainer>
-          <S.Card data-tour="card-headcount">
-            <S.CardIcon>
-              <S.BarIcon />
-            </S.CardIcon>
-            <S.CardContainer>
-              <S.CardTitle>Headcount Atual</S.CardTitle>
-              <S.CardValue>{formatValue(summary?.headcount.last ?? 0, false)}</S.CardValue>
-            </S.CardContainer>
-          </S.Card>
+      {scope === "hierarchy" && (
+        <S.HierarchySection>
+          <S.SectionTitle>Detalhes por Gestor</S.SectionTitle>
+          <ReportTree reports={hierarchyReports} />
+        </S.HierarchySection>
+      )}
 
-          <S.Card data-tour="card-average-headcount">
-            <S.CardIcon>
-              <S.BarIcon />
-            </S.CardIcon>
-            <S.CardContainer>
-              <S.CardTitle>Média Headcount</S.CardTitle>
-              <S.CardValue>{formatValue(summary?.headcount.avg ?? 0, false)}</S.CardValue>
-            </S.CardContainer>
-          </S.Card>
-
-          <S.Card data-tour="card-max-headcount">
-            <S.CardIcon>
-              <S.BarIcon />
-            </S.CardIcon>
-            <S.CardContainer>
-              <S.CardTitle>Máximo Headcount</S.CardTitle>
-              <S.CardValue>{formatValue(summary?.headcount.max ?? 0, false)}</S.CardValue>
-            </S.CardContainer>
-          </S.Card>
-
-          <S.Card data-tour="card-turnover">
-            <S.CardIcon>
-              <S.BarIcon />
-            </S.CardIcon>
-            <S.CardContainer>
-              <S.CardTitle>Turnover Atual</S.CardTitle>
-              <S.CardValue>{formatValue(summary?.turnover.last ?? 0, true)}</S.CardValue>
-            </S.CardContainer>
-          </S.Card>
-
-          <S.Card data-tour="card-max-turnover">
-            <S.CardIcon>
-              <S.BarIcon />
-            </S.CardIcon>
-            <S.CardContainer>
-              <S.CardTitle>Máximo Turnover</S.CardTitle>
-              <S.CardValue>{formatValue(summary?.turnover.max ?? 0, true)}</S.CardValue>
-            </S.CardContainer>
-          </S.Card>
-        </S.GridContainer>
-      </motion.div>
-
-      <motion.div
-        initial={{ opacity: 0, y: 30 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, ease: "easeOut" }}
-      >
-        <S.GridChart>
-          <S.CardChart ref={headcountContainerRef} data-tour="chart-headcount">
-            <LineChart
-              title="Headcount"
-              data={headcountSeriesTop}
-              containerRef={headcountContainerRef}
-            />
-          </S.CardChart>
-
-          <S.CardChart ref={turnoverContainerRef} data-tour="chart-turnover">
-            <LineChart
-              title="Turnover"
-              data={turnoverSeriesTop}
-              isPercentage
-              containerRef={turnoverContainerRef}
-            />
-          </S.CardChart>
-        </S.GridChart>
-      </motion.div>
-      <motion.div
-        initial={{ opacity: 0, y: 30 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, ease: "easeOut" }}
-      >
-        {scope === "hierarchy" && (
-          <S.HierarchySection>
-            <S.SectionTitle>Detalhes por Gestor</S.SectionTitle>
-            {renderReports(hierarchyReports)}
-          </S.HierarchySection>
-        )}
-      </motion.div>
       <S.CardContainer>
         <S.ChatContainer data-tour="chat">
-          <AiFloatingChat/>
+          <AiFloatingChat />
         </S.ChatContainer>
       </S.CardContainer>
     </S.Container>
