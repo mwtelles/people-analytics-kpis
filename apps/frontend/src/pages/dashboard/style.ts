@@ -25,17 +25,6 @@ export const SectionTitle = styled.h2`
   color: ${({ theme }) => theme.colors.text};
 `;
 
-
-
-
-
-
-
-
-
-
-
-
 export const ChatContainer = styled.div`
   position: absolute;
   width: 100px;

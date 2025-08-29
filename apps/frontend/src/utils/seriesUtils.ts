@@ -3,18 +3,14 @@ import { KpiPoint, HierarchyNodeResponse } from "../interfaces/kpi";
 export type MetricType = "headcount" | "turnover";
 
 export function sumSeriesByMonth(seriesList: KpiPoint[][]): KpiPoint[] {
-  const months = Array.from(new Set(seriesList.flatMap(s => s.map(p => p.month)))).sort();
-  return months.map(month => ({
+  const months = Array.from(new Set(seriesList.flatMap((s) => s.map((p) => p.month)))).sort();
+  return months.map((month) => ({
     month,
-    value: seriesList.reduce((acc, s) => acc + (s.find(p => p.month === month)?.value ?? 0), 0),
+    value: seriesList.reduce((acc, s) => acc + (s.find((p) => p.month === month)?.value ?? 0), 0),
   }));
 }
 
-export function buildChildSeriesMap(
-  node: HierarchyNodeResponse,
-  metric: MetricType,
-  topN = 6,
-) {
+export function buildChildSeriesMap(node: HierarchyNodeResponse, metric: MetricType, topN = 6) {
   const total = node.metrics[metric] ?? [];
   const children = (node.reports ?? []).map((child) => {
     const series = child.metrics[metric] ?? [];
@@ -28,8 +24,10 @@ export function buildChildSeriesMap(
   const rest = children.slice(topN);
 
   const map: Record<string, KpiPoint[]> = { Total: total };
-  top.forEach(({ name, series }) => { map[name] = series });
-  if (rest.length) map[`Outros (${rest.length})`] = sumSeriesByMonth(rest.map(c => c.series));
+  top.forEach(({ name, series }) => {
+    map[name] = series;
+  });
+  if (rest.length) map[`Outros (${rest.length})`] = sumSeriesByMonth(rest.map((c) => c.series));
 
   return map;
 }

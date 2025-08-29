@@ -14,11 +14,12 @@ const options: swaggerJsDoc.Options = {
     servers: [
       {
         url: `${process.env.BACKEND_URL}/api`,
-        description: process.env.NODE_ENV === "production" ? "Production server" : "Local dev server",
+        description:
+          process.env.NODE_ENV === "production" ? "Production server" : "Local dev server",
       },
     ],
   },
-  apis: ["./src/routes/*.ts"],
+  apis: ["src/routes/*.ts", "dist/routes/*.js"],
 };
 
 const swaggerSpec = swaggerJsDoc(options);

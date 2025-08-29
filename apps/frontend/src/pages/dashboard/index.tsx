@@ -73,7 +73,10 @@ export default function DashboardPage() {
         onScopeChange={setScope}
         from={from}
         to={to}
-        onRangeChange={([f, t]) => { setFrom(f); setTo(t); }}
+        onRangeChange={([f, t]) => {
+          setFrom(f);
+          setTo(t);
+        }}
         initialFrom={initialFrom}
         initialTo={initialTo}
       />

@@ -32,9 +32,11 @@ export default function ReportTree({ reports }: Props) {
               </S.CardChart>
             </S.ReportCharts>
 
-            {report.reports?.length && <S.SubReports>
-              <ReportTree reports={report.reports} />
-            </S.SubReports>}
+            {report.reports?.length && (
+              <S.SubReports>
+                <ReportTree reports={report.reports} />
+              </S.SubReports>
+            )}
           </S.ReportCard>
         );
       })}

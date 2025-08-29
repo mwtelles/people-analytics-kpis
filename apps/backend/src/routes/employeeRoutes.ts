@@ -15,7 +15,7 @@ const router = Router();
  *           type: string
  *         required: true
  *         description: E-mail do funcionário a ser verificado
- *         example: daniellewinters@kpis.tech   # 👈 exemplo default
+ *         example: daniellewinters@kpis.tech
  *     responses:
  *       200:
  *         description: E-mail encontrado

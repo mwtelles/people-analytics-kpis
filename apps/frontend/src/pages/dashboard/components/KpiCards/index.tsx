@@ -18,7 +18,9 @@ export default function KpiCards({ summary }: Props) {
     >
       <S.GridContainer>
         <S.Card data-tour="card-headcount">
-          <S.CardIcon><S.BarIcon /></S.CardIcon>
+          <S.CardIcon>
+            <S.BarIcon />
+          </S.CardIcon>
           <S.CardContainer>
             <S.CardTitle>Headcount Atual</S.CardTitle>
             <S.CardValue>{formatValue(summary?.headcount.last ?? 0, false)}</S.CardValue>
@@ -26,7 +28,9 @@ export default function KpiCards({ summary }: Props) {
         </S.Card>
 
         <S.Card data-tour="card-average-headcount">
-          <S.CardIcon><S.BarIcon /></S.CardIcon>
+          <S.CardIcon>
+            <S.BarIcon />
+          </S.CardIcon>
           <S.CardContainer>
             <S.CardTitle>Média Headcount</S.CardTitle>
             <S.CardValue>{formatValue(summary?.headcount.avg ?? 0, false)}</S.CardValue>
@@ -34,7 +38,9 @@ export default function KpiCards({ summary }: Props) {
         </S.Card>
 
         <S.Card data-tour="card-max-headcount">
-          <S.CardIcon><S.BarIcon /></S.CardIcon>
+          <S.CardIcon>
+            <S.BarIcon />
+          </S.CardIcon>
           <S.CardContainer>
             <S.CardTitle>Máximo Headcount</S.CardTitle>
             <S.CardValue>{formatValue(summary?.headcount.max ?? 0, false)}</S.CardValue>
@@ -42,7 +48,9 @@ export default function KpiCards({ summary }: Props) {
         </S.Card>
 
         <S.Card data-tour="card-turnover">
-          <S.CardIcon><S.BarIcon /></S.CardIcon>
+          <S.CardIcon>
+            <S.BarIcon />
+          </S.CardIcon>
           <S.CardContainer>
             <S.CardTitle>Turnover Atual</S.CardTitle>
             <S.CardValue>{formatValue(summary?.turnover.last ?? 0, true)}</S.CardValue>
@@ -50,7 +58,9 @@ export default function KpiCards({ summary }: Props) {
         </S.Card>
 
         <S.Card data-tour="card-max-turnover">
-          <S.CardIcon><S.BarIcon /></S.CardIcon>
+          <S.CardIcon>
+            <S.BarIcon />
+          </S.CardIcon>
           <S.CardContainer>
             <S.CardTitle>Máximo Turnover</S.CardTitle>
             <S.CardValue>{formatValue(summary?.turnover.max ?? 0, true)}</S.CardValue>

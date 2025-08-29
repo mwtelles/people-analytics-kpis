@@ -27,11 +27,20 @@ export default function KpiCharts({
     >
       <S.GridChart>
         <S.CardChart ref={headcountContainerRef} data-tour="chart-headcount">
-          <LineChart title="Headcount" data={headcountSeriesTop} containerRef={headcountContainerRef} />
+          <LineChart
+            title="Headcount"
+            data={headcountSeriesTop}
+            containerRef={headcountContainerRef}
+          />
         </S.CardChart>
 
         <S.CardChart ref={turnoverContainerRef} data-tour="chart-turnover">
-          <LineChart title="Turnover" data={turnoverSeriesTop} isPercentage containerRef={turnoverContainerRef} />
+          <LineChart
+            title="Turnover"
+            data={turnoverSeriesTop}
+            isPercentage
+            containerRef={turnoverContainerRef}
+          />
         </S.CardChart>
       </S.GridChart>
     </motion.div>
