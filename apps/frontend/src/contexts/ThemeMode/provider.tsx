@@ -6,7 +6,7 @@ import { lightTheme, darkTheme } from "../../theme";
 export const ThemeModeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [mode, setMode] = useState<ThemeMode>(() => {
     const stored = localStorage.getItem("theme_mode");
-    return stored === "dark" ? "dark" : "light";
+    return stored === "light" ? "light" : "dark";
   });
 
   useEffect(() => {

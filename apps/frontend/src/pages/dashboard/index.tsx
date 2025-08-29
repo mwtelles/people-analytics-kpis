@@ -138,9 +138,8 @@ export default function DashboardPage() {
         transition={{ duration: 0.8, ease: "easeOut" }}
       >
         <S.Toolbar>
-          <S.HeadlineContainer>
+          <S.HeadlineContainer data-tour="headline">
             <S.Headline
-              data-tour="headline"
               as={motion.h1}
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
@@ -162,17 +161,18 @@ export default function DashboardPage() {
           </S.HeadlineContainer>
 
           <S.Wrapper>
-            <Select
-              value={scope}
-              onChange={(val) => setScope(val as Scope)}
-              options={[
-                { value: "total", label: "Total" },
-                { value: "grouped", label: "Diretos vs Indiretos" },
-                { value: "hierarchy", label: "Hierarquia" },
-              ]}
-            />
-
-            <S.DateContainer>
+            <S.SelectContainer data-tour="scope-select">
+              <Select
+                value={scope}
+                onChange={(val) => setScope(val as Scope)}
+                options={[
+                  { value: "total", label: "Total" },
+                  { value: "grouped", label: "Diretos vs Indiretos" },
+                  { value: "hierarchy", label: "Hierarquia" },
+                ]}
+              />
+            </S.SelectContainer>
+            <S.DateContainer data-tour="date-picker">
               <DatePicker
                 mode="range"
                 variant="dropdown"
@@ -206,7 +206,7 @@ export default function DashboardPage() {
         transition={{ duration: 0.8, ease: "easeOut" }}
       >
         <S.GridContainer>
-          <S.Card>
+          <S.Card data-tour="card-headcount">
             <S.CardIcon>
               <S.BarIcon />
             </S.CardIcon>
@@ -216,7 +216,7 @@ export default function DashboardPage() {
             </S.CardContainer>
           </S.Card>
 
-          <S.Card>
+          <S.Card data-tour="card-average-headcount">
             <S.CardIcon>
               <S.BarIcon />
             </S.CardIcon>
@@ -226,7 +226,7 @@ export default function DashboardPage() {
             </S.CardContainer>
           </S.Card>
 
-          <S.Card>
+          <S.Card data-tour="card-max-headcount">
             <S.CardIcon>
               <S.BarIcon />
             </S.CardIcon>
@@ -236,7 +236,7 @@ export default function DashboardPage() {
             </S.CardContainer>
           </S.Card>
 
-          <S.Card>
+          <S.Card data-tour="card-turnover">
             <S.CardIcon>
               <S.BarIcon />
             </S.CardIcon>
@@ -246,7 +246,7 @@ export default function DashboardPage() {
             </S.CardContainer>
           </S.Card>
 
-          <S.Card>
+          <S.Card data-tour="card-max-turnover">
             <S.CardIcon>
               <S.BarIcon />
             </S.CardIcon>
@@ -264,7 +264,7 @@ export default function DashboardPage() {
         transition={{ duration: 0.8, ease: "easeOut" }}
       >
         <S.GridChart>
-          <S.CardChart ref={headcountContainerRef}>
+          <S.CardChart ref={headcountContainerRef} data-tour="chart-headcount">
             <LineChart
               title="Headcount"
               data={headcountSeriesTop}
@@ -272,7 +272,7 @@ export default function DashboardPage() {
             />
           </S.CardChart>
 
-          <S.CardChart ref={turnoverContainerRef}>
+          <S.CardChart ref={turnoverContainerRef} data-tour="chart-turnover">
             <LineChart
               title="Turnover"
               data={turnoverSeriesTop}
@@ -294,7 +294,11 @@ export default function DashboardPage() {
           </S.HierarchySection>
         )}
       </motion.div>
-      <AiFloatingChat />
+      <S.CardContainer>
+        <S.ChatContainer data-tour="chat">
+          <AiFloatingChat/>
+        </S.ChatContainer>
+      </S.CardContainer>
     </S.Container>
   );
 }

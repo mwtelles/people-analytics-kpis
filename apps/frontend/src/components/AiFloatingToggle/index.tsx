@@ -67,29 +67,23 @@ export default function AiFloatingChat() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [loadingIx, setLoadingIx] = useState(0);
-
   const endRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!open || messages.length) return;
     const seen = localStorage.getItem("ai_seen") === "1";
-
     if (!seen) {
       localStorage.setItem("ai_seen", "1");
-
       const hi = `Oi! 👋`;
       const help =
         "Posso te ajudar com KPIs — faça uma pergunta no modo *Perguntar* ou gere um resumo no modo *Insights*.";
-
       setMessages([{ id: crypto.randomUUID(), role: "assistant", text: hi }]);
-
       const t = setTimeout(() => {
         setMessages((prev) => [
           ...prev,
           { id: crypto.randomUUID(), role: "assistant", text: help },
         ]);
       }, 700);
-
       return () => clearTimeout(t);
     }
   }, [open, messages.length]);
@@ -115,7 +109,7 @@ export default function AiFloatingChat() {
             ];
           });
         },
-        () => {},
+        () => { },
       );
     },
     onError: () => {
@@ -152,7 +146,7 @@ export default function AiFloatingChat() {
             ];
           });
         },
-        () => {},
+        () => { },
       );
     },
     onError: () => {
@@ -161,7 +155,7 @@ export default function AiFloatingChat() {
         {
           id: crypto.randomUUID(),
           role: "assistant",
-          text: "⚠️ Não consegui gerar o insight agora. Tente novamente mais tarde.",
+          text: "Não consegui gerar o insight agora. Tente novamente mais tarde.",
           type: "error",
         },
       ]);
@@ -187,7 +181,6 @@ export default function AiFloatingChat() {
 
   const handleSend = async () => {
     if (isLoading) return;
-
     if (mode === "qa") {
       const q = input.trim();
       if (!q) return;
@@ -196,7 +189,6 @@ export default function AiFloatingChat() {
       await askMutation.mutateAsync(q);
       return;
     }
-
     const q = input.trim() || "Gerar resumo do período";
     setMessages((prev) => [...prev, { id: crypto.randomUUID(), role: "user", text: q }]);
     setInput("");
@@ -211,9 +203,7 @@ export default function AiFloatingChat() {
   };
 
   const placeholder = mode === "qa" ? "Pergunte algo sobre seus KPIs" : "Peça um insight";
-
   const canSend = mode === "qa" ? input.trim().length > 0 : !isLoading;
-
   const showSuggestions = useMemo(() => !messages.some((m) => m.role === "user"), [messages]);
 
   const suggestions = useMemo(() => {
@@ -246,123 +236,123 @@ export default function AiFloatingChat() {
 
   return (
     <S.FloatingWrapper>
-      {!open && (
-        <S.FloatingButton
-          onClick={() => setOpen(true)}
-          as={motion.button}
-          initial={{ scale: 0, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          exit={{ scale: 0, opacity: 0 }}
-          whileTap={{ scale: 0.92 }}
-        >
-          <S.Text>IA</S.Text>
-        </S.FloatingButton>
-      )}
-
-      <AnimatePresence>
-        {open && (
-          <S.ChatContainer
-            as={motion.div}
-            initial={{ opacity: 0, y: 96 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 96 }}
-            transition={{ duration: 0.25 }}
+      <AnimatePresence mode="wait">
+        {!open ? (
+          <S.FloatingButton
+            key="float"
+            layoutId="ai-float"
+            initial={{ scale: 0, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0, opacity: 0 }}
+            transition={{ type: "spring", stiffness: 300, damping: 20 }}
+            onClick={() => setOpen(true)}
           >
-            <S.ChatHeader>
-              <S.Title>Assistente IA</S.Title>
-              <S.Segmented>
-                <S.Segment data-active={mode === "qa"} onClick={() => setMode("qa")}>
-                  Perguntar
-                </S.Segment>
-                <S.Segment data-active={mode === "insights"} onClick={() => setMode("insights")}>
-                  Insights
-                </S.Segment>
-              </S.Segmented>
-              <S.CloseButton onClick={() => setOpen(false)}>
-                <S.CloseIcon />
-              </S.CloseButton>
-            </S.ChatHeader>
-
-            <S.ChatBody>
-              <S.ChatMessages>
-                {messages.map((m) => (
-                  <S.MessageRow key={m.id} align={m.role}>
-                    {m.role !== "user" && (
+            <S.Text>IA</S.Text>
+          </S.FloatingButton>
+        ) : (
+          <motion.div
+            key="chat"
+            layoutId="ai-float"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ type: "spring", stiffness: 120, damping: 15 }}
+            style={{ borderRadius: 16 }}
+          >
+            <S.ChatContainer>
+              <S.ChatHeader>
+                <S.Title>Assistente IA</S.Title>
+                <S.Segmented>
+                  <S.Segment data-active={mode === "qa"} onClick={() => setMode("qa")}>
+                    Perguntar
+                  </S.Segment>
+                  <S.Segment data-active={mode === "insights"} onClick={() => setMode("insights")}>
+                    Insights
+                  </S.Segment>
+                </S.Segmented>
+                <S.CloseButton onClick={() => setOpen(false)}>
+                  <S.CloseIcon />
+                </S.CloseButton>
+              </S.ChatHeader>
+              <S.ChatBody>
+                <S.ChatMessages>
+                  {messages.map((m) => (
+                    <S.MessageRow key={m.id} align={m.role}>
+                      {m.role !== "user" && (
+                        <S.Avatar side="left">
+                          <S.Logo />
+                        </S.Avatar>
+                      )}
+                      <S.Message $role={m.role} $type={m.type}>
+                        {m.insight ? (
+                          renderInsight(m.text)
+                        ) : (
+                          <div dangerouslySetInnerHTML={{ __html: m.text }} />
+                        )}
+                        {m.qa?.params && (
+                          <S.ParamsBar>
+                            <S.ParamChip>{m.qa.params.metric}</S.ParamChip>
+                            <S.ParamChip>{m.qa.params.agg}</S.ParamChip>
+                            <S.ParamChip>{formatMonth(m.qa.params.from.slice(0, 7))}</S.ParamChip>
+                            <S.ParamChip>{formatMonth(m.qa.params.to.slice(0, 7))}</S.ParamChip>
+                          </S.ParamsBar>
+                        )}
+                      </S.Message>
+                      {m.role === "user" && (
+                        <S.Avatar side="right">
+                          <S.UserIcon />
+                        </S.Avatar>
+                      )}
+                    </S.MessageRow>
+                  ))}
+                  {isLoading && (
+                    <S.MessageRow align="assistant">
                       <S.Avatar side="left">
                         <S.Logo />
                       </S.Avatar>
-                    )}
-                    <S.Message $role={m.role} $type={m.type}>
-                      {m.insight ? (
-                        renderInsight(m.text)
-                      ) : (
-                        <div dangerouslySetInnerHTML={{ __html: m.text }} />
-                      )}
-                      {m.qa?.params && (
-                        <S.ParamsBar>
-                          <S.ParamChip>{m.qa.params.metric}</S.ParamChip>
-                          <S.ParamChip>{m.qa.params.agg}</S.ParamChip>
-                          <S.ParamChip>{formatMonth(m.qa.params.from.slice(0, 7))}</S.ParamChip>
-                          <S.ParamChip>{formatMonth(m.qa.params.to.slice(0, 7))}</S.ParamChip>
-                        </S.ParamsBar>
-                      )}
-                    </S.Message>
-                    {m.role === "user" && (
-                      <S.Avatar side="right">
-                        <S.UserIcon />
-                      </S.Avatar>
-                    )}
-                  </S.MessageRow>
-                ))}
-
-                {isLoading && (
-                  <S.MessageRow align="assistant">
-                    <S.Avatar side="left">
-                      <S.Logo />
-                    </S.Avatar>
-                    <S.TypingBubble>
-                      <S.LoadingText>{LOADING_TEXTS[loadingIx]}</S.LoadingText>
-                      <S.Dots>
-                        <S.Dot
-                          as={motion.span}
-                          animate={{ opacity: [0.2, 1, 0.2] }}
-                          transition={{ duration: 1, repeat: Infinity, delay: 0 }}
-                        />
-                        <S.Dot
-                          as={motion.span}
-                          animate={{ opacity: [0.2, 1, 0.2] }}
-                          transition={{ duration: 1, repeat: Infinity, delay: 0.2 }}
-                        />
-                        <S.Dot
-                          as={motion.span}
-                          animate={{ opacity: [0.2, 1, 0.2] }}
-                          transition={{ duration: 1, repeat: Infinity, delay: 0.4 }}
-                        />
-                      </S.Dots>
-                    </S.TypingBubble>
-                  </S.MessageRow>
-                )}
-                <div ref={endRef} />
-              </S.ChatMessages>
-              {suggestions}
-            </S.ChatBody>
-
-            <S.ChatFooter as="form" onSubmit={(e) => (e.preventDefault(), handleSend())}>
-              <S.Input
-                as={mode === "qa" ? "textarea" : "input"}
-                rows={mode === "qa" ? 2 : undefined}
-                placeholder={placeholder}
-                value={input}
-                onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
-                  setInput(e.target.value)
-                }
-                onKeyDown={onKeyDown}
-              />
-              <S.PrimaryButton type="submit" disabled={!canSend}>
-                <S.SendIcon />
-              </S.PrimaryButton>
-            </S.ChatFooter>
-          </S.ChatContainer>
+                      <S.TypingBubble>
+                        <S.LoadingText>{LOADING_TEXTS[loadingIx]}</S.LoadingText>
+                        <S.Dots>
+                          <S.Dot
+                            as={motion.span}
+                            animate={{ opacity: [0.2, 1, 0.2] }}
+                            transition={{ duration: 1, repeat: Infinity, delay: 0 }}
+                          />
+                          <S.Dot
+                            as={motion.span}
+                            animate={{ opacity: [0.2, 1, 0.2] }}
+                            transition={{ duration: 1, repeat: Infinity, delay: 0.2 }}
+                          />
+                          <S.Dot
+                            as={motion.span}
+                            animate={{ opacity: [0.2, 1, 0.2] }}
+                            transition={{ duration: 1, repeat: Infinity, delay: 0.4 }}
+                          />
+                        </S.Dots>
+                      </S.TypingBubble>
+                    </S.MessageRow>
+                  )}
+                  <div ref={endRef} />
+                </S.ChatMessages>
+                {suggestions}
+              </S.ChatBody>
+              <S.ChatFooter as="form" onSubmit={(e) => (e.preventDefault(), handleSend())}>
+                <S.Input
+                  as={mode === "qa" ? "textarea" : "input"}
+                  rows={mode === "qa" ? 2 : undefined}
+                  placeholder={placeholder}
+                  value={input}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
+                    setInput(e.target.value)
+                  }
+                  onKeyDown={onKeyDown}
+                />
+                <S.PrimaryButton type="submit" disabled={!canSend}>
+                  <S.SendIcon />
+                </S.PrimaryButton>
+              </S.ChatFooter>
+            </S.ChatContainer>
+          </motion.div>
         )}
       </AnimatePresence>
     </S.FloatingWrapper>

@@ -16,7 +16,7 @@ export const FloatingWrapper = styled.div`
 export const FloatingButton = styled(motion.button)`
   width: 60px;
   height: 60px;
-  border-radius: 50%;
+  border-radius: 100% !important;
   border: 1px solid ${({ theme }) => theme.colors.glowPrimary};
   cursor: pointer;
   display: grid;

@@ -68,7 +68,6 @@ export const NavButton = styled.button<{ $hide?: boolean }>`
   height: 32px;
 
   &:hover {
-    background-color: ${({ theme }) => theme.colors.text};
 
     svg {
       color: ${({ theme }) => theme.colors.primary};

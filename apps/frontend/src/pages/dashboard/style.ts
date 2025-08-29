@@ -62,8 +62,10 @@ export const Wrapper = styled.div`
   display: flex;
   flex-direction: row;
   align-items: flex-end;
+  justify-content: flex-end;
   gap: 16px;
   flex-wrap: wrap;
+  width: 100%;
 `;
 
 export const Select = styled.select`
@@ -75,6 +77,12 @@ export const Select = styled.select`
   padding: 0 0.5rem;
   color: ${({ theme }) => theme.colors.textSecondary};
 
+  @media (max-width: 480px) {
+    width: 100%;
+  }
+`;
+
+export const SelectContainer = styled.div`
   @media (max-width: 480px) {
     width: 100%;
   }
@@ -108,7 +116,7 @@ export const Card = styled.div`
   padding: 16px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 
-  @media (max-width: 480px) {
+  @media (max-width: 500px) {
     padding: 12px;
     gap: 12px;
   }
@@ -135,12 +143,11 @@ export const CardIcon = styled.div`
     color: ${({ theme }) => theme.colors.primary};
   }
 
-  @media (max-width: 480px) {
-    padding: 12px;
+  @media (max-width: 500px) {
 
     svg {
-      width: 20px;
-      height: 20px;
+      width: 25px;
+      height: 25px;
     }
   }
 `;
@@ -229,4 +236,12 @@ export const SubReports = styled.div`
   gap: 1rem;
   border-left: 2px solid ${({ theme }) => theme.colors.border};
   padding-left: 1rem;
+`;
+
+export const ChatContainer = styled.div`
+  position: absolute;
+  width: 100px;
+  height: 100px;
+  right: 0;
+  bottom: -3%;
 `;
