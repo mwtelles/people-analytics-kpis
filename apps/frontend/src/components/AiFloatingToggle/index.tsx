@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
-import { useSearch, useNavigate } from "@tanstack/react-router";
+import { useSearch } from "@tanstack/react-router";
 import { AnimatePresence, motion } from "framer-motion";
 import * as S from "./style";
 import { askQuestion, getInsights, QaResponse } from "../../services/ai";
@@ -62,7 +62,6 @@ function renderInsight(text: string) {
 
 export default function AiFloatingChat() {
   const { email, from, to } = useSearch({ from: "/dashboard" });
-  const navigate = useNavigate({ from: "/dashboard" });
   const [open, setOpen] = useState(false);
   const [mode, setMode] = useState<Mode>(() => (localStorage.getItem("ai_mode") as Mode) || "qa");
   const [messages, setMessages] = useState<Message[]>([]);
@@ -116,7 +115,7 @@ export default function AiFloatingChat() {
             ];
           });
         },
-        () => {},
+        () => { },
       );
     },
     onError: () => {
@@ -125,7 +124,7 @@ export default function AiFloatingChat() {
         {
           id: crypto.randomUUID(),
           role: "assistant",
-          text: "⚠️ Desculpe, não consegui responder sua pergunta. Tente novamente.",
+          text: "Desculpe, não consegui responder sua pergunta. Tente novamente.",
         },
       ]);
     },
@@ -153,7 +152,7 @@ export default function AiFloatingChat() {
             ];
           });
         },
-        () => {},
+        () => { },
       );
     },
     onError: () => {
@@ -354,7 +353,9 @@ export default function AiFloatingChat() {
                 rows={mode === "qa" ? 2 : undefined}
                 placeholder={placeholder}
                 value={input}
-                onChange={(e: any) => setInput(e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
+                  setInput(e.target.value)
+                }
                 onKeyDown={onKeyDown}
               />
               <S.PrimaryButton type="submit" disabled={!canSend}>
