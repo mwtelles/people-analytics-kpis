@@ -7,7 +7,7 @@ import ReportTree from "./components/ReportTree";
 import DashboardHeader from "./components/Header";
 import KpiCards from "./components/KpiCards";
 import KpiCharts from "./components/KpiCharts";
-import { buildChildSeriesMap } from "../../utils/seriesUtils";
+import { buildChildSeriesMap } from "../../utils/buildChildSeriesMap";
 import type { HierarchyNodeResponse, KpiPoint } from "../../interfaces/kpi";
 
 type SeriesMap = Record<string, KpiPoint[]>;

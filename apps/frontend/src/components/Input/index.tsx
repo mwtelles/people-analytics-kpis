@@ -1,6 +1,5 @@
-import { useEffect, useState } from "react";
+import { useEffect, useId, useState } from "react";
 import * as S from "./style";
-import { MailOutline } from "@mui/icons-material";
 import { motion } from "framer-motion";
 
 interface EmailInputProps {
@@ -31,6 +30,7 @@ export function EmailInput({
   onValidityChange,
 }: EmailInputProps) {
   const [touched, setTouched] = useState(false);
+  const inputId = useId();
 
   const emailRegex =
     /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z]{2,})+$/;
@@ -63,11 +63,11 @@ export function EmailInput({
   const rawError = validate(value);
 
   const finalError =
-    externalError ||
-    (submitted && rawError === "Campo obrigatório") ||
-    (touched && value && rawError)
-      ? rawError
-      : null;
+  externalError ||
+  (submitted && rawError) ||
+  (touched && rawError)
+    ? rawError
+    : null;
 
   const isValid = !rawError;
 
@@ -82,7 +82,7 @@ export function EmailInput({
 
   return (
     <S.Wrapper>
-      {label && <S.Label>{label}</S.Label>}
+      {label && <S.Label htmlFor={inputId}>{label}</S.Label>}
 
       <motion.div
         animate={finalError ? { x: [-4, 4, -4, 4, 0] } : { x: 0 }}
@@ -90,9 +90,10 @@ export function EmailInput({
       >
         <S.InputWrapper $hasError={!!finalError} $isValid={isValid} $validating={validating}>
           <S.Icon>
-            <MailOutline />
+            <S.MailIcon />
           </S.Icon>
           <S.InputField
+            id={inputId}
             type="email"
             value={value}
             onChange={handleChange}

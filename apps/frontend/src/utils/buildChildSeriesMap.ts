@@ -1,14 +1,7 @@
 import { KpiPoint, HierarchyNodeResponse } from "../interfaces/kpi";
+import { sumSeriesByMonth } from "./sumSeriesByMonth";
 
 export type MetricType = "headcount" | "turnover";
-
-export function sumSeriesByMonth(seriesList: KpiPoint[][]): KpiPoint[] {
-  const months = Array.from(new Set(seriesList.flatMap((s) => s.map((p) => p.month)))).sort();
-  return months.map((month) => ({
-    month,
-    value: seriesList.reduce((acc, s) => acc + (s.find((p) => p.month === month)?.value ?? 0), 0),
-  }));
-}
 
 export function buildChildSeriesMap(node: HierarchyNodeResponse, metric: MetricType, topN = 6) {
   const total = node.metrics[metric] ?? [];

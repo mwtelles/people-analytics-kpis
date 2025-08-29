@@ -3,7 +3,7 @@ import { useNavigate } from "@tanstack/react-router";
 import { AxiosError } from "axios";
 import { motion } from "framer-motion";
 import * as S from "./style";
-import { EmailInput } from "../../components/EmailInput";
+import { EmailInput } from "../../components/Input";
 import Spinner from "../../components/Loading/Spinner";
 import { checkEmail } from "../../services/employees";
 

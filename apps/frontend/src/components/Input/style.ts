@@ -1,3 +1,4 @@
+import { Mail04 } from "@untitled-ui/icons-react";
 import styled from "styled-components";
 
 export const Wrapper = styled.div`
@@ -87,4 +88,7 @@ export const ErrorMsg = styled.span`
   font-size: 0.8rem;
   color: ${({ theme }) => theme.colors.error};
   margin-top: 2px;
+`;
+
+export const MailIcon = styled(Mail04)`
 `;

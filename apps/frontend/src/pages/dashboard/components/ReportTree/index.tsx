@@ -1,7 +1,7 @@
 import * as S from "./style";
 import LineChart from "../../../../components/Chart/Line";
 import { HierarchyNodeResponse } from "../../../../interfaces/kpi";
-import { buildChildSeriesMap } from "../../../../utils/seriesUtils";
+import { buildChildSeriesMap } from "../../../../utils/buildChildSeriesMap";
 
 interface Props {
   reports: HierarchyNodeResponse[];
