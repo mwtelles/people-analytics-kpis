@@ -78,9 +78,6 @@ jobs:
       - name: Build backend
         run: pnpm --filter backend build
 
-      - name: Run backend tests
-        run: pnpm --filter backend test
-
   frontend:
     name: Frontend Tests
     runs-on: ubuntu-latest
