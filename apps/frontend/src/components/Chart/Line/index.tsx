@@ -84,7 +84,7 @@ export default function LineChart({
     }
 
     return Object.entries(data as ChartSeries)
-      .filter(([_, value]) => Array.isArray(value))
+      .filter(([, value]) => Array.isArray(value))
       .map(([key, value], idx) => ({
         id: key,
         color: getColor(key, idx),
