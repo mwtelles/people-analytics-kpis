@@ -74,8 +74,7 @@ export interface KpiSummaryResponse {
   turnover: KpiAggregateSummary;
 }
 
-export const isHierarchy = (r: KpiSeriesResponse): r is HierarchyKpiResponse =>
-  "hierarchy" in r;
+export const isHierarchy = (r: KpiSeriesResponse): r is HierarchyKpiResponse => "hierarchy" in r;
 
 export const isGrouped = (r: KpiSeriesResponse): r is GroupedKpiResponse =>
   !isHierarchy(r) && "direct" in r.aggregates;

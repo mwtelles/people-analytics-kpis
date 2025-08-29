@@ -44,8 +44,8 @@ export function EmailInput({
 
       if (domainWhitelist && domainWhitelist.length > 0) {
         const lower = email.toLowerCase();
-        const validDomain = domainWhitelist.some((d) =>
-          lower.endsWith(`@${d.toLowerCase()}`) || lower.endsWith(`.${d.toLowerCase()}`)
+        const validDomain = domainWhitelist.some(
+          (d) => lower.endsWith(`@${d.toLowerCase()}`) || lower.endsWith(`.${d.toLowerCase()}`),
         );
         if (!validDomain) {
           return `Use um e-mail corporativo válido (${domainWhitelist.join(", ")})`;
