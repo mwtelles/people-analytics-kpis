@@ -11,7 +11,7 @@ interface Props {
   headerLayout?: "centered" | "logoLeft";
 }
 
-const API_DOCS_URL = import.meta.env.VITE_API_DOCS_URL || "http://localhost:3000/api/docs";
+const API_DOCS_URL = import.meta.env.VITE_API_DOCS_URL;
 const GITHUB_REPO = "https://github.com/mwtelles/people-analytics-kpis";
 
 export default function BoostLayout({

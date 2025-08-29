@@ -8,8 +8,8 @@ import timeout from "connect-timeout";
 
 const app = express();
 
-app.use(cors({ origin: process.env.VITE_URL || "http://localhost:5173" }));
-console.log(`CORS enabled for ${process.env.VITE_URL || "http://localhost:5173"}`);
+app.use(cors({ origin: process.env.VITE_URL }));
+console.log(`CORS enabled for ${process.env.VITE_URL}`);
 
 app.use(express.json());
 app.use(timeout("15s"));

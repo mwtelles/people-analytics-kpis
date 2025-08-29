@@ -5,9 +5,11 @@ RUN corepack enable
 
 ARG VITE_URL
 ARG VITE_BACKEND_URL
+ARG VITE_API_DOCS_URL
 
 ENV VITE_URL=${VITE_URL}
 ENV VITE_BACKEND_URL=${VITE_BACKEND_URL}
+ENV VITE_API_DOCS_URL=${VITE_API_DOCS_URL}
 
 COPY package.json pnpm-lock.yaml* ./
 RUN pnpm install --no-frozen-lockfile
