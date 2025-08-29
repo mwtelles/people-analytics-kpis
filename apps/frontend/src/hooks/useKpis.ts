@@ -1,28 +1,44 @@
 import { useQuery } from "@tanstack/react-query";
-import { getHeadcount, getTurnover, KpiResponse, SeriesPoint } from "../services/kpis";
+import { getKpis, getSummary } from "../services/kpis";
+import {
+  KpiPoint,
+  KpiSeriesResponse,
+  KpiSummaryResponse,
+  TotalKpiResponse,
+  GroupedKpiResponse,
+  HierarchyKpiResponse,
+  isHierarchy,
+  isGrouped,
+} from "../interfaces/kpi";
 
 export type Scope = "total" | "grouped" | "hierarchy";
 
-export type TotalData = { scope: "total"; total: SeriesPoint[] };
+type SeriesByScope<S extends Scope> = S extends "total"
+  ? TotalKpiResponse
+  : S extends "grouped"
+    ? GroupedKpiResponse
+    : HierarchyKpiResponse;
+
+export type TotalData = { scope: "total"; total: KpiPoint[] };
 export type GroupedData = {
   scope: "grouped";
-  total: SeriesPoint[];
-  direct: SeriesPoint[];
-  indirect: SeriesPoint[];
+  total: KpiPoint[];
+  direct: KpiPoint[];
+  indirect: KpiPoint[];
 };
 export type HierarchyData = {
   scope: "hierarchy";
-  total: SeriesPoint[];
-  direct: SeriesPoint[];
-  indirect: SeriesPoint[];
+  total: KpiPoint[];
+  direct: KpiPoint[];
+  indirect: KpiPoint[];
   reports: {
     id: number;
     name: string;
     position?: string;
     status: string;
     metrics: {
-      headcount?: SeriesPoint[];
-      turnover?: SeriesPoint[];
+      headcount: KpiPoint[];
+      turnover: KpiPoint[];
     };
   }[];
 };
@@ -40,6 +56,7 @@ interface UseKpisParams<S extends Scope> {
 type UseKpisReturn<S extends Scope> = {
   headcount: Extract<KpiData, { scope: S }>;
   turnover: Extract<KpiData, { scope: S }>;
+  summary?: KpiSummaryResponse;
   isLoading: boolean;
   isError: boolean;
   error: unknown;
@@ -52,27 +69,39 @@ export function useKpis<S extends Scope = "total">({
   scope = "total" as S,
   includeMeta = false,
 }: UseKpisParams<S>): UseKpisReturn<S> {
-  const headcountQuery = useQuery<KpiResponse>({
-    queryKey: ["kpis", "headcount", email, from, to, scope, includeMeta],
-    queryFn: () => getHeadcount(email, from, to, scope, includeMeta),
+  const seriesQuery = useQuery<SeriesByScope<S>>({
+    queryKey: ["kpis", "series", email, from, to, scope, includeMeta],
+    queryFn: () => {
+      switch (scope) {
+        case "total":
+          return getKpis(email, from, to, "total", includeMeta) as Promise<SeriesByScope<S>>;
+        case "grouped":
+          return getKpis(email, from, to, "grouped", includeMeta) as Promise<SeriesByScope<S>>;
+        case "hierarchy":
+          return getKpis(email, from, to, "hierarchy", includeMeta) as Promise<SeriesByScope<S>>;
+      }
+    },
     enabled: Boolean(email && from && to),
   });
 
-  const turnoverQuery = useQuery<KpiResponse>({
-    queryKey: ["kpis", "turnover", email, from, to, scope, includeMeta],
-    queryFn: () => getTurnover(email, from, to, scope, includeMeta),
+  const summaryQuery = useQuery<KpiSummaryResponse>({
+    queryKey: ["kpis", "summary", email, from, to],
+    queryFn: () => getSummary(email, from, to),
     enabled: Boolean(email && from && to),
   });
 
-  const normalize = (data: KpiResponse | undefined, type: "headcount" | "turnover"): KpiData => {
+  const normalize = (
+    data: KpiSeriesResponse | undefined,
+    type: "headcount" | "turnover",
+  ): KpiData => {
     if (!data) return { scope, total: [] } as KpiData;
 
-    if ("leader" in data && "hierarchy" in data) {
+    if (isHierarchy(data)) {
       return {
         scope: "hierarchy",
-        total: data.aggregates.total[type] ?? [],
-        direct: data.aggregates.direct[type] ?? [],
-        indirect: data.aggregates.indirect[type] ?? [],
+        total: data.aggregates.total[type],
+        direct: data.aggregates.direct[type],
+        indirect: data.aggregates.indirect[type],
         reports: data.hierarchy.directReports.map((r) => ({
           id: r.id,
           name: r.name,
@@ -83,26 +112,33 @@ export function useKpis<S extends Scope = "total">({
       };
     }
 
-    if ("direct" in data.aggregates) {
+    if (isGrouped(data)) {
       return {
         scope: "grouped",
-        total: data.aggregates.total[type] ?? [],
-        direct: data.aggregates.direct[type] ?? [],
-        indirect: data.aggregates.indirect[type] ?? [],
+        total: data.aggregates.total[type],
+        direct: data.aggregates.direct[type],
+        indirect: data.aggregates.indirect[type],
       };
     }
 
     return {
       scope: "total",
-      total: data.aggregates.total[type] ?? [],
+      total: data.aggregates.total[type],
     };
   };
 
   return {
-    headcount: normalize(headcountQuery.data, "headcount") as Extract<KpiData, { scope: S }>,
-    turnover: normalize(turnoverQuery.data, "turnover") as Extract<KpiData, { scope: S }>,
-    isLoading: headcountQuery.isLoading || turnoverQuery.isLoading,
-    isError: headcountQuery.isError || turnoverQuery.isError,
-    error: headcountQuery.error || turnoverQuery.error,
+    headcount: normalize(seriesQuery.data as unknown as KpiSeriesResponse, "headcount") as Extract<
+      KpiData,
+      { scope: S }
+    >,
+    turnover: normalize(seriesQuery.data as unknown as KpiSeriesResponse, "turnover") as Extract<
+      KpiData,
+      { scope: S }
+    >,
+    summary: summaryQuery.data,
+    isLoading: seriesQuery.isLoading || summaryQuery.isLoading,
+    isError: seriesQuery.isError || summaryQuery.isError,
+    error: seriesQuery.error || summaryQuery.error,
   };
 }

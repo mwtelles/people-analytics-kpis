@@ -20,6 +20,7 @@ export function buildMonthlySeries(
       y++;
       m = 0;
     }
+
     const { start, end } = getMonthRange(y, m);
 
     const activeFirstDay = list.filter((e) => isActiveOnDate(e, start)).length;
@@ -36,10 +37,8 @@ export function buildMonthlySeries(
       value = headcount > 0 ? terminated / headcount : 0;
     }
 
-    series.push({
-      month: `${y}-${String(m + 1).padStart(2, "0")}`,
-      value,
-    });
+    series.push({ month: `${y}-${String(m + 1).padStart(2, "0")}`, value });
   }
+
   return series;
 }

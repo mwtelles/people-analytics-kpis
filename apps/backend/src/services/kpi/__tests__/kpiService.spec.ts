@@ -18,7 +18,7 @@ describe("KpiService", () => {
   });
 
   describe("Grouped scope", () => {
-    it("deve retornar séries para direct, indirect e total (headcount)", async () => {
+    it("deve retornar séries para direct, indirect e total (headcount e turnover)", async () => {
       const leader = makeEmployee({ id: 1, email: "test@acme.com" });
       jest.spyOn(EmployeeRepository, "getEmployeesByIds").mockResolvedValue([
         leader,
@@ -26,7 +26,7 @@ describe("KpiService", () => {
         makeEmployee({ id: 3, leaderId: 2 }),
       ]);
 
-      const result = await KpiService.getHeadcount(
+      const result = await KpiService.getKpis(
         "test@acme.com",
         "2021-01",
         "2021-01",
@@ -36,13 +36,18 @@ describe("KpiService", () => {
       const grouped = result as GroupedKpiDto;
 
       expect(grouped.aggregates.direct.headcount).toBeDefined();
+      expect(grouped.aggregates.direct.turnover).toBeDefined();
+
       expect(grouped.aggregates.indirect.headcount).toBeDefined();
+      expect(grouped.aggregates.indirect.turnover).toBeDefined();
+
       expect(grouped.aggregates.total.headcount).toBeDefined();
+      expect(grouped.aggregates.total.turnover).toBeDefined();
     });
   });
 
   describe("Hierarchy scope", () => {
-    it("deve retornar leader e directReports no escopo hierarchy (headcount)", async () => {
+    it("deve retornar leader e directReports no escopo hierarchy (headcount e turnover)", async () => {
       const leader = makeEmployee({ id: 1, email: "test@acme.com" });
       const direct = makeEmployee({ id: 2, leaderId: leader.id });
 
@@ -53,7 +58,7 @@ describe("KpiService", () => {
 
       jest.spyOn(Employee, "findOne").mockResolvedValue(leader as Employee);
 
-      const result = await KpiService.getHeadcount(
+      const result = await KpiService.getKpis(
         "test@acme.com",
         "2021-01",
         "2021-01",
@@ -64,8 +69,16 @@ describe("KpiService", () => {
 
       expect(hierarchy.leader?.id).toBe(1);
       expect(hierarchy.hierarchy.directReports.length).toBe(1);
-      expect(hierarchy.hierarchy.directReports[0].id).toBe(2);
-      expect(hierarchy.hierarchy.directReports[0].metrics.headcount).toBeDefined();
+
+      const firstReport = hierarchy.hierarchy.directReports[0];
+      expect(firstReport.id).toBe(2);
+
+      expect(firstReport.metrics.headcount).toBeDefined();
+      expect(firstReport.metrics.turnover).toBeDefined();
+
+      expect(firstReport.counts.total).toBeGreaterThanOrEqual(0);
+      expect(firstReport.counts.direct).toBeGreaterThanOrEqual(0);
+      expect(firstReport.counts.indirect).toBeGreaterThanOrEqual(0);
     });
   });
 });

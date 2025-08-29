@@ -8,7 +8,7 @@ export function makeEmployee(attrs: Partial<Employee> = {}): Employee {
     name: "Teste User",
     email: "teste@acme.com",
     leaderId: null,
-    admissionDate: new Date("2020-01-01"),
+    admissionDate: new Date(Date.UTC(2020, 0, 1)),
     resignationDate: null,
     position: "Dev",
     ...attrs,

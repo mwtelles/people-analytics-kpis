@@ -3,11 +3,26 @@ export function parseMonth(month: string): Date {
   return new Date(Date.UTC(year, m - 1, 1));
 }
 
-export function formatMonth(month: string, locale: "pt-BR" | "en-US" = "pt-BR"): string {
+interface FormatMonthOptions {
+  locale?: "pt-BR" | "en-US";
+  format?: "short" | "long";
+  showYear?: "2-digit" | "numeric" | false;
+}
+
+export function formatMonth(
+  month: string,
+  { locale = "pt-BR", format = "short", showYear = "2-digit" }: FormatMonthOptions = {},
+): string {
   const date = parseMonth(month);
-  return date.toLocaleDateString(locale, {
-    month: "short",
-    year: "2-digit",
+
+  const options: Intl.DateTimeFormatOptions = {
+    month: format,
     timeZone: "UTC",
-  });
+  };
+
+  if (showYear) {
+    options.year = showYear;
+  }
+
+  return date.toLocaleDateString(locale, options);
 }

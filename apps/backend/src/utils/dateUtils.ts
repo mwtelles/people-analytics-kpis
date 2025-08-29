@@ -7,5 +7,12 @@ export function isActiveOnDate(
   const admission = new Date(employee.admissionDate);
   const resignation = employee.resignationDate ? new Date(employee.resignationDate) : null;
 
-  return admission <= date && (!resignation || resignation >= date);
+  if (admission.getTime() > date.getTime()) {
+    return false;
+  }
+  if (resignation && resignation.getTime() < date.getTime()) {
+    return false;
+  }
+
+  return true;
 }
