@@ -12,6 +12,7 @@
     "connect-timeout": "^1.9.1",
     "cors": "^2.8.5",
     "date-fns": "^4.1.0",
+    "dotenv": "^17.2.1",
     "express": "^4.19.0",
     "openai": "^5.16.0",
     "pg": "^8.11.0",
@@ -22,6 +23,7 @@
   "devDependencies": {
     "@types/connect-timeout": "^1.9.0",
     "@types/cors": "^2.8.19",
+    "@types/dotenv": "^8.2.3",
     "@types/express": "^5.0.3",
     "@types/jest": "^30.0.0",
     "@types/node": "^24.3.0",
