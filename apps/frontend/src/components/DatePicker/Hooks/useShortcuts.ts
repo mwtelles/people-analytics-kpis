@@ -12,11 +12,7 @@ export type MonthShortcut =
   | "last3Years"
   | "last5Years";
 
-export type YearShortcut =
-  | "thisYear"
-  | "lastYear"
-  | "last3Years"
-  | "last5Years";
+export type YearShortcut = "thisYear" | "lastYear" | "last3Years" | "last5Years";
 
 export type ShortcutType = MonthShortcut | YearShortcut;
 
@@ -111,11 +107,13 @@ export const useShortcuts = (selectionLevel: "month" | "year" = "month") => {
   const shortcuts = selectionLevel === "year" ? yearShortcuts : monthShortcuts;
 
   const shortcutLabels = Object.fromEntries(
-    Object.entries(shortcuts).map(([key, { label }]) => [key, label])
+    Object.entries(shortcuts).map(([key, { label }]) => [key, label]),
   ) as Record<ShortcutType, string>;
 
   const resolveShortcut = (shortcut: ShortcutType): [string, string] => {
-    return (shortcuts as Record<ShortcutType, { label: string; getRange: RangeFn }>)[shortcut].getRange(today);
+    return (shortcuts as Record<ShortcutType, { label: string; getRange: RangeFn }>)[
+      shortcut
+    ].getRange(today);
   };
 
   return {

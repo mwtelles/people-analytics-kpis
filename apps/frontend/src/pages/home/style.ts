@@ -127,7 +127,9 @@ export const InputWrapper = styled.div`
   padding: 1rem 1.25rem;
   border-radius: 12px;
   border: 1px solid ${({ theme }) => theme.colors.borderSoft};
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  transition:
+    border-color 0.3s ease,
+    box-shadow 0.3s ease;
 
   &:focus-within {
     border-color: ${({ theme }) => theme.colors.primary};
@@ -197,7 +199,9 @@ export const SubmitButton = styled.button`
     background-position: -120% 0;
 
     opacity: 0;
-    transition: opacity 0.4s ease, background-position 1.2s ease-in-out;
+    transition:
+      opacity 0.4s ease,
+      background-position 1.2s ease-in-out;
     pointer-events: none;
   }
 
@@ -206,7 +210,6 @@ export const SubmitButton = styled.button`
     background-position: 120% 0;
   }
 `;
-
 
 export const ErrorBox = styled.div`
   color: ${({ theme }) => theme.colors.error};

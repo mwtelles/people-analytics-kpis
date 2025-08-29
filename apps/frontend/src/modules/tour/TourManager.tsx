@@ -39,7 +39,13 @@ export default function TourManager() {
       continuous
       showProgress
       showSkipButton
-      locale={{ next: "Próximo", back: "Voltar", skip: "Pular", last: "Concluir", nextLabelWithProgress: "Próximo ({step} de {steps})" }}
+      locale={{
+        next: "Próximo",
+        back: "Voltar",
+        skip: "Pular",
+        last: "Concluir",
+        nextLabelWithProgress: "Próximo ({step} de {steps})",
+      }}
       styles={{
         options: {
           zIndex: 2000,

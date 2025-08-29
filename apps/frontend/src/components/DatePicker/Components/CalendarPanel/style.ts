@@ -1,5 +1,5 @@
-import { ChevronRight } from '@untitled-ui/icons-react';
-import styled, { css } from 'styled-components';
+import { ChevronRight } from "@untitled-ui/icons-react";
+import styled, { css } from "styled-components";
 
 export const CalendarWrapper = styled.div`
   display: flex;
@@ -26,7 +26,7 @@ export const MonthLabel = styled.span<{ $clickable?: boolean }>`
   font-size: 12px;
   font-weight: 600;
   color: ${({ theme }) => theme.colors.text};
-  cursor: ${({ $clickable }) => $clickable ? 'pointer' : 'default'};
+  cursor: ${({ $clickable }) => ($clickable ? "pointer" : "default")};
 
   ${({ $clickable }) =>
     $clickable &&
@@ -43,7 +43,7 @@ export const YearLabel = styled.span<{ $clickable?: boolean }>`
   font-weight: 600;
   color: ${({ theme }) => theme.colors.text};
 
-  cursor: ${({ $clickable }) => $clickable ? 'pointer' : 'default'};
+  cursor: ${({ $clickable }) => ($clickable ? "pointer" : "default")};
 
   ${({ $clickable }) =>
     $clickable &&
@@ -71,7 +71,7 @@ export const NavButton = styled.button<{ $hide?: boolean }>`
     background-color: ${({ theme }) => theme.colors.text};
 
     svg {
-        color: ${({ theme }) => theme.colors.primary};
+      color: ${({ theme }) => theme.colors.primary};
     }
   }
 
@@ -123,15 +123,16 @@ export const Day = styled.button<DayProps>`
   color: ${({ theme }) => theme.colors.text};
   transition: background 0.2s;
 
-  ${({ $inRange, theme }) =>
+  ${({ $inRange }) =>
     $inRange &&
     css`
       background-color: red;
       color: ${({ theme }) => theme.colors.text};
     `}
 
-  ${({ $outsideMonth, theme }) =>
-    $outsideMonth && css`
+  ${({ $outsideMonth }) =>
+    $outsideMonth &&
+    css`
       color: ${({ theme }) => theme.colors.text};
     `}
 
@@ -146,21 +147,21 @@ export const Day = styled.button<DayProps>`
     $selected &&
     !$outsideMonth &&
     css`
-    background-color: ${theme.colors.primary};
-    color: ${theme.colors.primary};
-  `}
+      background-color: ${theme.colors.primary};
+      color: ${theme.colors.primary};
+    `}
 
 ${({ $selected, $outsideMonth, theme }) =>
     $selected &&
     $outsideMonth &&
     css`
-    background-color: ${theme.colors.primary};
-    color: ${({ theme }) => theme.colors.text};
-    opacity: 0.6;
-  `}
+      background-color: ${theme.colors.primary};
+      color: ${({ theme }) => theme.colors.text};
+      opacity: 0.6;
+    `}
 
 
-  ${({ $disabled, theme }) =>
+  ${({ $disabled }) =>
     $disabled &&
     css`
       color: ${({ theme }) => theme.colors.text};
@@ -168,16 +169,16 @@ ${({ $selected, $outsideMonth, theme }) =>
     `}
 
   &:hover {
-    ${({ $disabled, $selected, theme }) =>
-    !$disabled &&
-    !$selected &&
-    css`
+    ${({ $disabled, $selected }) =>
+      !$disabled &&
+      !$selected &&
+      css`
         background-color: ${({ theme }) => theme.colors.text};
       `}
   }
 `;
 
-export const ArrowIcon = styled(ChevronRight) <{ $rotated?: boolean }>`
+export const ArrowIcon = styled(ChevronRight)<{ $rotated?: boolean }>`
   width: 18px;
   height: 18px;
   color: ${({ theme }) => theme.colors.text};

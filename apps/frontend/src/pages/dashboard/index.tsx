@@ -14,22 +14,22 @@ import AiFloatingChat from "../../components/AiFloatingToggle";
 type SeriesMap = Record<string, KpiPoint[]>;
 
 function sumSeriesByMonth(seriesList: KpiPoint[][]): KpiPoint[] {
-  const months = Array.from(new Set(seriesList.flatMap(s => s.map(p => p.month)))).sort();
-  return months.map(month => ({
+  const months = Array.from(new Set(seriesList.flatMap((s) => s.map((p) => p.month)))).sort();
+  return months.map((month) => ({
     month,
-    value: seriesList.reduce((acc, s) => acc + (s.find(p => p.month === month)?.value ?? 0), 0),
+    value: seriesList.reduce((acc, s) => acc + (s.find((p) => p.month === month)?.value ?? 0), 0),
   }));
 }
 
 function buildChildSeriesMap(
   node: HierarchyNodeResponse,
   metric: "headcount" | "turnover",
-  topN = 6
+  topN = 6,
 ): SeriesMap {
   const total = node.metrics[metric] ?? [];
-  const children = (node.reports ?? []).map(child => {
+  const children = (node.reports ?? []).map((child) => {
     const series = child.metrics[metric] ?? [];
-    const last = series.length > 0 ? series[series.length - 1]?.value ?? 0 : 0;
+    const last = series.length > 0 ? (series[series.length - 1]?.value ?? 0) : 0;
     return { name: child.name, series, last };
   });
 
@@ -39,7 +39,7 @@ function buildChildSeriesMap(
 
   const map: SeriesMap = { Total: total };
   top.forEach(({ name, series }) => (map[name] = series));
-  if (rest.length) map[`Outros (${rest.length})`] = sumSeriesByMonth(rest.map(c => c.series));
+  if (rest.length) map[`Outros (${rest.length})`] = sumSeriesByMonth(rest.map((c) => c.series));
 
   return map;
 }
@@ -167,7 +167,6 @@ export default function DashboardPage() {
             ]}
           />
 
-
           <S.DateContainer>
             <DatePicker
               mode="range"
@@ -197,7 +196,9 @@ export default function DashboardPage() {
 
       <S.GridContainer>
         <S.Card>
-          <S.CardIcon><S.BarIcon /></S.CardIcon>
+          <S.CardIcon>
+            <S.BarIcon />
+          </S.CardIcon>
           <S.CardContainer>
             <S.CardTitle>Headcount Atual</S.CardTitle>
             <S.CardValue>{formatValue(summary?.headcount.last ?? 0, false)}</S.CardValue>
@@ -205,7 +206,9 @@ export default function DashboardPage() {
         </S.Card>
 
         <S.Card>
-          <S.CardIcon><S.BarIcon /></S.CardIcon>
+          <S.CardIcon>
+            <S.BarIcon />
+          </S.CardIcon>
           <S.CardContainer>
             <S.CardTitle>Média Headcount</S.CardTitle>
             <S.CardValue>{formatValue(summary?.headcount.avg ?? 0, false)}</S.CardValue>
@@ -213,7 +216,9 @@ export default function DashboardPage() {
         </S.Card>
 
         <S.Card>
-          <S.CardIcon><S.BarIcon /></S.CardIcon>
+          <S.CardIcon>
+            <S.BarIcon />
+          </S.CardIcon>
           <S.CardContainer>
             <S.CardTitle>Máximo Headcount</S.CardTitle>
             <S.CardValue>{formatValue(summary?.headcount.max ?? 0, false)}</S.CardValue>
@@ -221,7 +226,9 @@ export default function DashboardPage() {
         </S.Card>
 
         <S.Card>
-          <S.CardIcon><S.BarIcon /></S.CardIcon>
+          <S.CardIcon>
+            <S.BarIcon />
+          </S.CardIcon>
           <S.CardContainer>
             <S.CardTitle>Turnover Atual</S.CardTitle>
             <S.CardValue>{formatValue(summary?.turnover.last ?? 0, true)}</S.CardValue>
@@ -229,7 +236,9 @@ export default function DashboardPage() {
         </S.Card>
 
         <S.Card>
-          <S.CardIcon><S.BarIcon /></S.CardIcon>
+          <S.CardIcon>
+            <S.BarIcon />
+          </S.CardIcon>
           <S.CardContainer>
             <S.CardTitle>Máximo Turnover</S.CardTitle>
             <S.CardValue>{formatValue(summary?.turnover.max ?? 0, true)}</S.CardValue>

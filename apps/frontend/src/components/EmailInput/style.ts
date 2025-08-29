@@ -27,11 +27,7 @@ export const InputWrapper = styled.div<{
   border-radius: 8px;
   border: 1px solid
     ${({ theme, $hasError, $isValid }) =>
-      $hasError
-        ? theme.colors.error
-        : $isValid
-        ? theme.colors.success
-        : theme.colors.border};
+      $hasError ? theme.colors.error : $isValid ? theme.colors.success : theme.colors.border};
   background: ${({ theme }) => theme.colors.backgroundContent};
 
   ${({ $validating, theme }) =>
@@ -46,20 +42,21 @@ export const InputWrapper = styled.div<{
       $hasError
         ? theme.colors.errorHover
         : $isValid
-        ? theme.colors.successHover
-        : theme.colors.primary};
+          ? theme.colors.successHover
+          : theme.colors.primary};
     box-shadow: 0 0 0 2px
       ${({ theme, $hasError, $isValid }) =>
         $hasError
           ? `${theme.colors.error}40`
           : $isValid
-          ? `${theme.colors.success}40`
-          : `${theme.colors.primary}40`};
+            ? `${theme.colors.success}40`
+            : `${theme.colors.primary}40`};
   }
 
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
 `;
-
 
 export const Icon = styled.div`
   color: ${({ theme }) => theme.colors.textSecondary};

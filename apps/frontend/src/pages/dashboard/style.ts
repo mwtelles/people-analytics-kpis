@@ -194,7 +194,7 @@ export const ReportCard = styled.div`
   border-radius: 12px;
   background: ${({ theme }) => theme.colors.overlay};
   border: 1px solid ${({ theme }) => theme.colors.border};
-  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
   display: flex;
   flex-direction: column;
   gap: 1rem;

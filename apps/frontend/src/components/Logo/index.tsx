@@ -15,7 +15,7 @@ export default function LogoWithText() {
         transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
         whileHover="hover"
       >
-        <S.InternPath 
+        <S.InternPath
           d={pathD}
           strokeWidth="0.5"
           fill="transparent"
@@ -25,7 +25,7 @@ export default function LogoWithText() {
           animate={{ pathLength: 1 }}
           transition={{ duration: 1.8, ease: "easeInOut" }}
         />
-        <S.ExternPath 
+        <S.ExternPath
           d={pathD}
           stroke="none"
           fillRule="evenodd"

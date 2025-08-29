@@ -25,7 +25,10 @@ export const FloatingButton = styled(motion.button)`
   background: ${({ theme }) => theme.colors.primary};
   color: ${({ theme }) => theme.colors.text || "#fff"};
 
-  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    background 0.2s ease;
   box-shadow: ${({ theme }) => theme.shadow.md};
 
   &:hover {
@@ -160,9 +163,20 @@ export const Avatar = styled.div<{ side: "left" | "right" }>`
   place-items: center;
   flex: 0 0 28px;
 
-  img { width: 100%; height: 100%; object-fit: cover; }
-  svg { width: 16px; height: 16px; color: ${({ theme }) => theme.colors.primary}; }
-  span { font-size: 12px; color: ${({ theme }) => theme.colors.textSecondary}; }
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  svg {
+    width: 16px;
+    height: 16px;
+    color: ${({ theme }) => theme.colors.primary};
+  }
+  span {
+    font-size: 12px;
+    color: ${({ theme }) => theme.colors.textSecondary};
+  }
 `;
 
 export const Logo = styled.img`
@@ -174,7 +188,10 @@ export const UserIcon = styled(User02)`
   height: 20px;
 `;
 
-export const Message = styled.div<{ $role: "user" | "assistant" | "system"; $type?: "message" | "error"; }>`
+export const Message = styled.div<{
+  $role: "user" | "assistant" | "system";
+  $type?: "message" | "error";
+}>`
   max-width: 76%;
   padding: 10px 12px;
   border-radius: 10px;
@@ -182,7 +199,7 @@ export const Message = styled.div<{ $role: "user" | "assistant" | "system"; $typ
   line-height: 1.35;
 
   color: ${({ $role, theme }) =>
-    $role === "user" ? (theme.colors.text || "#fff") : theme.colors.text};
+    $role === "user" ? theme.colors.text || "#fff" : theme.colors.text};
 
   background: ${({ $role, theme }) =>
     $role === "user" ? theme.colors.primary : theme.colors.surface};
@@ -190,10 +207,14 @@ export const Message = styled.div<{ $role: "user" | "assistant" | "system"; $typ
   border: 1px solid
     ${({ $role, theme }) => ($role === "user" ? "transparent" : theme.colors.border)};
 
-  & a { color: inherit; text-decoration: underline; }
+  & a {
+    color: inherit;
+    text-decoration: underline;
+  }
 
   ${({ $type, theme }) =>
-    $type === "error" && `
+    $type === "error" &&
+    `
     border: 1px solid ${theme.colors.error};
     background: ${theme.colors.surface};
     color: ${theme.colors.error};
@@ -235,7 +256,8 @@ export const Suggestions = styled.div`
 
 export const Suggestion = styled.button`
   border: 1px solid ${({ theme }) => theme.colors.glowPrimary};
-  background: ${({ theme }) => theme.mode === "dark" ? theme.colors.glowSecondary : theme.colors.landingBackground};
+  background: ${({ theme }) =>
+    theme.mode === "dark" ? theme.colors.glowSecondary : theme.colors.landingBackground};
   color: ${({ theme }) => theme.colors.text};
   border-radius: ${({ theme }) => theme.radius.full};
   padding: 6px 10px;
@@ -243,9 +265,12 @@ export const Suggestion = styled.button`
   cursor: pointer;
   box-shadow: ${({ theme }) => theme.shadow.sm};
 
-  &:hover { 
-    background: ${({ theme }) => theme.mode === "dark" ? theme.colors.glowPrimary : theme.colors.glowPrimary};
-    border: 1px solid ${({ theme }) => theme.mode === "dark" ? theme.colors.glowPrimary : theme.colors.glowPrimary};
+  &:hover {
+    background: ${({ theme }) =>
+      theme.mode === "dark" ? theme.colors.glowPrimary : theme.colors.glowPrimary};
+    border: 1px solid
+      ${({ theme }) =>
+        theme.mode === "dark" ? theme.colors.glowPrimary : theme.colors.glowPrimary};
   }
 `;
 
@@ -269,8 +294,12 @@ export const PrimaryButton = styled.button`
   box-shadow: ${({ theme }) => theme.shadow.sm};
   transition: background 0.2s ease;
 
-  &:hover { background: ${({ theme }) => theme.colors.primary}; }
-  &:disabled { cursor: not-allowed; }
+  &:hover {
+    background: ${({ theme }) => theme.colors.primary};
+  }
+  &:disabled {
+    cursor: not-allowed;
+  }
 `;
 
 export const Input = styled.textarea`
@@ -280,15 +309,17 @@ export const Input = styled.textarea`
   max-height: 96px;
   border: none;
   outline: none;
-  border-radius:  0px 0px 0px 10px;
+  border-radius: 0px 0px 0px 10px;
   padding: 8px;
   font-size: 14px;
 
   background: ${({ theme }) => theme.colors.background};
   color: ${({ theme }) => theme.colors.text};
 
-  &::placeholder { color: ${({ theme }) => theme.colors.textSecondary}; }
-  &:focus { 
+  &::placeholder {
+    color: ${({ theme }) => theme.colors.textSecondary};
+  }
+  &:focus {
     outline: 1px solid ${({ theme }) => theme.colors.primaryHover};
   }
 `;

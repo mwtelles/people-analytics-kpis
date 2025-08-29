@@ -1,4 +1,4 @@
-import express from "express";
+import express, { Request, Response, NextFunction } from "express";
 import cors from "cors";
 import kpiRoutes from "./routes/kpiRoutes";
 import { setupSwagger } from "./config/swagger";
@@ -12,12 +12,13 @@ app.use(cors({ origin: process.env.VITE_URL || "http://localhost:5173" }));
 console.log(`CORS enabled for ${process.env.VITE_URL || "http://localhost:5173"}`);
 
 app.use(express.json());
-
 app.use(timeout("15s"));
 
-app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
-  if (err?.code === "ETIMEDOUT") {
-    return res.status(503).json({ error: "Request timed out" });
+app.use((err: unknown, req: Request, res: Response, next: NextFunction) => {
+  if (typeof err === "object" && err !== null && "code" in err) {
+    if ((err as { code?: string }).code === "ETIMEDOUT") {
+      return res.status(503).json({ error: "Request timed out" });
+    }
   }
   next(err);
 });

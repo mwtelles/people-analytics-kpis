@@ -55,8 +55,7 @@ export const Option = styled.li<{ $active?: boolean }>`
   padding: 8px 12px;
   cursor: pointer;
   text-align: left;
-  color: ${({ theme, $active }) =>
-    $active ? theme.colors.primary : theme.colors.textSecondary};
+  color: ${({ theme, $active }) => ($active ? theme.colors.primary : theme.colors.textSecondary)};
 
   &:hover {
     background: ${({ theme }) => theme.colors.overlayInput};
@@ -64,10 +63,10 @@ export const Option = styled.li<{ $active?: boolean }>`
 `;
 
 export const TriggerIcon = styled(ChevronDown)<{ $open: boolean }>`
-    width: 16px;
-    height: 16px;
-    color: ${({ theme }) => theme.colors.textSecondary};
+  width: 16px;
+  height: 16px;
+  color: ${({ theme }) => theme.colors.textSecondary};
 
-    transform: ${({ $open }) => ($open ? "rotate(180deg)" : "rotate(0deg)")};
-    transition: transform 0.2s ease;
+  transform: ${({ $open }) => ($open ? "rotate(180deg)" : "rotate(0deg)")};
+  transition: transform 0.2s ease;
 `;

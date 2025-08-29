@@ -87,11 +87,8 @@ export const LegendItem = styled.button<{ active: boolean }>`
   text-transform: capitalize;
 
   color: ${({ theme }) => theme.colors.text};
-  background: ${({ theme, active }) =>
-    active ? theme.colors.overlay : "transparent"};
-  border: 1px solid
-    ${({ theme, active }) =>
-      active ? theme.colors.primary : theme.colors.border};
+  background: ${({ theme, active }) => (active ? theme.colors.overlay : "transparent")};
+  border: 1px solid ${({ theme, active }) => (active ? theme.colors.primary : theme.colors.border)};
 
   &:hover {
     background: ${({ theme }) => theme.colors.glowPrimary};

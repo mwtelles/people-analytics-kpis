@@ -24,7 +24,7 @@ export const Route = createFileRoute("/dashboard")({
     email: search.email,
     from: search.from,
     to: search.to,
-    scope: search.scope ?? "total" as "total" | "grouped" | "hierarchy",
+    scope: search.scope ?? ("total" as "total" | "grouped" | "hierarchy"),
     includeMeta: search.includeMeta ?? false,
   }),
 

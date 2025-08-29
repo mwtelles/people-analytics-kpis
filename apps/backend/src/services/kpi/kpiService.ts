@@ -46,11 +46,7 @@ export class KpiService {
     return EmployeeRepository.getEmployeesByIds(ids);
   }
 
-  private static async getTotal(
-    email: string,
-    from: string,
-    to: string,
-  ): Promise<TotalKpiDto> {
+  private static async getTotal(email: string, from: string, to: string): Promise<TotalKpiDto> {
     const employees = await this.getAllEmployees(email);
 
     return {
@@ -63,11 +59,7 @@ export class KpiService {
     };
   }
 
-  private static async getGrouped(
-    email: string,
-    from: string,
-    to: string,
-  ): Promise<GroupedKpiDto> {
+  private static async getGrouped(email: string, from: string, to: string): Promise<GroupedKpiDto> {
     const leader = await Employee.findOne({ where: { email } });
     if (!leader) {
       return {
@@ -81,8 +73,8 @@ export class KpiService {
 
     if (leader.position === "Diretor") {
       const employees = await Employee.findAll();
-      const direct = employees.filter(e => !e.leaderId && e.id !== leader.id);
-      const indirect = employees.filter(e => e.leaderId);
+      const direct = employees.filter((e) => !e.leaderId && e.id !== leader.id);
+      const indirect = employees.filter((e) => e.leaderId);
 
       return {
         aggregates: {
@@ -143,9 +135,7 @@ export class KpiService {
     }
 
     const employees =
-      leader.position === "Diretor"
-        ? await Employee.findAll()
-        : await this.getAllEmployees(email);
+      leader.position === "Diretor" ? await Employee.findAll() : await this.getAllEmployees(email);
 
     return {
       leader: includeMeta
@@ -169,11 +159,7 @@ export class KpiService {
     };
   }
 
-  static async getSummary(
-    email: string,
-    from: string,
-    to: string,
-  ): Promise<KpiSummaryDto> {
+  static async getSummary(email: string, from: string, to: string): Promise<KpiSummaryDto> {
     const employees = await this.getAllEmployees(email);
 
     const headcountSeries = buildMonthlySeries("headcount", employees, from, to);

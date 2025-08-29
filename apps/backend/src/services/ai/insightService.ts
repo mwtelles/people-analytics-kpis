@@ -38,6 +38,8 @@ Regras:
     max_tokens: 250,
   });
 
-  return completion.choices[0].message.content?.trim()
-    ?? "Não foi possível gerar um insight para esse período.";
+  return (
+    completion.choices[0].message.content?.trim() ??
+    "Não foi possível gerar um insight para esse período."
+  );
 }

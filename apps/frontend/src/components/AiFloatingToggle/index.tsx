@@ -33,11 +33,7 @@ const LOADING_TEXTS = [
   "Estou analisando seu pedido…",
 ];
 
-function typeWriterEffect(
-  text: string,
-  onUpdate: (t: string) => void,
-  onDone: () => void
-) {
+function typeWriterEffect(text: string, onUpdate: (t: string) => void, onDone: () => void) {
   let i = 0;
   const interval = setInterval(() => {
     i++;
@@ -52,11 +48,7 @@ function typeWriterEffect(
 function renderInsight(text: string) {
   return text.split("\n").map((line, i) => {
     if (line.startsWith("**")) {
-      return (
-        <S.InsightHeading key={i}>
-          {line.replace(/\*\*/g, "")}
-        </S.InsightHeading>
-      );
+      return <S.InsightHeading key={i}>{line.replace(/\*\*/g, "")}</S.InsightHeading>;
     }
     if (line.startsWith("-")) {
       return <S.InsightItem key={i}>{line.replace(/^- /, "")}</S.InsightItem>;
@@ -72,9 +64,7 @@ export default function AiFloatingChat() {
   const { email, from, to } = useSearch({ from: "/dashboard" });
   const navigate = useNavigate({ from: "/dashboard" });
   const [open, setOpen] = useState(false);
-  const [mode, setMode] = useState<Mode>(
-    () => (localStorage.getItem("ai_mode") as Mode) || "qa"
-  );
+  const [mode, setMode] = useState<Mode>(() => (localStorage.getItem("ai_mode") as Mode) || "qa");
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [loadingIx, setLoadingIx] = useState(0);
@@ -118,10 +108,7 @@ export default function AiFloatingChat() {
           setMessages((prev) => {
             const last = prev[prev.length - 1];
             if (last?.role === "assistant" && last.id.startsWith("typing")) {
-              return [
-                ...prev.slice(0, -1),
-                { ...last, text: partial, qa: res },
-              ];
+              return [...prev.slice(0, -1), { ...last, text: partial, qa: res }];
             }
             return [
               ...prev,
@@ -129,7 +116,7 @@ export default function AiFloatingChat() {
             ];
           });
         },
-        () => { }
+        () => { },
       );
     },
     onError: () => {
@@ -153,18 +140,20 @@ export default function AiFloatingChat() {
           setMessages((prev) => {
             const last = prev[prev.length - 1];
             if (last?.role === "assistant" && last.id.startsWith("typing")) {
-              return [
-                ...prev.slice(0, -1),
-                { ...last, text: partial, insight: true },
-              ];
+              return [...prev.slice(0, -1), { ...last, text: partial, insight: true }];
             }
             return [
               ...prev,
-              { id: "typing-" + crypto.randomUUID(), role: "assistant", text: partial, insight: true },
+              {
+                id: "typing-" + crypto.randomUUID(),
+                role: "assistant",
+                text: partial,
+                insight: true,
+              },
             ];
           });
         },
-        () => { }
+        () => { },
       );
     },
     onError: () => {
@@ -179,7 +168,6 @@ export default function AiFloatingChat() {
       ]);
     },
   });
-
 
   const isLoading = askMutation.isPending || insightMutation.isPending;
 
@@ -204,20 +192,14 @@ export default function AiFloatingChat() {
     if (mode === "qa") {
       const q = input.trim();
       if (!q) return;
-      setMessages((prev) => [
-        ...prev,
-        { id: crypto.randomUUID(), role: "user", text: q },
-      ]);
+      setMessages((prev) => [...prev, { id: crypto.randomUUID(), role: "user", text: q }]);
       setInput("");
       await askMutation.mutateAsync(q);
       return;
     }
 
     const q = input.trim() || "Gerar resumo do período";
-    setMessages((prev) => [
-      ...prev,
-      { id: crypto.randomUUID(), role: "user", text: q },
-    ]);
+    setMessages((prev) => [...prev, { id: crypto.randomUUID(), role: "user", text: q }]);
     setInput("");
     await insightMutation.mutateAsync({ from, to });
   };
@@ -229,24 +211,11 @@ export default function AiFloatingChat() {
     }
   };
 
-  const placeholder =
-    mode === "qa"
-      ? "Pergunte algo sobre seus KPIs"
-      : "Peça um insight";
+  const placeholder = mode === "qa" ? "Pergunte algo sobre seus KPIs" : "Peça um insight";
 
   const canSend = mode === "qa" ? input.trim().length > 0 : !isLoading;
 
-  const applyRangeFromParams = (qa?: QaResponse) => {
-    if (!qa?.params) return;
-    const pf = qa.params.from.slice(0, 7);
-    const pt = qa.params.to.slice(0, 7);
-    navigate({ search: (prev) => ({ ...prev, from: pf, to: pt }) });
-  };
-
-  const showSuggestions = useMemo(
-    () => !messages.some((m) => m.role === "user"),
-    [messages]
-  );
+  const showSuggestions = useMemo(() => !messages.some((m) => m.role === "user"), [messages]);
 
   const suggestions = useMemo(() => {
     if (!showSuggestions) return null;
@@ -303,29 +272,33 @@ export default function AiFloatingChat() {
             <S.ChatHeader>
               <S.Title>Assistente IA</S.Title>
               <S.Segmented>
-                <S.Segment
-                  data-active={mode === "qa"}
-                  onClick={() => setMode("qa")}
-                >
+                <S.Segment data-active={mode === "qa"} onClick={() => setMode("qa")}>
                   Perguntar
                 </S.Segment>
-                <S.Segment
-                  data-active={mode === "insights"}
-                  onClick={() => setMode("insights")}
-                >
+                <S.Segment data-active={mode === "insights"} onClick={() => setMode("insights")}>
                   Insights
                 </S.Segment>
               </S.Segmented>
-              <S.CloseButton onClick={() => setOpen(false)}><S.CloseIcon /></S.CloseButton>
+              <S.CloseButton onClick={() => setOpen(false)}>
+                <S.CloseIcon />
+              </S.CloseButton>
             </S.ChatHeader>
 
             <S.ChatBody>
               <S.ChatMessages>
                 {messages.map((m) => (
                   <S.MessageRow key={m.id} align={m.role}>
-                    {m.role !== "user" && <S.Avatar side="left"><S.Logo /></S.Avatar>}
+                    {m.role !== "user" && (
+                      <S.Avatar side="left">
+                        <S.Logo />
+                      </S.Avatar>
+                    )}
                     <S.Message $role={m.role} $type={m.type}>
-                      {m.insight ? renderInsight(m.text) : <div dangerouslySetInnerHTML={{ __html: m.text }} />}
+                      {m.insight ? (
+                        renderInsight(m.text)
+                      ) : (
+                        <div dangerouslySetInnerHTML={{ __html: m.text }} />
+                      )}
                       {m.qa?.params && (
                         <S.ParamsBar>
                           <S.ParamChip>{m.qa.params.metric}</S.ParamChip>
@@ -335,19 +308,37 @@ export default function AiFloatingChat() {
                         </S.ParamsBar>
                       )}
                     </S.Message>
-                    {m.role === "user" && <S.Avatar side="right"><S.UserIcon /></S.Avatar>}
+                    {m.role === "user" && (
+                      <S.Avatar side="right">
+                        <S.UserIcon />
+                      </S.Avatar>
+                    )}
                   </S.MessageRow>
                 ))}
 
                 {isLoading && (
                   <S.MessageRow align="assistant">
-                    <S.Avatar side="left"><S.Logo /></S.Avatar>
+                    <S.Avatar side="left">
+                      <S.Logo />
+                    </S.Avatar>
                     <S.TypingBubble>
                       <S.LoadingText>{LOADING_TEXTS[loadingIx]}</S.LoadingText>
                       <S.Dots>
-                        <S.Dot as={motion.span} animate={{ opacity: [0.2, 1, 0.2] }} transition={{ duration: 1, repeat: Infinity, delay: 0 }} />
-                        <S.Dot as={motion.span} animate={{ opacity: [0.2, 1, 0.2] }} transition={{ duration: 1, repeat: Infinity, delay: 0.2 }} />
-                        <S.Dot as={motion.span} animate={{ opacity: [0.2, 1, 0.2] }} transition={{ duration: 1, repeat: Infinity, delay: 0.4 }} />
+                        <S.Dot
+                          as={motion.span}
+                          animate={{ opacity: [0.2, 1, 0.2] }}
+                          transition={{ duration: 1, repeat: Infinity, delay: 0 }}
+                        />
+                        <S.Dot
+                          as={motion.span}
+                          animate={{ opacity: [0.2, 1, 0.2] }}
+                          transition={{ duration: 1, repeat: Infinity, delay: 0.2 }}
+                        />
+                        <S.Dot
+                          as={motion.span}
+                          animate={{ opacity: [0.2, 1, 0.2] }}
+                          transition={{ duration: 1, repeat: Infinity, delay: 0.4 }}
+                        />
                       </S.Dots>
                     </S.TypingBubble>
                   </S.MessageRow>

@@ -61,10 +61,7 @@ export interface HierarchyKpiResponse {
   };
 }
 
-export type KpiSeriesResponse =
-  | TotalKpiResponse
-  | GroupedKpiResponse
-  | HierarchyKpiResponse;
+export type KpiSeriesResponse = TotalKpiResponse | GroupedKpiResponse | HierarchyKpiResponse;
 
 export interface KpiAggregateSummary {
   last: number;
@@ -78,12 +75,10 @@ export interface KpiSummaryResponse {
 }
 
 export const isHierarchy = (r: KpiSeriesResponse): r is HierarchyKpiResponse =>
-  (r as HierarchyKpiResponse).hierarchy !== undefined;
+  "hierarchy" in r;
 
 export const isGrouped = (r: KpiSeriesResponse): r is GroupedKpiResponse =>
-  !isHierarchy(r) && (r as GroupedKpiResponse).aggregates.direct !== undefined;
+  !isHierarchy(r) && "direct" in r.aggregates;
 
 export const isTotal = (r: KpiSeriesResponse): r is TotalKpiResponse =>
-  !isHierarchy(r) &&
-  (r as any).aggregates.direct === undefined &&
-  (r as TotalKpiResponse).aggregates.total !== undefined;
+  !isHierarchy(r) && "total" in r.aggregates && !("direct" in r.aggregates);

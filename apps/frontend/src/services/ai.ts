@@ -11,10 +11,7 @@ export interface QaResponse {
   };
 }
 
-export const askQuestion = async (
-  email: string,
-  question: string
-): Promise<QaResponse> => {
+export const askQuestion = async (email: string, question: string): Promise<QaResponse> => {
   const { data } = await api.post("/ai/qa", { email, question });
   return data;
 };
@@ -26,7 +23,7 @@ export interface InsightResponse {
 export const getInsights = async (
   email: string,
   from: string,
-  to: string
+  to: string,
 ): Promise<InsightResponse> => {
   const { data } = await api.get("/ai/insights", {
     params: { email, from, to },

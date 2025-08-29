@@ -30,11 +30,21 @@ export default function BoostLayout({
           <>
             <S.LeftCluster $layout={headerLayout}>
               <S.Nav>
-                <S.NavItem data-tour="repo-link" href={GITHUB_REPO} target="_blank" rel="noopener noreferrer">
+                <S.NavItem
+                  data-tour="repo-link"
+                  href={GITHUB_REPO}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   <S.RepoIcon />
                   Repositório
                 </S.NavItem>
-                <S.NavItem data-tour="docs-link" href={API_DOCS_URL} target="_blank" rel="noopener noreferrer">
+                <S.NavItem
+                  data-tour="docs-link"
+                  href={API_DOCS_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   <S.DocIcon />
                   API Docs
                 </S.NavItem>
@@ -72,11 +82,21 @@ export default function BoostLayout({
 
             <S.RightCluster $layout={headerLayout}>
               <S.Nav>
-                <S.NavItem data-tour="repo-link" href={GITHUB_REPO} target="_blank" rel="noopener noreferrer">
+                <S.NavItem
+                  data-tour="repo-link"
+                  href={GITHUB_REPO}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   <S.RepoIcon />
                   Repositório
                 </S.NavItem>
-                <S.NavItem data-tour="docs-link" href={API_DOCS_URL} target="_blank" rel="noopener noreferrer">
+                <S.NavItem
+                  data-tour="docs-link"
+                  href={API_DOCS_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   <S.DocIcon />
                   API Docs
                 </S.NavItem>

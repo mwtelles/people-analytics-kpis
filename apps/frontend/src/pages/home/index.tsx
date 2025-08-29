@@ -10,8 +10,7 @@ import { checkEmail } from "../../services/employees";
 function defaultRange() {
   const end = new Date();
   const start = new Date(end.getFullYear(), end.getMonth() - 11, 1);
-  const fmt = (d: Date) =>
-    `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
+  const fmt = (d: Date) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
   return { from: fmt(start), to: fmt(end) };
 }
 

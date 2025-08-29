@@ -34,7 +34,7 @@ export const Spinner: FC<SpinnerProps> = ({
 
     return {
       sizeValue: s,
-      duration: typeof speed === "number" ? speed : speedMap[speed] ?? 1.2,
+      duration: typeof speed === "number" ? speed : (speedMap[speed] ?? 1.2),
       primary: theme.colors.primary,
       secondary: theme.colors.primaryHover,
       background: theme.colors.background,

@@ -10,9 +10,7 @@ export function buildHierarchyTree(
 ) {
   const getSubtree = (root: Employee): Employee[] => {
     const subs = employees.filter((e) => e.leaderId === root.id);
-    return subs.length > 0
-      ? [...subs, ...subs.flatMap(s => getSubtree(s))]
-      : [];
+    return subs.length > 0 ? [...subs, ...subs.flatMap((s) => getSubtree(s))] : [];
   };
 
   const build = (parent: Employee, rootId: number): HierarchyNodeDto => {

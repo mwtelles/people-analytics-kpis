@@ -13,10 +13,11 @@ import {
 
 export type Scope = "total" | "grouped" | "hierarchy";
 
-type SeriesByScope<S extends Scope> =
-  S extends "total" ? TotalKpiResponse :
-  S extends "grouped" ? GroupedKpiResponse :
-  HierarchyKpiResponse;
+type SeriesByScope<S extends Scope> = S extends "total"
+  ? TotalKpiResponse
+  : S extends "grouped"
+    ? GroupedKpiResponse
+    : HierarchyKpiResponse;
 
 export type TotalData = { scope: "total"; total: KpiPoint[] };
 export type GroupedData = {
@@ -127,8 +128,14 @@ export function useKpis<S extends Scope = "total">({
   };
 
   return {
-    headcount: normalize(seriesQuery.data as unknown as KpiSeriesResponse, "headcount") as Extract<KpiData, { scope: S }>,
-    turnover: normalize(seriesQuery.data as unknown as KpiSeriesResponse, "turnover") as Extract<KpiData, { scope: S }>,
+    headcount: normalize(seriesQuery.data as unknown as KpiSeriesResponse, "headcount") as Extract<
+      KpiData,
+      { scope: S }
+    >,
+    turnover: normalize(seriesQuery.data as unknown as KpiSeriesResponse, "turnover") as Extract<
+      KpiData,
+      { scope: S }
+    >,
     summary: summaryQuery.data,
     isLoading: seriesQuery.isLoading || summaryQuery.isLoading,
     isError: seriesQuery.isError || summaryQuery.isError,

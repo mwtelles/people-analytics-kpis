@@ -15,9 +15,7 @@ export class KpiController {
       const { email, from, to, scope = "total", includeMeta } = req.query;
 
       if (!email || !from || !to) {
-        return res
-          .status(400)
-          .json({ error: "Parâmetros obrigatórios: email, from, to" });
+        return res.status(400).json({ error: "Parâmetros obrigatórios: email, from, to" });
       }
 
       const result: KpiResponseDto = await KpiService.getKpis(
@@ -25,15 +23,13 @@ export class KpiController {
         String(from),
         String(to),
         parseScope(scope),
-        includeMeta === "true"
+        includeMeta === "true",
       );
 
       return res.json(result satisfies KpiResponseDto);
     } catch (err) {
       console.error(err);
-      return res
-        .status(500)
-        .json({ error: "Erro interno ao calcular KPIs" });
+      return res.status(500).json({ error: "Erro interno ao calcular KPIs" });
     }
   }
 
@@ -42,23 +38,19 @@ export class KpiController {
       const { email, from, to } = req.query;
 
       if (!email || !from || !to) {
-        return res
-          .status(400)
-          .json({ error: "Parâmetros obrigatórios: email, from, to" });
+        return res.status(400).json({ error: "Parâmetros obrigatórios: email, from, to" });
       }
 
       const result: KpiSummaryDto = await KpiService.getSummary(
         String(email),
         String(from),
-        String(to)
+        String(to),
       );
 
       return res.json(result satisfies KpiSummaryDto);
     } catch (err) {
       console.error(err);
-      return res
-        .status(500)
-        .json({ error: "Erro interno ao calcular resumo de KPIs" });
+      return res.status(500).json({ error: "Erro interno ao calcular resumo de KPIs" });
     }
   }
 }

@@ -15,19 +15,19 @@ export const Container = styled.div`
 `;
 
 export const InternPath = styled(motion.path)`
-  stroke: ${({ theme }) => theme.mode === "dark" ? "#fff" : theme.colors.primary};
+  stroke: ${({ theme }) => (theme.mode === "dark" ? "#fff" : theme.colors.primary)};
   transition: stroke 0.2s ease;
 
   &:hover {
-    stroke: ${({ theme }) => theme.mode === "dark" ? "#fff" : theme.colors.primary};
+    stroke: ${({ theme }) => (theme.mode === "dark" ? "#fff" : theme.colors.primary)};
   }
 `;
 
 export const ExternPath = styled(motion.path)`
-  fill: ${({ theme }) => theme.mode === "dark" ? "#fff" : theme.colors.primary};
+  fill: ${({ theme }) => (theme.mode === "dark" ? "#fff" : theme.colors.primary)};
   transition: fill 0.2s ease;
 
   &:hover {
-    fill: ${({ theme }) => theme.mode === "dark" ? "#fff" : theme.colors.primary};
+    fill: ${({ theme }) => (theme.mode === "dark" ? "#fff" : theme.colors.primary)};
   }
 `;

@@ -1,7 +1,7 @@
-import styled from 'styled-components';
-import { motion } from 'framer-motion';
-import Calendar from '@untitled-ui/icons-react/build/cjs/Calendar';
-import X from '@untitled-ui/icons-react/build/cjs/X';
+import styled from "styled-components";
+import { motion } from "framer-motion";
+import Calendar from "@untitled-ui/icons-react/build/cjs/Calendar";
+import X from "@untitled-ui/icons-react/build/cjs/X";
 
 interface TriggerProps {
   $height?: string;
@@ -53,22 +53,21 @@ export const Dropdown = styled.div`
   width: 100%;
 `;
 
-export const TriggerContainer = styled.div`
-`;
+export const TriggerContainer = styled.div``;
 
 export const Trigger = styled.button<TriggerProps>`
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  width: ${({ $width }) => $width || '100%'};
+  width: ${({ $width }) => $width || "100%"};
   padding: 8px 12px;
   border: 1px solid ${({ theme }) => theme.colors.glowPrimary};
   border-radius: 8px;
   background-color: ${({ theme }) => theme.colors.overlay};
   text-align: left;
   cursor: pointer;
-  height: ${({ $height }) => $height || '40px'};
+  height: ${({ $height }) => $height || "40px"};
 
   &:hover {
     border-color: ${({ theme }) => theme.colors.primary};
@@ -175,5 +174,4 @@ export const ClearButton = styled.button`
   }
 `;
 
-export const ClearIcon = styled(X)`
-`;
+export const ClearIcon = styled(X)``;

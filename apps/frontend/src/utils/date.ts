@@ -11,7 +11,7 @@ interface FormatMonthOptions {
 
 export function formatMonth(
   month: string,
-  { locale = "pt-BR", format = "short", showYear = "2-digit" }: FormatMonthOptions = {}
+  { locale = "pt-BR", format = "short", showYear = "2-digit" }: FormatMonthOptions = {},
 ): string {
   const date = parseMonth(month);
 

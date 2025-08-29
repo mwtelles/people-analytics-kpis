@@ -13,9 +13,5 @@ export function TourProvider({ children }: { children: React.ReactNode }) {
     localStorage.setItem("tours-seen", JSON.stringify(updated));
   };
 
-  return (
-    <TourContext.Provider value={{ seen, markAsSeen }}>
-      {children}
-    </TourContext.Provider>
-  );
+  return <TourContext.Provider value={{ seen, markAsSeen }}>{children}</TourContext.Provider>;
 }

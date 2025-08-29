@@ -48,10 +48,10 @@ export const DatePicker = ({
   const resolvedMonthsToShow = monthsToShow ?? (isRange ? 2 : 1);
 
   const [internalStart, setInternalStart] = useState<string | null>(
-    Array.isArray(defaultValue) ? defaultValue[0] : defaultValue ?? null
+    Array.isArray(defaultValue) ? defaultValue[0] : (defaultValue ?? null),
   );
   const [internalEnd, setInternalEnd] = useState<string | null>(
-    Array.isArray(defaultValue) ? defaultValue[1] : null
+    Array.isArray(defaultValue) ? defaultValue[1] : null,
   );
 
   const [isOpen, setIsOpen] = useState(false);
@@ -60,7 +60,7 @@ export const DatePicker = ({
   const [panelMonths, setPanelMonths] = useState<string[]>(() => {
     const today = dayjs();
     return Array.from({ length: resolvedMonthsToShow }).map((_, i) =>
-      today.subtract(resolvedMonthsToShow - 1 - i, "month").format(dateFormat)
+      today.subtract(resolvedMonthsToShow - 1 - i, "month").format(dateFormat),
     );
   });
 
@@ -104,18 +104,17 @@ export const DatePicker = ({
     }
   }, [defaultValue]);
 
-useEffect(() => {
-  if (value !== undefined) {
-    if (Array.isArray(value)) {
-      setInternalStart(value[0] ?? null);
-      setInternalEnd(value[1] ?? null);
-    } else {
-      setInternalStart(value ?? null);
-      setInternalEnd(null);
+  useEffect(() => {
+    if (value !== undefined) {
+      if (Array.isArray(value)) {
+        setInternalStart(value[0] ?? null);
+        setInternalEnd(value[1] ?? null);
+      } else {
+        setInternalStart(value ?? null);
+        setInternalEnd(null);
+      }
     }
-  }
-}, [value]);
-
+  }, [value]);
 
   useEffect(() => {
     if (isOpen) {
@@ -160,7 +159,7 @@ useEffect(() => {
       onChange?.(isRange ? [start, end] : start);
       setIsOpen(false);
     },
-    [isRange, onChange, resolveShortcut]
+    [isRange, onChange, resolveShortcut],
   );
 
   const handleSelect = (start: string, end?: string) => {
@@ -275,7 +274,9 @@ useEffect(() => {
                 </S.RangeItem>
               </S.RangeDisplay>
             ) : (
-              <S.Item>{internalStart ? formatDisplayDate(internalStart) : "Selecionar data"}</S.Item>
+              <S.Item>
+                {internalStart ? formatDisplayDate(internalStart) : "Selecionar data"}
+              </S.Item>
             )}
             {allowClear && internalStart && (
               <S.ClearButton
@@ -323,7 +324,7 @@ useEffect(() => {
                 {renderCalendars()}
                 {activeShortcuts.length > 0 && renderShortcuts()}
               </S.Popover>,
-              document.body
+              document.body,
             )}
         </S.TriggerContainer>
       ) : (
